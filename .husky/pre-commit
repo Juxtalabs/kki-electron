@@ -1,1 +1,19 @@
-npx lint-staged
+#!/usr/bin/env sh
+# Husky v9+ hook (no sourcing of _/husky.sh)
+set -e
+
+echo " Running pre-commit checks..."
+
+if command -v npm.cmd >/dev/null 2>&1; then
+  NPM="npm.cmd"
+elif command -v npm >/dev/null 2>&1; then
+  NPM="npm"
+else
+  echo "? npm not found in PATH"
+  exit 127
+fi
+
+# Jalankan lint sebelum commit
+"$NPM" run lint
+
+echo " All lint checks passed!"
