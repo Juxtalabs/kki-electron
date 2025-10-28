@@ -14,7 +14,6 @@ class WebUI {
       goBackButton: $('#goback'),
       goForwardButton: $('#goforward'),
       reloadButton: $('#reload'),
-      addressUrl: $('#addressurl'),
 
       browserActions: $('#actions'),
 
@@ -27,7 +26,6 @@ class WebUI {
     this.$.goBackButton.addEventListener('click', () => chrome.tabs.goBack())
     this.$.goForwardButton.addEventListener('click', () => chrome.tabs.goForward())
     this.$.reloadButton.addEventListener('click', () => chrome.tabs.reload())
-    this.$.addressUrl.addEventListener('keypress', this.onAddressUrlKeyPress.bind(this))
 
     this.$.minimizeButton.addEventListener('click', () =>
       chrome.windows.get(chrome.windows.WINDOW_ID_CURRENT, (win) => {
@@ -128,12 +126,6 @@ class WebUI {
     }
   }
 
-  onAddressUrlKeyPress(event) {
-    if (event.code === 'Enter') {
-      const url = this.$.addressUrl.value
-      chrome.tabs.update({ url })
-    }
-  }
 
   createTabNode(tab) {
     const tabElem = this.$.tabTemplate.content.cloneNode(true).firstElementChild
@@ -185,7 +177,6 @@ class WebUI {
   }
 
   renderToolbar(tab) {
-    this.$.addressUrl.value = tab.url
     // this.$.browserActions.tab = tab.id
   }
 }
