@@ -98,15 +98,8 @@ class Browser {
       urls: this.urls,
       extensions: this.extensions,
       window: {
-        width: 1280,
-        height: 720,
         frame: false,
-        titleBarStyle: 'hidden',
-        titleBarOverlay: {
-          height: 31,
-          color: '#39375b',
-          symbolColor: '#ffffff',
-        },
+        kiosk: true,
         webPreferences: {
           sandbox: true,
           nodeIntegration: false,
@@ -117,6 +110,11 @@ class Browser {
       },
     })
     this.windows.push(win)
+
+    // Prevent closing window
+    win.window.on('close', (event) => {
+      event.preventDefault()
+    })
 
     if (process.env.SHELL_DEBUG) {
       win.webContents.openDevTools({ mode: 'detach' })

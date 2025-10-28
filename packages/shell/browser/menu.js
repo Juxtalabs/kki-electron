@@ -1,4 +1,4 @@
-const { Menu } = require('electron')
+const { Menu, app } = require('electron')
 
 const setupMenu = (browser) => {
   const isMac = process.platform === 'darwin'
@@ -8,7 +8,24 @@ const setupMenu = (browser) => {
 
   const template = [
     ...(isMac ? [{ role: 'appMenu' }] : []),
-    { role: 'fileMenu' },
+    {
+      label: 'File',
+      submenu: [
+        {
+          label: 'Exit Kiosk Mode',
+          accelerator: 'CmdOrCtrl+Shift+Q',
+          click: () => {
+            // Force destroy all windows and quit
+            browser.windows.forEach(win => {
+              if (win.window && !win.window.isDestroyed()) {
+                win.window.destroy()
+              }
+            })
+            app.quit()
+          }
+        }
+      ]
+    },
     { role: 'editMenu' },
     {
       label: 'View',
@@ -35,11 +52,8 @@ const setupMenu = (browser) => {
         { role: 'resetZoom' },
         { role: 'zoomIn' },
         { role: 'zoomOut' },
-        { type: 'separator' },
-        { role: 'togglefullscreen' },
       ],
     },
-    { role: 'windowMenu' },
   ]
 
   const menu = Menu.buildFromTemplate(template)
