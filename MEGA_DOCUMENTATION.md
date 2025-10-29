@@ -159,6 +159,33 @@ const BLOCKED_SHORTCUTS = [
 - Window/tab lookup functions
 - Common helper methods
 
+**🎯 `monitor-detector.js`** - Monitor Detection System
+```javascript
+function getConnectedMonitorCount() {
+  // Get number of connected monitors
+  // Uses Electron screen API for cross-platform support
+}
+
+function hasExternalMonitorConnected() {
+  // Check if external monitor is connected (>1 monitor)
+}
+
+function shouldBlockBrowser() {
+  // Check if browser should be blocked due to multiple monitors
+  // Respects environment variable flags for development
+}
+
+function checkAndBlockIfMultipleMonitors() {
+  // Execute monitor check and block browser if needed
+  // Shows warning message and exits application
+}
+```
+**Fitur:**
+- Cross-platform monitor detection
+- Development bypass with environment variables
+- Automatic browser blocking when multiple monitors detected
+- Console logging for debugging
+
 #### 🧩 `extensions/` - Chrome Extension Support
 
 **🎯 `extension-manager.js`** - Extension Management
@@ -411,6 +438,11 @@ bool isBlockedCombo =
    }
    
    async init() {
+     // Check for multiple monitors and block if detected
+     if (checkAndBlockIfMultipleMonitors()) {
+       return // Exit if blocked
+     }
+     
      this.initSession()           // Setup Electron session
      setupMenu(this)              // Create application menu
      registerPreloadScripts()     // Register security preloads
@@ -480,6 +512,34 @@ keyboardBlocker.install() // Use Electron globalShortcut
 ---
 
 ## 🔒 Security Features
+
+### 🖥️ Monitor Detection & Blocking
+
+**Purpose**: Prevent browser from running when multiple monitors are detected
+
+**Implementation:**
+```javascript
+// Monitor detection using Electron screen API
+const { screen } = require('electron')
+const displays = screen.getAllDisplays()
+const monitorCount = displays.length
+
+// Block browser if >1 monitor detected
+if (monitorCount > 1 && !process.env.DISABLE_MONITOR_CHECK) {
+  console.error('BROWSER DIBLOKIR - Multiple Monitor Detected')
+  app.quit()
+}
+```
+
+**Environment Variable Flags:**
+- `DISABLE_MONITOR_CHECK=true`: Disable monitor detection for development
+- `SHELL_DEBUG=true`: Debug mode automatically bypasses monitor check
+
+**Development Commands:**
+```bash
+npm run start:no-monitor-check  # Start without monitor check
+npm run start:debug            # Debug mode with bypass
+```
 
 ### 🛡️ Kiosk Mode Security
 
@@ -553,6 +613,7 @@ sejati-electron/
 │   │   │   ├── 📁 utils/       # Utility functions
 │   │   │   │   ├── 📄 keyboard-hook.js
 │   │   │   │   ├── 📄 keyboard-blocker.js
+│   │   │   │   ├── 📄 monitor-detector.js
 │   │   │   │   └── 📄 helpers.js
 │   │   │   ├── 📁 ui/          # User interface
 │   │   │   │   └── 📄 webui.js
@@ -597,11 +658,15 @@ npm run rebuild-native
 
 ### 🏃 Running the Application
 ```bash
-# Development mode
+# Development mode (with monitor check)
 yarn user:start
 
-# Debug mode with logging
+# Debug mode with logging (bypasses monitor check)
 yarn start:debug
+
+# Skip monitor check for development
+cd packages/shell
+npm run start:no-monitor-check
 
 # Skip build for faster startup
 yarn start:skip-build
