@@ -1,0 +1,10 @@
+# Build output
+build/
+*.node
+
+# Node-gyp
+.node-gyp/
+
+# Logs
+*.log
+npm-debug.log*

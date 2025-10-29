@@ -9,6 +9,14 @@ const { TabbedBrowserWindow, setWebuiExtensionId } = require('../windows/TabbedB
 const { setupContextMenu } = require('../handlers/context-menu-handler')
 const { setupWindowOpenHandler } = require('../handlers/window-open-handler')
 
+// Try to load native keyboard hook, fallback to JavaScript blocker
+let keyboardHook
+try {
+  keyboardHook = require('../utils/keyboard-hook')
+} catch (error) {
+  keyboardHook = require('../utils/keyboard-blocker')
+}
+
 class Browser {
   windows = []
 
@@ -40,6 +48,10 @@ class Browser {
   }
 
   destroy() {
+    // Uninstall keyboard hook before quitting
+    if (keyboardHook.isInstalled()) {
+      keyboardHook.uninstall()
+    }
     app.quit()
   }
 
@@ -73,6 +85,20 @@ class Browser {
 
     const webuiExtensionId = await loadExtensions(this.session)
     setWebuiExtensionId(webuiExtensionId)
+
+    // Install keyboard hook for kiosk mode security
+    try {
+      if (keyboardHook.isAvailable()) {
+        keyboardHook.install()
+      }
+    } catch (error) {
+      try {
+        const keyboardBlocker = require('../utils/keyboard-blocker')
+        keyboardBlocker.install()
+      } catch (fallbackError) {
+        // Silent fail - keyboard blocking is optional
+      }
+    }
 
     this.createInitialWindow()
     this.resolveReady()

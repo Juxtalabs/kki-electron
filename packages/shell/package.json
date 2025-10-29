@@ -9,7 +9,9 @@
     "start": "electron-forge start",
     "start:trace": "electron-forge start -- --trace-startup=\"*\" --trace-startup-file=\"$HOME/Desktop/trace.json\"",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "electron-forge make",
+    "rebuild-native": "electron-rebuild -f -w keyhook",
+    "postinstall": "npm run rebuild-native || echo 'Native addon build failed, continuing without keyboard hook'"
   },
   "license": "MIT",
   "author": "Samuel Maddock <sam@samuelmaddock.com>",
@@ -27,8 +29,10 @@
     "@electron-forge/maker-zip": "^7.5.0",
     "@electron-forge/plugin-auto-unpack-natives": "^7.5.0",
     "@electron-forge/plugin-webpack": "^7.5.0",
+    "@electron/rebuild": "^3.6.0",
     "copy-webpack-plugin": "^11.0.0",
     "cross-env": "^7.0.2",
-    "electron": "^37.1.0"
+    "electron": "^37.1.0",
+    "node-addon-api": "^8.0.0"
   }
 }
