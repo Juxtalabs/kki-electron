@@ -7,6 +7,8 @@
   "scripts": {
     "build": "npm run package",
     "start": "electron-forge start",
+    "start:no-monitor-check": "cross-env DISABLE_MONITOR_CHECK=true electron-forge start",
+    "start:debug": "cross-env SHELL_DEBUG=true electron-forge start",
     "start:trace": "electron-forge start -- --trace-startup=\"*\" --trace-startup-file=\"$HOME/Desktop/trace.json\"",
     "package": "electron-forge package",
     "make": "electron-forge make",

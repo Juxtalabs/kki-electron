@@ -8,6 +8,7 @@ const { setupExtensions, loadExtensions } = require('../extensions/extension-man
 const { TabbedBrowserWindow, setWebuiExtensionId } = require('../windows/TabbedBrowserWindow')
 const { setupContextMenu } = require('../handlers/context-menu-handler')
 const { setupWindowOpenHandler } = require('../handlers/window-open-handler')
+const { checkAndBlockIfMultipleMonitors } = require('../utils/monitor-detector')
 
 // Try to load native keyboard hook, fallback to JavaScript blocker
 let keyboardHook
@@ -76,6 +77,11 @@ class Browser {
   }
 
   async init() {
+    // Check for multiple monitors and block if detected
+    if (checkAndBlockIfMultipleMonitors()) {
+      return // Exit if blocked
+    }
+    
     this.initSession()
     setupMenu(this)
 
