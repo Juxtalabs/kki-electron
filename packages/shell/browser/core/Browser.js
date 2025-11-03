@@ -49,10 +49,22 @@ class Browser {
   }
 
   destroy() {
-    // Uninstall keyboard hook before quitting
-    if (keyboardHook.isInstalled()) {
-      keyboardHook.uninstall()
+    console.log('Browser: Cleaning up before exit...')
+    
+    // Stop native keyboard helper
+    this.stopNativeKeyboardHelper()
+    
+    // Uninstall Electron keyboard hook
+    try {
+      if (keyboardHook.isInstalled && keyboardHook.isInstalled()) {
+        console.log('Browser: Uninstalling Electron keyboard hook...')
+        keyboardHook.uninstall()
+      }
+    } catch (error) {
+      console.warn('Browser: Failed to uninstall Electron hook:', error.message)
     }
+    
+    console.log('Browser: Cleanup completed, quitting app...')
     app.quit()
   }
 
@@ -107,21 +119,83 @@ class Browser {
     }
 
     // Install keyboard hook for kiosk mode security
-    try {
-      if (keyboardHook.isAvailable()) {
-        keyboardHook.install()
-      }
-    } catch (error) {
-      try {
-        const keyboardBlocker = require('../utils/keyboard-blocker')
-        keyboardBlocker.install()
-      } catch (fallbackError) {
-        // Silent fail - keyboard blocking is optional
-      }
-    }
+    console.log('Browser: Installing keyboard blocking system...')
+    
+    // Primary: Start native helper (handles Windows key effectively)
+    this.startNativeKeyboardHelper()
+    
+    // Backup: Install Electron addon (handles key combinations)
+    this.installElectronKeyboardHook()
 
     this.createInitialWindow()
     this.resolveReady()
+  }
+
+  installElectronKeyboardHook() {
+    try {
+      if (keyboardHook.isAvailable()) {
+        console.log('Browser: Installing Electron hook for key combinations...')
+        const result = keyboardHook.install()
+        if (result) {
+          console.log('Browser: Electron hook installed successfully (backup for combinations)')
+        } else {
+          console.warn('Browser: Electron hook installation failed (expected limitation)')
+        }
+      } else {
+        console.warn('Browser: Electron hook not available on this platform')
+      }
+    } catch (error) {
+      console.warn('Browser: Electron hook error (expected):', error.message)
+    }
+  }
+
+  startNativeKeyboardHelper() {
+    const { spawn } = require('child_process')
+    const path = require('path')
+    
+    try {
+      // Path to native helper executable
+      const helperPath = path.join(__dirname, '..', '..', 'keyhook-helper.exe')
+      
+      console.log('Browser: Starting native keyboard helper:', helperPath)
+      
+      // Spawn native helper process
+      this.keyboardHelperProcess = spawn(helperPath, [], {
+        detached: false,
+        stdio: ['ignore', 'pipe', 'pipe']
+      })
+      
+      this.keyboardHelperProcess.stdout.on('data', (data) => {
+        console.log('KeyboardHelper:', data.toString().trim())
+      })
+      
+      this.keyboardHelperProcess.stderr.on('data', (data) => {
+        console.error('KeyboardHelper Error:', data.toString().trim())
+      })
+      
+      this.keyboardHelperProcess.on('exit', (code) => {
+        console.log('KeyboardHelper: Process exited with code', code)
+        this.keyboardHelperProcess = null
+      })
+      
+      this.keyboardHelperProcess.on('error', (error) => {
+        console.error('KeyboardHelper: Failed to start:', error.message)
+        this.keyboardHelperProcess = null
+      })
+      
+      console.log('Browser: Native keyboard helper started successfully')
+      
+    } catch (error) {
+      console.error('Browser: Failed to start native keyboard helper:', error.message)
+    }
+  }
+
+  stopNativeKeyboardHelper() {
+    if (this.keyboardHelperProcess) {
+      console.log('Browser: Stopping native keyboard helper...')
+      this.keyboardHelperProcess.kill()
+      this.keyboardHelperProcess = null
+    }
   }
 
   initSession() {
