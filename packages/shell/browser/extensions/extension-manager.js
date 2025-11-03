@@ -67,21 +67,28 @@ async function setupExtensions(browserInstance) {
 }
 
 async function loadExtensions(browserSession) {
-  const webuiExtension = await browserSession.extensions.loadExtension(PATHS.WEBUI)
+  try {
+    // Check if extensions API is available
+    if (!browserSession.extensions || typeof browserSession.extensions.loadExtension !== 'function') {
+      console.warn('Extensions API not available in this Electron version')
+      return null
+    }
 
-  // Wait for web store extensions to finish loading
-  await installChromeWebStore({
-    session: browserSession,
-    async beforeInstall(details) {
-      if (!details.browserWindow || details.browserWindow.isDestroyed()) return
+    const webuiExtension = await browserSession.extensions.loadExtension(PATHS.WEBUI)
 
-      const title = `Add "${details.localizedName}"?`
+    // Wait for web store extensions to finish loading
+    await installChromeWebStore({
+      session: browserSession,
+      async beforeInstall(details) {
+        if (!details.browserWindow || details.browserWindow.isDestroyed()) return
 
-      let message = `${title}`
-      if (details.manifest.permissions) {
-        const permissions = (details.manifest.permissions || []).join(', ')
-        message += `\n\nPermissions: ${permissions}`
-      }
+        const title = `Add "${details.localizedName}"?`
+
+        let message = `${title}`
+        if (details.manifest.permissions) {
+          const permissions = (details.manifest.permissions || []).join(', ')
+          message += `\n\nPermissions: ${permissions}`
+        }
 
       const returnValue = await dialog.showMessageBox(details.browserWindow, {
         title,
@@ -113,6 +120,10 @@ async function loadExtensions(browserSession) {
   )
 
   return webuiExtension.id
+  } catch (error) {
+    console.error('Failed to load extensions:', error.message)
+    return null
+  }
 }
 
 module.exports = { setupExtensions, loadExtensions }

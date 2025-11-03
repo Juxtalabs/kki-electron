@@ -3,7 +3,7 @@ const { setupMenu } = require('../menu')
 const { PATHS } = require('../config/paths')
 const { getParentWindowOfTab } = require('../utils/helpers')
 const { setupIpcHandlers } = require('../handlers/ipc-handlers')
-const { initSession, registerPreloadScripts } = require('../session/session-manager')
+const { initSession, registerPreloadScripts, getDomainInterceptor } = require('../session/session-manager')
 const { setupExtensions, loadExtensions } = require('../extensions/extension-manager')
 const { TabbedBrowserWindow, setWebuiExtensionId } = require('../windows/TabbedBrowserWindow')
 const { setupContextMenu } = require('../handlers/context-menu-handler')
@@ -87,10 +87,24 @@ class Browser {
 
     registerPreloadScripts(this.session)
 
-    this.extensions = await setupExtensions(this)
+    try {
+      this.extensions = await setupExtensions(this)
+    } catch (error) {
+      console.warn('Browser: Failed to setup extensions:', error.message)
+      this.extensions = null
+    }
 
-    const webuiExtensionId = await loadExtensions(this.session)
-    setWebuiExtensionId(webuiExtensionId)
+    try {
+      const webuiExtensionId = await loadExtensions(this.session)
+      if (webuiExtensionId) {
+        setWebuiExtensionId(webuiExtensionId)
+      } else {
+        console.warn('Browser: Extensions not loaded, continuing without extensions')
+      }
+    } catch (error) {
+      console.warn('Browser: Failed to load extensions:', error.message)
+      // Continue without extensions - not critical for core functionality
+    }
 
     // Install keyboard hook for kiosk mode security
     try {
@@ -159,6 +173,22 @@ class Browser {
     // Create browser window with welcome page as initial URL
     const welcomeUrl = `file://${PATHS.WELCOME_HTML}`
     this.createWindow({ initialUrl: welcomeUrl })
+
+    // Test domain whitelist system in debug mode
+    if (process.env.SHELL_DEBUG) {
+      setTimeout(() => {
+        this.testDomainWhitelist()
+      }, 2000) // Wait 2 seconds after window creation
+    }
+  }
+
+  testDomainWhitelist() {
+    const domainInterceptor = getDomainInterceptor()
+    if (domainInterceptor) {
+      console.log('=== BROWSER: TESTING DOMAIN WHITELIST ===')
+      domainInterceptor.testInterception()
+      console.log('=== BROWSER: END DOMAIN WHITELIST TEST ===')
+    }
   }
 
   async onWebContentsCreated(event, webContents) {

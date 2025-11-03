@@ -1,13 +1,24 @@
 const { app, session } = require('electron')
 const { PATHS } = require('../config/paths')
+const DomainInterceptor = require('../security/domain-interceptor')
+
+let domainInterceptor = null
 
 function initSession(browserSession) {
+  // Initialize domain interceptor if not already done
+  if (!domainInterceptor) {
+    domainInterceptor = new DomainInterceptor()
+  }
+
   // Remove Electron and App details to closer emulate Chrome's UA
   const userAgent = browserSession
     .getUserAgent()
     .replace(/\sElectron\/\S+/, '')
     .replace(new RegExp(`\\s${app.getName()}/\\S+`), '')
   browserSession.setUserAgent(userAgent)
+
+  // Setup domain whitelist interceptor
+  domainInterceptor.setupInterceptor(browserSession)
 
   browserSession.serviceWorkers.on('running-status-changed', (event) => {
     console.info(`service worker ${event.versionId} ${event.runningStatus}`)
@@ -39,4 +50,8 @@ function registerPreloadScripts(browserSession) {
   }
 }
 
-module.exports = { initSession, registerPreloadScripts }
+module.exports = { 
+  initSession, 
+  registerPreloadScripts,
+  getDomainInterceptor: () => domainInterceptor
+}
