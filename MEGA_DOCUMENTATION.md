@@ -509,7 +509,155 @@ keyboardHook.install()  // Block Alt+Tab, Alt+F4, etc.
 keyboardBlocker.install() // Use Electron globalShortcut
 ```
 
----
+### 🔑 Windows Key Blocking Implementation
+
+**Native Windows Hook (Primary):**
+```cpp
+// keyhook.cc - Native C++ addon
+LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
+  if (nCode == HC_ACTION) {
+    KBDLLHOOKSTRUCT* pKeyboard = (KBDLLHOOKSTRUCT*)lParam;
+    
+    // Block Windows key (VK_LWIN, VK_RWIN)
+    if (pKeyboard->vkCode == VK_LWIN || pKeyboard->vkCode == VK_RWIN) {
+      return 1; // Block the key
+    }
+    
+    // Block Alt+Tab, Alt+F4, Ctrl+Alt+Del, etc.
+    // 60+ combinations blocked
+  }
+  return CallNextHookEx(NULL, nCode, wParam, lParam);
+}
+```
+
+**JavaScript Fallback (Secondary):**
+```javascript
+// keyboard-blocker.js - Electron globalShortcut fallback
+const { globalShortcut } = require('electron')
+
+function installKeyboardBlocker() {
+  // Block common shortcuts
+  const blockedShortcuts = [
+    'Alt+Tab', 'Alt+F4', 'Alt+Space', 'F11',
+    'Ctrl+Shift+I', 'Ctrl+Shift+J', 'Ctrl+Shift+C',
+    'F12', 'Ctrl+R', 'Ctrl+Shift+R',
+    // Print screen combinations
+    'PrintScreen', 'Alt+PrintScreen', 'Ctrl+PrintScreen'
+  ]
+  
+  blockedShortcuts.forEach(shortcut => {
+    globalShortcut.register(shortcut, () => {
+      console.log(`Blocked shortcut: ${shortcut}`)
+    })
+  })
+}
+```
+
+**Browser.js Integration:**
+```javascript
+// Browser.js - Main application entry point
+class Browser {
+  constructor() {
+    this.keyboardHelperProcess = null
+    this.electronKeyboardHook = null
+  }
+  
+  async initializeSecurity() {
+    // Check development flag first
+    if (process.env.DISABLE_WIN_KEY_BLOCK) {
+      console.log('Browser: Windows key blocking DISABLED for development')
+      return
+    }
+    
+    console.log('Browser: Installing keyboard blocking system...')
+    
+    // Primary: Start native helper (handles Windows key effectively)
+    await this.startNativeKeyboardHelper()
+    
+    // Backup: Install Electron addon (handles key combinations)
+    this.installElectronKeyboardHook()
+  }
+  
+  async startNativeKeyboardHelper() {
+    const { spawn } = require('child_process')
+    const path = require('path')
+    
+    try {
+      const helperPath = path.join(__dirname, '..', 'keyhook-helper.exe')
+      
+      console.log('Browser: Starting native keyboard helper:', helperPath)
+      
+      this.keyboardHelperProcess = spawn(helperPath, [], {
+        detached: false,
+        stdio: ['ignore', 'pipe', 'pipe']
+      })
+      
+      this.keyboardHelperProcess.stdout.on('data', (data) => {
+        console.log('KeyboardHelper:', data.toString().trim())
+      })
+      
+      this.keyboardHelperProcess.stderr.on('data', (data) => {
+        console.error('KeyboardHelper Error:', data.toString().trim())
+      })
+      
+      this.keyboardHelperProcess.on('exit', (code) => {
+        console.log('KeyboardHelper: Process exited with code', code)
+        this.keyboardHelperProcess = null
+      })
+      
+    } catch (error) {
+      console.error('Failed to start native keyboard helper:', error)
+    }
+  }
+  
+  installElectronKeyboardHook() {
+    try {
+      const keyboardHook = require('./utils/keyboard-hook')
+      
+      if (keyboardHook.isAvailable()) {
+        console.log('Browser: Installing Electron hook for key combinations...')
+        const result = keyboardHook.install()
+        
+        if (result) {
+          console.log('Browser: Electron hook installed successfully (backup for combinations)')
+        } else {
+          console.warn('Browser: Electron hook installation failed (expected limitation)')
+        }
+      } else {
+        console.warn('Browser: Electron hook not available on this platform')
+      }
+    } catch (error) {
+      console.warn('Browser: Electron hook error (expected):', error.message)
+    }
+  }
+  
+  cleanup() {
+    // Kill native helper process
+    if (this.keyboardHelperProcess) {
+      this.keyboardHelperProcess.kill()
+      this.keyboardHelperProcess = null
+    }
+    
+    // Uninstall hooks
+    if (this.electronKeyboardHook) {
+      this.electronKeyboardHook.uninstall()
+      this.electronKeyboardHook = null
+    }
+  }
+}
+```
+
+**Development Flags:**
+```javascript
+// Environment variable check
+if (process.env.DISABLE_WIN_KEY_BLOCK) {
+  console.log('Browser: Windows key blocking DISABLED for development (DISABLE_WIN_KEY_BLOCK=true)')
+} else {
+  // Install keyboard blocking
+  this.initializeSecurity()
+}
+```
+
 
 ## 🔒 Security Features
 
@@ -535,12 +683,6 @@ if (monitorCount > 1 && !process.env.DISABLE_MONITOR_CHECK) {
 - `DISABLE_MONITOR_CHECK=true`: Disable monitor detection for development
 - `SHELL_DEBUG=true`: Debug mode automatically bypasses monitor check
 
-**Development Commands:**
-```bash
-npm run start:no-monitor-check  # Start without monitor check
-npm run start:debug            # Debug mode with bypass
-```
-
 ### 🛡️ Kiosk Mode Security
 
 **Window Configuration:**
@@ -561,15 +703,58 @@ npm run start:debug            # Debug mode with bypass
 **Keyboard Shortcut Blocking:**
 - **Native Hook**: Windows low-level keyboard interception
 - **JavaScript Fallback**: Electron globalShortcut API
-- **Blocked Shortcuts**: 60+ system combinations including:
-  - `Alt+Tab` (Application switching)
-  - `Alt+F4` (Close application)
-  - `Win+D` (Show desktop)
-  - `F11` (Fullscreen toggle)
-  - `Ctrl+Shift+I` (Developer tools)
-  - Print screen combinations
+- **60+ Blocked Combinations**: See Windows Key Blocking Implementation section above
 
-### 🔐 Session Security
+### 🍽️ Application Menu System
+
+**Menu Structure:**
+```javascript
+// menu.js - Application menu configuration
+const template = [
+  ...(isMac ? [{ role: 'appMenu' }] : []),
+  {
+    label: 'File',
+    submenu: [{
+      label: 'Exit Kiosk Mode',
+      accelerator: 'CmdOrCtrl+Shift+Q',
+      click: () => {
+        // Force destroy all windows and quit
+        browser.windows.forEach(win => {
+          if (win.window && !win.window.isDestroyed()) {
+            win.window.destroy()
+          }
+        })
+        app.quit()
+      }
+    }]
+  },
+  { role: 'editMenu' },
+  {
+    label: 'View',
+    submenu: [{
+      label: 'Reload',
+      accelerator: 'CmdOrCtrl+R',
+      click: () => tabWc().reload()
+    }, {
+      label: 'Force Reload',
+      accelerator: 'Shift+CmdOrCtrl+R',
+      click: () => tabWc().reloadIgnoringCache()
+    }, {
+      label: 'Toggle Developer Tools',
+      accelerator: isMac ? 'Alt+Command+I' : 'Ctrl+Shift+I',
+      click: () => tabWc().toggleDevTools()
+    }]
+  }
+]
+```
+
+**Menu Features:**
+- **Exit Kiosk Mode**: `Ctrl+Shift+Q` - Emergency exit from kiosk mode
+- **Navigation**: Reload, Force Reload, Developer Tools
+- **Standard Menus**: Edit menu, Zoom controls
+- **Platform Specific**: Different accelerators for macOS vs Windows/Linux
+
+---
 
 **Preload Scripts:**
 - Chrome extension API injection
@@ -634,77 +819,632 @@ sejati-electron/
 └── 📁 extensions/              # Local extensions directory
 ```
 
-## 🚀 Getting Started
+## 🚀 Quick Start
 
-### 📋 Prerequisites
-- Node.js >= 16.0.0
-- Yarn >= 1.10.0
-- Python 3.x (for native addon compilation)
-- Windows SDK (for keyboard hook compilation)
-
-### 🔧 Installation
 ```bash
-# Clone repository
-git clone https://github.com/Sejati-io/sejati-electron.git
-cd sejati-electron
-
-# Install dependencies
-yarn install
-
-# Build native addons (Windows only)
+# Quick development start (recommended)
 cd packages/shell
-npm run rebuild-native
-```
+npm run start:dev-direct
 
-### 🏃 Running the Application
-```bash
-# Development mode (with monitor check)
-yarn user:start
+# Full development mode with all flags disabled
+npm run start:dev
 
-# Debug mode with logging (bypasses monitor check)
-yarn start:debug
+# Production mode with all security enabled
+npm start
 
-# Skip monitor check for development
-cd packages/shell
-npm run start:no-monitor-check
-
-# Skip build for faster startup
-yarn start:skip-build
-```
-
-### 📦 Building for Distribution
-```bash
-# Build all packages
-yarn user:build
-
-# Package application
-yarn package
-
-# Create distributable
-yarn make
+# See Development Guide section below for detailed instructions
 ```
 
 ---
 
-## 🔧 Development Guidelines
+## 🚪 Application Entry Points
 
-### 🏗️ Architecture Principles
-1. **Modular Design**: Separate concerns into distinct modules
-2. **Event-Driven**: Use EventEmitter for loose coupling
-3. **Security First**: Sandbox and isolate all components
-4. **Cross-Platform**: Windows-specific features with fallbacks
+### 📄 Main Entry Point
 
-### 📝 Code Conventions
-- **ESLint**: Enforced code style
-- **TypeScript**: Type safety for new code
-- **Documentation**: JSDoc comments for APIs
-- **Error Handling**: Graceful fallbacks and logging
+**index.js (Shell Package):**
+```javascript
+const Browser = require('./browser/main')
+new Browser()
+```
 
-### 🧪 Testing Strategy
-- Unit tests for core functionality
-- Extension compatibility tests
-- Integration tests for keyboard security
-- Cross-platform validation
+**browser/main.js (Browser Module):**
+```javascript
+/**
+ * Sejati Browser - Main Entry Point
+ * 
+ * This is the main entry point for the Sejati browser application.
+ * The actual Browser implementation has been modularized into separate files
+ * for better maintainability and organization.
+ * 
+ * Structure:
+ * - core/Browser.js: Main Browser class
+ * - windows/TabbedBrowserWindow.js: Browser window management
+ * - config/paths.js: Path configurations
+ * - session/session-manager.js: Session initialization and management
+ * - extensions/extension-manager.js: Chrome extension handling
+ * - handlers/: IPC, context menu, and window handlers
+ * - utils/: Helper functions
+ */
+
+const Browser = require('./core/Browser')
+module.exports = Browser
+```
+
+**Purpose:**
+- **Modular Architecture**: Separates concerns into logical modules
+- **Clean Entry Point**: Simple initialization without complex logic
+- **Maintainable Structure**: Easy to locate and modify specific functionality
+
+---
+
+Panduan untuk development aplikasi Sejati Browser dengan berbagai flag dan mode development.
+
+### 🔧 Environment Variables
+
+#### Security Flags
+
+##### `DISABLE_WIN_KEY_BLOCK`
+Menonaktifkan Windows key blocking untuk memudahkan development.
+
+```bash
+# Set environment variable
+set DISABLE_WIN_KEY_BLOCK=true
+
+# Atau gunakan script npm
+npm run start:no-winkey
+```
+
+**Kapan digunakan:**
+- Saat development dan perlu akses Windows key
+- Testing tanpa keyboard restrictions
+- Debugging keyboard-related issues
+
+##### `DISABLE_MONITOR_CHECK`
+Menonaktifkan pengecekan multiple monitor.
+
+```bash
+# Set environment variable  
+set DISABLE_MONITOR_CHECK=true
+
+# Atau gunakan script npm
+npm run start:no-monitor-check
+```
+
+**Kapan digunakan:**
+- Development dengan multiple monitor setup
+- Testing di environment dengan banyak monitor
+
+##### `SHELL_DEBUG`
+Mengaktifkan debug mode dengan developer tools.
+
+```bash
+# Set environment variable
+set SHELL_DEBUG=true
+
+# Atau gunakan script npm
+npm run start:debug
+```
+
+**Kapan digunakan:**
+- Debugging aplikasi
+- Inspecting web contents
+- Development dengan DevTools
+
+### 📜 NPM Scripts
+
+#### Production Scripts
+```bash
+npm start                    # Normal start dengan semua security
+npm run build               # Build aplikasi untuk production
+npm run package            # Package aplikasi
+```
+
+#### Development Scripts
+```bash
+npm run start:dev           # Development mode (no winkey + no monitor check)
+npm run start:dev-direct    # Development mode dengan direct electron
+npm run start:no-winkey     # Disable Windows key blocking only
+npm run start:no-winkey-direct # Disable Windows key blocking (direct)
+npm run start:no-monitor-check  # Disable monitor check only
+npm run start:debug         # Debug mode dengan DevTools
+```
+
+#### Utility Scripts
+```bash
+npm run rebuild-native      # Rebuild native keyboard hook addon
+npm run start:trace         # Start dengan performance tracing
+```
+
+### 🔄 Development Workflow
+
+#### 1. Setup Development Environment
+```bash
+# Clone repository
+git clone <repo-url>
+cd sejati-electron/packages/shell
+
+# Install dependencies
+npm install
+
+# Start development mode
+npm run start:dev-direct
+```
+
+#### 2. Development dengan Hot Reload
+```bash
+# Start dengan webpack hot reload (bisa stuck)
+npm run start:dev
+
+# Alternatif yang lebih reliable
+npm run start:dev-direct
+
+# Untuk debugging
+npm run start:debug
+```
+
+#### 3. Testing Security Features
+```bash
+# Test dengan semua security enabled
+npm start
+
+# Test tanpa Windows key blocking
+npm run start:no-winkey-direct
+
+# Test tanpa monitor check
+npm run start:no-monitor-check
+```
+
+### 🐛 Debugging Tips
+
+#### 1. Keyboard Hook Issues
+```bash
+# Rebuild native addon
+npm run rebuild-native
+
+# Start tanpa keyboard blocking
+npm run start:no-winkey-direct
+```
+
+#### 2. Extension Issues
+```bash
+# Start dengan debug mode
+npm run start:debug
+
+# Check console untuk extension errors
+```
+
+#### 3. Monitor Detection Issues
+```bash
+# Bypass monitor check
+npm run start:no-monitor-check
+
+# Atau set environment variable
+set DISABLE_MONITOR_CHECK=true
+npm start
+```
+
+#### 4. Webpack Stuck Issues
+```bash
+# Kill node processes
+taskkill /f /im node.exe
+
+# Clear webpack cache
+Remove-Item -Recurse -Force .webpack -ErrorAction SilentlyContinue
+
+# Use direct electron instead
+npm run start:dev-direct
+```
+
+### 🔀 Environment Variable Combinations
+
+#### Full Development Mode
+```bash
+set DISABLE_WIN_KEY_BLOCK=true
+set DISABLE_MONITOR_CHECK=true
+set SHELL_DEBUG=true
+npm start
+```
+
+#### Production Testing
+```bash
+# Unset semua development flags
+set DISABLE_WIN_KEY_BLOCK=
+set DISABLE_MONITOR_CHECK=
+set SHELL_DEBUG=
+npm start
+```
+
+#### Selective Testing
+```bash
+# Test hanya keyboard blocking
+set DISABLE_MONITOR_CHECK=true
+set SHELL_DEBUG=true
+npm start
+
+# Test hanya monitor check
+set DISABLE_WIN_KEY_BLOCK=true
+set SHELL_DEBUG=true
+npm start
+```
+
+### 🔧 Development vs Production
+- **Development**: Gunakan flags untuk disable security features
+- **Production**: Semua security features harus enabled
+- **Testing**: Kombinasi flags sesuai kebutuhan testing
+
+### 🚨 Troubleshooting
+
+#### Native Addon Build Failures
+```bash
+# Install build tools
+npm install --global windows-build-tools
+
+# Rebuild addon
+npm run rebuild-native
+```
+
+#### Permission Issues
+```bash
+# Run as administrator jika diperlukan
+# Atau disable security features untuk development
+npm run start:dev-direct
+```
+
+#### Multiple Monitor Detection
+```bash
+# Disable untuk development
+npm run start:no-monitor-check
+
+# Atau set permanent untuk development
+set DISABLE_MONITOR_CHECK=true
+```
+
+### ✅ Best Practices
+
+1. **Development**: Selalu gunakan `npm run start:dev-direct` (lebih reliable)
+2. **Testing**: Test dengan dan tanpa security flags
+3. **Production**: Pastikan semua flags disabled
+4. **Debugging**: Gunakan `npm run start:debug` untuk DevTools
+5. **Native Addon**: Rebuild setelah update dependencies
+6. **Webpack Issues**: Gunakan `-direct` scripts untuk menghindari webpack stuck
+
+---
+
+## 🔨 Native Helper Compilation
+
+### 📁 Native Keyboard Hook Helper
+
+**Source Files:**
+- `native/keyhook-helper.cpp` - Standalone Windows executable
+- `native/keyhook.cc` - Node.js addon for Electron integration
+- `native/binding.gyp` - Build configuration for node-gyp
+
+**Compilation Script:**
+```bat
+:: compile-helper.bat - Automated compilation
+@echo off
+echo Compiling native keyboard hook helper...
+
+:: Compile dengan Visual Studio Build Tools
+cl.exe /EHsc native\keyhook-helper.cpp /Fe:keyhook-helper.exe user32.lib kernel32.lib
+
+:: Atau compile dengan MinGW jika tersedia
+:: g++ -o keyhook-helper.exe native/keyhook-helper.cpp -luser32 -lkernel32
+
+echo Native helper compiled successfully!
+echo Run keyhook-helper.exe to test Windows key blocking.
+pause
+```
+
+**Manual Compilation:**
+```bash
+# Dengan Visual Studio Build Tools
+cl.exe /EHsc native/keyhook-helper.cpp /Fe:keyhook-helper.exe user32.lib kernel32.lib
+
+# Dengan MinGW
+g++ -o keyhook-helper.exe native/keyhook-helper.cpp -luser32 -lkernel32
+```
+
+**Purpose:**
+- **Standalone Executable**: `keyhook-helper.exe` - Independent Windows key blocker
+- **Node.js Integration**: `keyhook.node` - Native addon for Electron
+- **Dual Implementation**: Fallback system for keyboard security
+
+---
+
+## 🏗️ Build System Configuration
+
+### ⚙️ Electron Forge Configuration
+
+**forge.config.js:**
+```javascript
+module.exports = {
+  packagerConfig: {
+    name: 'Shell',
+    asar: true,
+    extraResource: ['browser/ui'],
+  },
+  makers: [
+    {
+      name: '@electron-forge/maker-zip',
+      platforms: ['darwin', 'win32'],
+    },
+  ],
+  plugins: [{
+    name: '@electron-forge/plugin-webpack',
+    config: {
+      mainConfig: './webpack.main.config.js',
+      renderer: {
+        config: './webpack.renderer.config.js',
+        entryPoints: [{
+          name: 'browser',
+          preload: { js: './preload.ts' },
+        }],
+      },
+    },
+  }],
+}
+```
+
+### 📦 Webpack Configuration
+
+**Main Process (webpack.main.config.js):**
+```javascript
+module.exports = {
+  entry: './index.js',
+  externals: {
+    // Exclude native modules from webpack bundling
+    '../native/build/Release/keyhook.node': 'commonjs ../native/build/Release/keyhook.node',
+  },
+  plugins: [
+    new CopyWebpackPlugin({
+      patterns: [
+        require.resolve('electron-chrome-extensions/preload'),
+        // Copy native addon to webpack output
+        {
+          from: path.resolve(__dirname, 'native/build/Release/keyhook.node'),
+          to: 'native/build/Release/keyhook.node',
+          noErrorOnMissing: true,
+        },
+      ],
+    }),
+  ],
+}
+```
+
+**Renderer Process (webpack.renderer.config.js):**
+```javascript
+module.exports = {
+  target: 'web',
+  entry: './browser/ui/webui.js',
+}
+```
+
+### 🚀 Preload Script Integration
+
+**preload.ts:**
+```typescript
+import { injectBrowserAction } from 'electron-chrome-extensions/browser-action'
+
+// Inject <browser-action-list> element into WebUI
+if (location.protocol === 'chrome-extension:' && location.pathname === '/webui.html') {
+  injectBrowserAction()
+}
+```
+
+**Purpose:**
+- **Extension API Injection**: Adds browser action buttons to UI
+- **Security Isolation**: Controlled API exposure to renderer
+- **Chrome Compatibility**: Mimics Chrome extension environment
+
+---
+
+## 🎨 UI System Components
+
+### 🌐 WebUI Interface
+
+**webui.html:**
+- Main browser interface with toolbar
+- Tab management UI
+- App buttons container
+- Extension browser actions integration
+
+**webui.js:**
+- Tab creation and management
+- Navigation controls
+- App buttons dynamic loading
+- IPC communication with main process
+
+**Key Features:**
+- **Responsive Design**: Adapts to different screen sizes
+- **Extension Integration**: Browser action buttons from extensions
+- **Dynamic Components**: App buttons loaded from configuration
+- **Accessibility**: Keyboard navigation support
+
+### 🚫 Access Control UI
+
+**access-denied.html:**
+- Blocked website notification page
+- User-friendly error messages
+- Retry and navigation options
+
+**access-denied-popup.js:**
+- Domain blocking popup management
+- User interaction handling
+- Bypass request processing
+
+**Purpose:**
+- **User Communication**: Clear messaging when access is blocked
+- **Fallback Options**: Allow navigation to alternative content
+- **Security Awareness**: Educate users about domain restrictions
+
+### 📑 Tab Management
+
+**new-tab.html:**
+- Default new tab page
+- Quick access to frequently used sites
+- Search functionality
+
+**tabs.js:**
+- Tab creation, switching, and closing
+- Tab state management
+- Navigation history per tab
+
+**Features:**
+- **Multi-Tab Support**: Unlimited tabs
+- **Independent Navigation**: Each tab maintains separate history
+- **Resource Management**: Proper cleanup on tab close
+
+---
+
+## 🎨 App Buttons Configuration
+
+Sistem ini memungkinkan Anda untuk menambah, mengedit, dan mengelola tombol aplikasi di browser toolbar melalui file konfigurasi JSON.
+
+### 📁 File Konfigurasi
+
+File konfigurasi utama: `packages/shell/browser/config/app-buttons.json`
+
+### 🏗️ Struktur Konfigurasi
+
+```json
+{
+  "appButtons": [
+    {
+      "id": "unique-app-id",
+      "name": "App Name",
+      "enabled": true,
+      "style": {
+        "backgroundColor": "#5865F2",
+        "hoverColor": "#4752C4", 
+        "activeColor": "#3C45A5",
+        "textColor": "#ffffff"
+      },
+      "detection": {
+        "type": "executable",
+        "paths": [
+          "%USERPROFILE%\\AppData\\Local\\App\\App.exe",
+          "%PROGRAMFILES%\\App\\App.exe"
+        ],
+        "fallbackCommand": "where appname"
+      },
+      "launch": {
+        "executable": "auto-detected",
+        "arguments": []
+      },
+      "fallback": {
+        "type": "url",
+        "url": "https://app.com/download",
+        "message": "App installer opened in browser"
+      }
+    }
+  ]
+}
+```
+
+### 📋 Properti Konfigurasi
+
+#### Root Object
+- `appButtons`: Array berisi konfigurasi tombol aplikasi
+
+#### App Button Object
+- `id` (string): ID unik untuk aplikasi
+- `name` (string): Nama yang ditampilkan di tombol
+- `enabled` (boolean): Apakah tombol diaktifkan atau tidak
+
+#### Style Object
+- `backgroundColor` (string): Warna background tombol
+- `hoverColor` (string): Warna saat hover
+- `activeColor` (string): Warna saat diklik
+- `textColor` (string): Warna teks
+
+#### Detection Object
+- `type` (string): Tipe deteksi ("executable")
+- `paths` (array): Daftar path untuk mencari executable
+- `fallbackCommand` (string): Command fallback untuk mencari aplikasi
+
+#### Launch Object
+- `executable` (string): Path executable atau "auto-detected"
+- `arguments` (array): Argumen command line
+
+#### Fallback Object
+- `type` (string): Tipe fallback ("url")
+- `url` (string): URL installer atau download page
+- `message` (string): Pesan yang ditampilkan saat fallback dieksekusi
+
+**Note**: URL fallback akan dibuka di dalam browser Electron, bukan di browser default user.
+
+### 🌍 Environment Variables
+
+Anda dapat menggunakan environment variables di path:
+- `%USERPROFILE%`: User profile directory
+- `%PROGRAMFILES%`: Program Files directory
+- `%PROGRAMFILES(X86)%`: Program Files (x86) directory
+
+### 🔍 Wildcard Paths
+
+Untuk aplikasi dengan versioning di folder name:
+```json
+"paths": [
+  "%USERPROFILE%\\AppData\\Local\\Discord\\app-*\\Discord.exe"
+]
+```
+
+### 📱 Contoh Aplikasi
+
+#### Discord
+```json
+{
+  "id": "discord",
+  "name": "Discord", 
+  "enabled": true,
+  "style": {
+    "backgroundColor": "#5865F2",
+    "hoverColor": "#4752C4",
+    "activeColor": "#3C45A5", 
+    "textColor": "#ffffff"
+  }
+}
+```
+
+#### Spotify
+```json
+{
+  "id": "spotify",
+  "name": "Spotify",
+  "enabled": false,
+  "style": {
+    "backgroundColor": "#1DB954",
+    "hoverColor": "#1ed760", 
+    "activeColor": "#169c46",
+    "textColor": "#ffffff"
+  }
+}
+```
+
+### 🚀 Cara Menggunakan
+
+1. **Edit file `app-buttons.json`** untuk menambah/mengedit aplikasi
+2. **Set `enabled: true`** untuk mengaktifkan tombol
+3. **Restart aplikasi** atau reload konfigurasi untuk melihat perubahan
+
+### ➕ Menambah Aplikasi Baru
+
+1. Buka `packages/shell/browser/config/app-buttons.json`
+2. Tambahkan object baru ke array `appButtons`
+3. Set konfigurasi sesuai kebutuhan
+4. Set `enabled: true`
+5. Save file dan restart aplikasi
+
+### 💡 Tips
+- Test path aplikasi sebelum menambahkan ke konfigurasi
+- Gunakan fallback URL yang valid
+- ID harus unik untuk setiap aplikasi
+
+### 🔧 App Buttons Troubleshooting
+- **Tombol tidak muncul**: Periksa `enabled: true` dan syntax JSON
+- **Aplikasi tidak launch**: Periksa path di `detection.paths`
+- **URL tidak terbuka**: Periksa URL fallback dan domain whitelist
 
 ---
 
@@ -741,4 +1481,4 @@ For proprietary use licensing, contact the project maintainers or sponsor throug
 
 ---
 
-*📝 This documentation covers the complete Sejati Electron Browser project structure, functionality, and implementation details. Last updated: 2025*
+*📝 This comprehensive mega documentation covers the complete Sejati Electron Browser project including architecture, security implementations, build systems, UI components, development guides, and configuration systems. Last updated: 2025*
