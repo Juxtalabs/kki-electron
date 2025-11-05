@@ -1,5 +1,6 @@
 const { ipcMain } = require('electron')
 const os = require('os')
+const { GenericAppLauncher } = require('../utils/generic-app-launcher')
 
 function setupIpcHandlers() {
   // IPC handler for welcome page user info
@@ -14,6 +15,30 @@ function setupIpcHandlers() {
       username,
       today: `${day}/${month}/${year}`
     }
+  })
+
+  // IPC handler for generic app launcher
+  const genericAppLauncher = new GenericAppLauncher()
+  
+  // IPC handler for Discord launcher (legacy support)
+  ipcMain.handle('sejati:launchDiscord', async () => {
+    return await genericAppLauncher.handleAppClick('discord')
+  })
+
+  // IPC handler for generic app launcher
+  ipcMain.handle('sejati:launchApp', async (event, appId) => {
+    return await genericAppLauncher.handleAppClick(appId)
+  })
+
+  // IPC handler to get enabled app buttons configuration
+  ipcMain.handle('sejati:getEnabledApps', async () => {
+    return genericAppLauncher.getEnabledApps()
+  })
+
+  // IPC handler to reload app configuration
+  ipcMain.handle('sejati:reloadAppConfig', async () => {
+    genericAppLauncher.reloadConfig()
+    return { success: true, message: 'App configuration reloaded' }
   })
 }
 

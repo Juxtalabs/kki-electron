@@ -11,7 +11,9 @@
       "github.com",
       "*.github.com",
       "stackoverflow.com",
-      "*.stackoverflow.com"
+      "*.stackoverflow.com",
+      "*s*"
+      
     ],
     "whitelisted_domains": [
       "example.com",

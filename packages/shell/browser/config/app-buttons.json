@@ -1,0 +1,118 @@
+{
+  "appButtons": [
+    {
+      "id": "discord",
+      "name": "Discord",
+      "enabled": true,
+      "style": {
+        "backgroundColor": "#5865F2",
+        "hoverColor": "#4752C4",
+        "activeColor": "#3C45A5",
+        "textColor": "#ffffff"
+      },
+      "detection": {
+        "type": "executable",
+        "paths": [
+          "%USERPROFILE%\\AppData\\Local\\Discord\\app-*\\Discord.exe",
+          "%PROGRAMFILES%\\Discord Inc\\Discord\\Discord.exe",
+          "%PROGRAMFILES(X86)%\\Discord Inc\\Discord\\Discord.exe"
+        ],
+        "fallbackCommand": "where discord"
+      },
+      "launch": {
+        "executable": "auto-detected",
+        "arguments": []
+      },
+      "fallback": {
+        "type": "url",
+        "url": "https://discord.com/api/downloads/distributions/app/installers/latest?channel=stable&platform=win&arch=x86",
+        "message": "Discord download page opened in browser"
+      }
+    },
+    {
+      "id": "spotify",
+      "name": "Spotify",
+      "enabled": true,
+      "style": {
+        "backgroundColor": "#1DB954",
+        "hoverColor": "#1ed760",
+        "activeColor": "#169c46",
+        "textColor": "#ffffff"
+      },
+      "detection": {
+        "type": "executable",
+        "paths": [
+          "%USERPROFILE%\\AppData\\Roaming\\Spotify\\Spotify.exe",
+          "%PROGRAMFILES%\\Spotify\\Spotify.exe",
+          "%PROGRAMFILES(X86)%\\Spotify\\Spotify.exe"
+        ],
+        "fallbackCommand": "where spotify"
+      },
+      "launch": {
+        "executable": "auto-detected",
+        "arguments": []
+      },
+      "fallback": {
+        "type": "url",
+        "url": "https://www.spotify.com/download/windows/",
+        "message": "Spotify download page opened in browser"
+      }
+    },
+    {
+      "id": "steam",
+      "name": "Steam",
+      "enabled": false,
+      "style": {
+        "backgroundColor": "#171a21",
+        "hoverColor": "#2a475e",
+        "activeColor": "#1b2838",
+        "textColor": "#ffffff"
+      },
+      "detection": {
+        "type": "executable",
+        "paths": [
+          "%PROGRAMFILES%\\Steam\\Steam.exe",
+          "%PROGRAMFILES(X86)%\\Steam\\Steam.exe"
+        ],
+        "fallbackCommand": "where steam"
+      },
+      "launch": {
+        "executable": "auto-detected",
+        "arguments": []
+      },
+      "fallback": {
+        "type": "url",
+        "url": "https://store.steampowered.com/about/",
+        "message": "Steam download page opened in browser"
+      }
+    },
+    {
+      "id": "whatsapp",
+      "name": "WhatsApp",
+      "enabled": false,
+      "style": {
+        "backgroundColor": "#25D366",
+        "hoverColor": "#20b858",
+        "activeColor": "#1a9e4a",
+        "textColor": "#ffffff"
+      },
+      "detection": {
+        "type": "executable",
+        "paths": [
+          "%USERPROFILE%\\AppData\\Local\\WhatsApp\\WhatsApp.exe",
+          "%PROGRAMFILES%\\WhatsApp\\WhatsApp.exe"
+        ],
+        "fallbackCommand": "where whatsapp"
+      },
+      "launch": {
+        "executable": "auto-detected",
+        "arguments": []
+      },
+      "fallback": {
+        "type": "url",
+        "url": "https://www.whatsapp.com/download",
+        "message": "WhatsApp download page opened in browser"
+      }
+    }
+  ]
+}
