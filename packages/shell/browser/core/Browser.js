@@ -118,14 +118,18 @@ class Browser {
       // Continue without extensions - not critical for core functionality
     }
 
-    // Install keyboard hook for kiosk mode security
-    console.log('Browser: Installing keyboard blocking system...')
-    
-    // Primary: Start native helper (handles Windows key effectively)
-    this.startNativeKeyboardHelper()
-    
-    // Backup: Install Electron addon (handles key combinations)
-    this.installElectronKeyboardHook()
+    // Install keyboard hook for kiosk mode security (unless disabled for development)
+    if (process.env.DISABLE_WIN_KEY_BLOCK) {
+      console.log('Browser: Windows key blocking DISABLED for development (DISABLE_WIN_KEY_BLOCK=true)')
+    } else {
+      console.log('Browser: Installing keyboard blocking system...')
+      
+      // Primary: Start native helper (handles Windows key effectively)
+      this.startNativeKeyboardHelper()
+      
+      // Backup: Install Electron addon (handles key combinations)
+      this.installElectronKeyboardHook()
+    }
 
     this.createInitialWindow()
     this.resolveReady()
