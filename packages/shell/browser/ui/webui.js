@@ -14,8 +14,7 @@ class WebUI {
       goBackButton: $('#goback'),
       goForwardButton: $('#goforward'),
       reloadButton: $('#reload'),
-      appButtonsContainer: $('#app-buttons'),
-
+      urlBar: $('#urlbar'),
       browserActions: $('#actions'),
 
       minimizeButton: $('#minimize'),
@@ -27,6 +26,17 @@ class WebUI {
     this.$.goBackButton.addEventListener('click', () => chrome.tabs.goBack())
     this.$.goForwardButton.addEventListener('click', () => chrome.tabs.goForward())
     this.$.reloadButton.addEventListener('click', () => chrome.tabs.reload())
+
+    this.$.urlBar.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        this.handleUrlEnter()
+      }
+    })
+
+    this.$.urlBar.addEventListener('focus', () => {
+      // Select all text for quick editing
+      this.$.urlBar.select()
+    })
 
     this.$.minimizeButton.addEventListener('click', () =>
       chrome.windows.get(chrome.windows.WINDOW_ID_CURRENT, (win) => {
@@ -44,7 +54,6 @@ class WebUI {
     document.body.classList.add(platformClass)
 
     this.initTabs()
-    this.initAppButtons()
   }
 
   async initTabs() {
@@ -179,119 +188,30 @@ class WebUI {
   }
 
   renderToolbar(tab) {
-    // this.$.browserActions.tab = tab.id
-  }
-
-  async initAppButtons() {
-    try {
-      const enabledApps = await window.sejati.getEnabledApps()
-      this.renderAppButtons(enabledApps)
-    } catch (error) {
-      console.error('Failed to load app buttons:', error)
-    }
-  }
-
-  renderAppButtons(apps) {
-    // Clear existing buttons
-    this.$.appButtonsContainer.innerHTML = ''
-
-    apps.forEach(app => {
-      const button = this.createAppButton(app)
-      this.$.appButtonsContainer.appendChild(button)
-    })
-  }
-
-  createAppButton(appConfig) {
-    const button = document.createElement('button')
-    button.className = 'app-button'
-    button.textContent = appConfig.name
-    button.dataset.appId = appConfig.id
-
-    // Apply custom styling from config
-    if (appConfig.style) {
-      button.style.backgroundColor = appConfig.style.backgroundColor
-      button.style.color = appConfig.style.textColor
-
-      // Add hover effects
-      button.addEventListener('mouseenter', () => {
-        if (!button.disabled && appConfig.style.hoverColor) {
-          button.style.backgroundColor = appConfig.style.hoverColor
-        }
-      })
-
-      button.addEventListener('mouseleave', () => {
-        if (!button.disabled) {
-          button.style.backgroundColor = appConfig.style.backgroundColor
-        }
-      })
-
-      button.addEventListener('mousedown', () => {
-        if (!button.disabled && appConfig.style.activeColor) {
-          button.style.backgroundColor = appConfig.style.activeColor
-        }
-      })
-
-      button.addEventListener('mouseup', () => {
-        if (!button.disabled && appConfig.style.hoverColor) {
-          button.style.backgroundColor = appConfig.style.hoverColor
-        }
-      })
-    }
-
-    // Add click handler
-    button.addEventListener('click', () => this.handleAppClick(appConfig.id, button))
-
-    return button
-  }
-
-  async handleAppClick(appId, buttonElement) {
-    try {
-      // Disable button to prevent multiple clicks
-      buttonElement.disabled = true
-      const originalText = buttonElement.textContent
-      buttonElement.textContent = 'Loading...'
-      
-      // Call the main process to handle app launch
-      const result = await window.sejati.launchApp(appId)
-      
-      // Show result to user
-      if (result.success) {
-        console.log('App action successful:', result.message)
-        // Show success indicator
-        buttonElement.textContent = result.action === 'launched' ? 'Launched!' : 'Installer Opened'
-        setTimeout(() => {
-          buttonElement.textContent = originalText
-        }, 2000)
-      } else {
-        console.error('App action failed:', result.message)
-        // Show error indicator
-        buttonElement.textContent = 'Error'
-        setTimeout(() => {
-          buttonElement.textContent = originalText
-        }, 2000)
+    if (!tab) {
+      if (this.$.urlBar) {
+        this.$.urlBar.value = ''
       }
-    } catch (error) {
-      console.error('Failed to launch app:', error)
-      buttonElement.textContent = 'Error'
-      setTimeout(() => {
-        buttonElement.textContent = originalText
-      }, 2000)
-    } finally {
-      // Re-enable button
-      buttonElement.disabled = false
+      return
+    }
+
+    if (this.$.urlBar) {
+      this.$.urlBar.value = tab.url || ''
     }
   }
 
-  // Legacy Discord support (for backward compatibility)
-  async handleDiscordClick() {
-    try {
-      const result = await window.sejati.launchDiscord()
-      console.log('Discord action result:', result)
-      return result
-    } catch (error) {
-      console.error('Failed to launch Discord:', error)
-      return { success: false, action: 'error', message: error.message }
+  handleUrlEnter() {
+    if (!this.$.urlBar || !this.activeTabId) return
+
+    let url = this.$.urlBar.value.trim()
+    if (!url) return
+
+    // If user types something without scheme, assume https
+    if (!/^https?:\/\//i.test(url) && !/^file:\/\//i.test(url)) {
+      url = 'https://' + url
     }
+
+    chrome.tabs.update(this.activeTabId, { url })
   }
 }
 

@@ -1,19 +1,9 @@
 {
   "security": {
     "admin_whitelisted_domains": [
-      "*.google.com",
-      "gstatic.com",
-      "*.gstatic.com", 
-      "googleapis.com",
-      "*.googleapis.com",
-      "googleusercontent.com",
-      "*.googleusercontent.com",
-      "github.com",
-      "*.github.com",
-      "stackoverflow.com",
-      "*.stackoverflow.com",
-      "*s*"
-      
+      "*.konsilkesehatanindonesia.id",
+      "kki.go.id",
+      "*.kki.go.id"
     ],
     "whitelisted_domains": [
       "example.com",

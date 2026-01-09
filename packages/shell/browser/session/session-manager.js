@@ -1,5 +1,6 @@
 const { app, session } = require('electron')
 const { PATHS } = require('../config/paths')
+const fs = require('fs')
 const DomainInterceptor = require('../security/domain-interceptor')
 
 let domainInterceptor = null
@@ -32,21 +33,36 @@ function initSession(browserSession) {
 }
 
 function registerPreloadScripts(browserSession) {
-  if ('registerPreloadScript' in browserSession) {
-    browserSession.registerPreloadScript({
+  const preloadFiles = []
+
+  if (fs.existsSync(PATHS.PRELOAD)) {
+    preloadFiles.push({
       id: 'shell-preload',
       type: 'frame',
       filePath: PATHS.PRELOAD,
     })
-    // Register welcome page preload for file:// protocol
-    browserSession.registerPreloadScript({
+  }
+
+  if (fs.existsSync(PATHS.WELCOME_PRELOAD)) {
+    preloadFiles.push({
       id: 'welcome-preload',
       type: 'frame',
       filePath: PATHS.WELCOME_PRELOAD,
     })
+  }
+
+  if (!preloadFiles.length) {
+    return
+  }
+
+  if ('registerPreloadScript' in browserSession) {
+    for (const preload of preloadFiles) {
+      browserSession.registerPreloadScript(preload)
+    }
   } else {
     // TODO(mv3): remove
-    browserSession.setPreloads([PATHS.PRELOAD, PATHS.WELCOME_PRELOAD])
+    const preloadPaths = preloadFiles.map((p) => p.filePath)
+    browserSession.setPreloads(preloadPaths)
   }
 }
 

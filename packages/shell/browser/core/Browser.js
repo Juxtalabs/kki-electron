@@ -248,8 +248,8 @@ class Browser {
   }
 
   createInitialWindow() {
-    // Create browser window with welcome page as initial URL
-    const welcomeUrl = `file://${PATHS.WELCOME_HTML}`
+    // Create browser window with external welcome page as initial URL
+    const welcomeUrl = 'https://ukom.konsilkesehatanindonesia.id'
     this.createWindow({ initialUrl: welcomeUrl })
 
     // Test domain whitelist system in debug mode

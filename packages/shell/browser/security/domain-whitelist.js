@@ -1,19 +1,16 @@
 const fs = require('fs')
 const path = require('path')
-const { PATHS } = require('../config/paths')
+const { ROOT_DIR } = require('../config/paths')
 
 class DomainWhitelist {
   constructor() {
     this.config = null
     // Try multiple possible config locations
     const possiblePaths = [
-      path.join(__dirname, '../config/config.json'),
-      path.join(__dirname, '../../../../config/config.json'),
-      path.join(__dirname, '../../../../../browser/config/config.json'),
-      path.join(__dirname, '../../../../.webpack/main/config.json'),
-      path.join(__dirname, '.webpack/main/config.json'),
-      path.join(process.cwd(), 'packages/shell/browser/config/config.json'),
-      path.join(process.cwd(), '.webpack/main/config.json')
+      // Primary: browser config (source tree)
+      path.join(ROOT_DIR, 'packages/shell/browser/config/config.json'),
+      // Fallback: relative to bundled .webpack/main location
+      path.join(__dirname, '../config/config.json')
     ]
     
     this.configPath = this.findConfigFile(possiblePaths)
@@ -40,12 +37,25 @@ class DomainWhitelist {
         this.config = JSON.parse(configData)
         console.log('DomainWhitelist: Configuration loaded from file successfully')
       } else {
-        console.error('DomainWhitelist: Config file not found at:', this.configPath)
-        throw new Error(`Config file not found: ${this.configPath}`)
+        console.warn('DomainWhitelist: Config file not found at:', this.configPath)
+        console.warn('DomainWhitelist: Falling back to default in-memory configuration')
+        this.config = {
+          security: {
+            admin_whitelisted_domains: [],
+            whitelisted_domains: [],
+          },
+        }
       }
     } catch (error) {
-      console.error('DomainWhitelist: Failed to load config from file:', error.message)
-      throw error
+      console.error('DomainWhitelist: Failed to load config from file, using default config:', error.message)
+      if (!this.config) {
+        this.config = {
+          security: {
+            admin_whitelisted_domains: [],
+            whitelisted_domains: [],
+          },
+        }
+      }
     }
   }
 
@@ -152,11 +162,7 @@ class DomainWhitelist {
       return []
     }
     const domains = this.config.security.admin_whitelisted_domains || []
-    if (domains.length === 0) {
-      console.log('DomainWhitelist: Admin whitelisted domains is empty')
-    } else {
-      console.log(`DomainWhitelist: Admin whitelisted domains: ${domains.length} entries`)
-    }
+    console.log(`DomainWhitelist: Admin whitelisted domains: ${domains.length} entries`)
     return domains
   }
 
