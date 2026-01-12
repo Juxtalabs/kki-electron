@@ -17,6 +17,7 @@ function getPaths() {
     LOCAL_EXTENSIONS: path.join(ROOT_DIR, 'extensions'),
     WELCOME_HTML: path.join(ROOT_DIR, 'src/renderer/index.html'),
     WELCOME_PRELOAD: path.join(ROOT_DIR, 'dist/preload/preload.js'),
+    APP_ICON: path.join(ROOT_DIR, 'assets', 'kki-icon.ico'),
   }
 }
 

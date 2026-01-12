@@ -46,8 +46,8 @@
     "prettier": "^3.4.1"
   },
   "build": {
-    "appId": "io.sejati.app",
-    "productName": "Sejati",
+    "appId": "io.kki.app",
+    "productName": "Ukom",
     "directories": {
       "output": "release",
       "buildResources": "assets",
@@ -57,8 +57,8 @@
       "target": [
         "nsis"
       ],
-      "icon": "assets/icon.ico",
-      "artifactName": "Sejati-${version}-win.${ext}"
+      "icon": "assets/kki-icon.ico",
+      "artifactName": "Ukom-${version}-win.${ext}"
     },
     "files": [
       "dist/**/*",
