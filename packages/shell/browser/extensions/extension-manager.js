@@ -56,12 +56,9 @@ async function setupExtensions(browserInstance) {
     browserInstance.popup = popup
   })
 
-  // Allow extensions to override new tab page
-  extensions.on('url-overrides-updated', (urlOverrides) => {
-    if (urlOverrides.newtab) {
-      browserInstance.urls.newtab = urlOverrides.newtab
-    }
-  })
+  // NOTE: We intentionally ignore extension new-tab overrides so that
+  // Browser.urls.newtab (configured in Browser.js) is always used for
+  // new tabs. This keeps the new tab page fixed to the UKOM URL.
 
   return extensions
 }

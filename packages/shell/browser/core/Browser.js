@@ -22,7 +22,7 @@ class Browser {
   windows = []
 
   urls = {
-    newtab: 'about:blank',
+    newtab: 'https://ukom.konsilkesehatanindonesia.id',
   }
 
   constructor() {
@@ -224,6 +224,7 @@ class Browser {
       window: {
         frame: false,
         kiosk: true,
+        icon: PATHS.APP_ICON,
         webPreferences: {
           sandbox: true,
           nodeIntegration: false,
