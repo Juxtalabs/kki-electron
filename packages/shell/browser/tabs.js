@@ -135,9 +135,6 @@ class Tabs extends EventEmitter {
       if (nextTab) this.select(nextTab.id)
     }
     this.emit('tab-destroyed', tab)
-    if (this.tabList.length === 0) {
-      this.destroy()
-    }
   }
 
   select(tabId) {
