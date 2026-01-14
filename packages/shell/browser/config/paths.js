@@ -8,9 +8,10 @@ const ROOT_DIR = path.join(__dirname, '../../../../')
 
 function getPaths() {
   const { app } = require('electron')
+  const isPackaged = Boolean(app && app.isPackaged)
   
   return {
-    WEBUI: app.isPackaged
+    WEBUI: isPackaged
       ? path.resolve(process.resourcesPath, 'ui')
       : path.resolve(SHELL_ROOT_DIR, 'browser', 'ui'),
     PRELOAD: path.join(__dirname, '../../renderer/browser/preload.js'),

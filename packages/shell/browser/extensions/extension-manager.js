@@ -1,9 +1,16 @@
 const { app, dialog } = require('electron')
-const { ElectronChromeExtensions } = require('electron-chrome-extensions')
 const { installChromeWebStore, loadAllExtensions } = require('electron-chrome-web-store')
 const { PATHS } = require('../config/paths')
 
 async function setupExtensions(browserInstance) {
+  let ElectronChromeExtensions
+  try {
+    ;({ ElectronChromeExtensions } = require('electron-chrome-extensions'))
+  } catch (error) {
+    console.warn('Failed to load electron-chrome-extensions:', error.message)
+    return null
+  }
+
   const extensions = new ElectronChromeExtensions({
     license: 'internal-license-do-not-use',
     session: browserInstance.session,

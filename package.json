@@ -10,6 +10,7 @@
     "copy-html": "powershell -Command \"Copy-Item -Path 'src/renderer/*.html' -Destination 'dist/renderer/' -Force\"",
     "clean": "rimraf dist",
     "start": "npm run build && cd packages/shell && npm start",
+    "start:dev-direct": "npm --prefix packages/shell run start:dev-direct",
     "package": "cd packages/shell && npm run package",
     "lint": "eslint . --ext .ts,.tsx --max-warnings 0",
     "user:build": "yarn run build:context-menu && yarn run build:chrome-web-store && yarn run build:extensions && yarn run build:shell",
@@ -25,6 +26,7 @@
     "start:skip-build": "cross-env SHELL_DEBUG=true DEBUG='electron-chrome-extensions*' yarn --cwd ./packages/shell start",
     "test": "yarn test:extensions",
     "test:extensions": "yarn --cwd ./packages/electron-chrome-extensions test",
+    "postinstall": "npm --prefix packages/shell install",
     "prepare": "husky",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css}\"",
     "generate-noncompliant": "cat noncompliant.txt | awk '{print tolower($0)}' | xargs -I {} node ./scripts/generate-hash.js {}"
