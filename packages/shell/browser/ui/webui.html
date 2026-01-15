@@ -219,6 +219,22 @@
       .toolbar .url-bar::placeholder {
         color: rgba(236, 236, 236, 0.6);
       }
+
+      .toolbar .logout-button {
+        margin-left: auto;
+        padding: 0 0.75rem;
+        height: 1.5rem;
+        border-radius: 999px;
+        border: 1px solid #ff4d4f;
+        background: transparent;
+        color: #ffffff;
+        font-size: 0.8rem;
+        cursor: pointer;
+      }
+
+      .toolbar .logout-button:hover {
+        background: #ff4d4f;
+      }
     </style>
   </head>
   <body>
@@ -254,6 +270,7 @@
         </div>
         <input id="urlbar" class="url-bar" type="text" spellcheck="false" placeholder="Enter URL" />
         <browser-action-list id="actions" alignment="bottom left"></browser-action-list>
+        <button id="logout" class="logout-button">Logout</button>
       </div>
     </div>
   </div>

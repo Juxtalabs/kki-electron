@@ -17,6 +17,8 @@ class WebUI {
       urlBar: $('#urlbar'),
       browserActions: $('#actions'),
 
+      logoutButton: $('#logout'),
+
       minimizeButton: $('#minimize'),
       maximizeButton: $('#maximize'),
       closeButton: $('#close'),
@@ -49,6 +51,8 @@ class WebUI {
       }),
     )
     this.$.closeButton.addEventListener('click', () => chrome.windows.remove())
+
+    this.$.logoutButton.addEventListener('click', () => chrome.windows.remove())
 
     const platformClass = `platform-${navigator.userAgentData.platform.toLowerCase()}`
     document.body.classList.add(platformClass)
