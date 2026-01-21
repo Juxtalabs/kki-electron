@@ -10,21 +10,24 @@ class WebUI {
     this.$ = {
       tabList: $('#tabstrip .tab-list'),
       tabTemplate: $('#tabtemplate'),
-      createTabButton: $('#createtab'),
       goBackButton: $('#goback'),
       goForwardButton: $('#goforward'),
       reloadButton: $('#reload'),
       urlBar: $('#urlbar'),
       browserActions: $('#actions'),
 
-      logoutButton: $('#logout'),
+      exitButton: $('#exit'),
 
       minimizeButton: $('#minimize'),
       maximizeButton: $('#maximize'),
       closeButton: $('#close'),
     }
 
-    this.$.createTabButton.addEventListener('click', () => chrome.tabs.create())
+    // Disable native context menu in the WebUI (tab/toolbar area)
+    window.addEventListener('contextmenu', (event) => {
+      event.preventDefault()
+    })
+
     this.$.goBackButton.addEventListener('click', () => chrome.tabs.goBack())
     this.$.goForwardButton.addEventListener('click', () => chrome.tabs.goForward())
     this.$.reloadButton.addEventListener('click', () => chrome.tabs.reload())
@@ -52,7 +55,7 @@ class WebUI {
     )
     this.$.closeButton.addEventListener('click', () => chrome.windows.remove())
 
-    this.$.logoutButton.addEventListener('click', () => chrome.windows.remove())
+    this.$.exitButton.addEventListener('click', () => chrome.windows.remove())
 
     const platformClass = `platform-${navigator.userAgentData.platform.toLowerCase()}`
     document.body.classList.add(platformClass)
@@ -148,9 +151,6 @@ class WebUI {
 
     tabElem.addEventListener('click', () => {
       chrome.tabs.update(tab.id, { active: true })
-    })
-    tabElem.querySelector('.close').addEventListener('click', () => {
-      chrome.tabs.remove(tab.id)
     })
     const faviconElem = tabElem.querySelector('.favicon')
     faviconElem?.addEventListener('load', () => {

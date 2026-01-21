@@ -220,7 +220,7 @@
         color: rgba(236, 236, 236, 0.6);
       }
 
-      .toolbar .logout-button {
+      .toolbar .exit-button {
         margin-left: auto;
         padding: 0 0.75rem;
         height: 1.5rem;
@@ -232,7 +232,7 @@
         cursor: pointer;
       }
 
-      .toolbar .logout-button:hover {
+      .toolbar .exit-button:hover {
         background: #ff4d4f;
       }
     </style>
@@ -248,12 +248,10 @@
                 <span class="title"></span>
                 <div class="controls">
                   <button class="control audio" disabled>🔊</button>
-                  <button class="control close">✕</button>
                 </div>
               </li>
             </template>
           </ul>
-          <button id="createtab">+</button>
           <div class="app-drag"></div>
           <div class="window-controls">
             <button id="minimize" class="control">🗕</button>
@@ -270,7 +268,7 @@
         </div>
         <input id="urlbar" class="url-bar" type="text" spellcheck="false" placeholder="Enter URL" />
         <browser-action-list id="actions" alignment="bottom left"></browser-action-list>
-        <button id="logout" class="logout-button">Logout</button>
+        <button id="exit" class="exit-button">Exit</button>
       </div>
     </div>
   </div>

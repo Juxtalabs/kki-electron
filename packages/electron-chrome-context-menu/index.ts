@@ -18,7 +18,6 @@ const LABELS = {
   reload: 'Reload',
   inspect: 'Inspect',
   addToDictionary: 'Add to dictionary',
-  exitFullScreen: 'Exit full screen',
   emoji: 'Emoji',
 }
 
@@ -196,20 +195,6 @@ export const buildChromeContextMenu = (opts: ChromeContextMenuOptions): Menu => 
   }
 
   if (menu.items.length === 0) {
-    const browserWindow = getBrowserWindowFromWebContents(webContents)
-
-    // TODO: Electron needs a way to detect whether we're in HTML5 full screen.
-    // Also need to properly exit full screen in Blink rather than just exiting
-    // the Electron BrowserWindow.
-    if (browserWindow?.fullScreen) {
-      append({
-        label: labels.exitFullScreen,
-        click: () => browserWindow.setFullScreen(false),
-      })
-
-      appendSeparator()
-    }
-
     append({
       label: labels.back,
       enabled: webContents.navigationHistory.canGoBack(),
