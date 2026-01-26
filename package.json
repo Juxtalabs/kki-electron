@@ -12,6 +12,8 @@
     "start": "npm run build && cd packages/shell && npm start",
     "start:dev-direct": "npm --prefix packages/shell run start:dev-direct",
     "package": "cd packages/shell && npm run package",
+    "package:mac": "npm run build && electron-builder --mac --arm64",
+    "check:mac-icon": "node scripts/create-mac-icon.js",
     "lint": "eslint . --ext .ts,.tsx --max-warnings 0",
     "user:build": "yarn run build:context-menu && yarn run build:chrome-web-store && yarn run build:extensions && yarn run build:shell",
     "build:chrome-web-store": "yarn --cwd ./packages/electron-chrome-web-store build",
@@ -61,6 +63,48 @@
       ],
       "icon": "assets/kki-icon.ico",
       "artifactName": "Ukom-${version}-win.${ext}"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "arm64"
+          ]
+        }
+      ],
+      "icon": "assets/kki-icon.icns",
+      "category": "public.app-category.education",
+      "artifactName": "Ukom-${version}-mac-arm64.${ext}",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist"
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ],
+      "title": "Ukom ${version}",
+      "window": {
+        "width": 540,
+        "height": 380
+      }
     },
     "files": [
       "dist/**/*",
