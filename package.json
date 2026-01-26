@@ -7,7 +7,7 @@
   "license": "GPL-3.0",
   "scripts": {
     "build": "tsc -p tsconfig.json && npm run copy-html",
-    "copy-html": "powershell -Command \"Copy-Item -Path 'src/renderer/*.html' -Destination 'dist/renderer/' -Force\"",
+    "copy-html": "node scripts/copy-html.js",
     "clean": "rimraf dist",
     "start": "npm run build && cd packages/shell && npm start",
     "start:dev-direct": "npm --prefix packages/shell run start:dev-direct",
