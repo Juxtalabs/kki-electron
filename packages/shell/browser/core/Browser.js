@@ -1,4 +1,4 @@
-const { app, session, BrowserWindow } = require('electron')
+const { app, session, BrowserWindow, globalShortcut } = require('electron')
 const { setupMenu } = require('../menu')
 const { PATHS } = require('../config/paths')
 const { getParentWindowOfTab } = require('../utils/helpers')
@@ -20,6 +20,7 @@ try {
 
 class Browser {
   windows = []
+  isQuitting = false
 
   urls = {
     newtab: 'https://ukom.konsilkesehatanindonesia.id',
@@ -30,7 +31,16 @@ class Browser {
       this.resolveReady = resolve
     })
 
-    app.whenReady().then(this.init.bind(this))
+    app.whenReady().then(() => {
+      try {
+        const accelerator = process.platform === 'darwin' ? 'Command+Shift+Q' : 'Ctrl+Shift+Q'
+        globalShortcut.register(accelerator, () => this.destroy())
+      } catch (error) {
+        console.warn('Browser: Failed to register quit shortcut:', error.message)
+      }
+
+      this.init()
+    })
 
     app.on('window-all-closed', () => {
       if (process.platform !== 'darwin') {
@@ -49,6 +59,8 @@ class Browser {
   }
 
   destroy() {
+    if (this.isQuitting) return
+    this.isQuitting = true
     console.log('Browser: Cleaning up before exit...')
     
     // Stop native keyboard helper
@@ -65,6 +77,19 @@ class Browser {
     }
     
     console.log('Browser: Cleanup completed, quitting app...')
+
+    // Force-destroy windows because we intentionally prevent user-driven closes.
+    // app.quit() triggers BrowserWindow close events; if those are prevented the app won't quit.
+    this.windows.forEach((win) => {
+      try {
+        if (win.window && !win.window.isDestroyed()) {
+          win.window.destroy()
+        }
+      } catch (error) {
+        console.warn('Browser: Failed to destroy window during quit:', error.message)
+      }
+    })
+
     app.quit()
   }
 
@@ -238,6 +263,7 @@ class Browser {
 
     // Prevent closing window
     win.window.on('close', (event) => {
+      if (this.isQuitting) return
       event.preventDefault()
     })
 

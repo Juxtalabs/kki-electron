@@ -13,7 +13,7 @@ const setupMenu = (browser) => {
       submenu: [
         {
           label: 'Exit Kiosk Mode',
-          accelerator: 'CmdOrCtrl+Shift+Q',
+          accelerator: isMac ? 'Command+Shift+Q' : 'Ctrl+Shift+Q',
           click: () => {
             // Force destroy all windows and quit
             browser.windows.forEach(win => {
