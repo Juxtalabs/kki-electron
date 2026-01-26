@@ -24,11 +24,8 @@ jobs:
           npm install
           cd packages/shell && npm install
       
-      - name: Build application
-        run: npm run build
-      
-      - name: Build Mac installer
-        run: npx electron-builder --mac --arm64
+      - name: Build Mac installer with electron-forge
+        run: cd packages/shell && npm run make
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
@@ -37,6 +34,6 @@ jobs:
         with:
           name: mac-installer
           path: |
-            release/*.dmg
-            release/*.zip
+            packages/shell/out/make/**/*.dmg
+            packages/shell/out/make/**/*.zip
           retention-days: 30

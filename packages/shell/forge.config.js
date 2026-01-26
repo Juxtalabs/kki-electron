@@ -1,8 +1,13 @@
 module.exports = {
   packagerConfig: {
-    name: 'Shell',
+    name: 'Ukom',
     asar: true,
     extraResource: ['browser/ui'],
+    icon: '../../assets/kki-icon',
+    appBundleId: 'io.kki.app',
+    appCategoryType: 'public.app-category.education',
+    osxSign: {},
+    osxNotarize: undefined,
   },
   rebuildConfig: {},
   makers: [
