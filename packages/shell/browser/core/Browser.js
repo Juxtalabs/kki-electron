@@ -30,7 +30,7 @@ class Browser {
   isQuitting = false
 
   urls = {
-    newtab: 'https://ukom.konsilkesehatanindonesia.id',
+    newtab: 'https://portal-ujian-ukom.kki.go.id/login-ujian',
   }
 
   constructor() {
@@ -341,7 +341,7 @@ class Browser {
 
   createInitialWindow() {
     // Create browser window with external welcome page as initial URL
-    const welcomeUrl = 'https://ukom.konsilkesehatanindonesia.id'
+    const welcomeUrl = 'https://portal-ujian-ukom.kki.go.id/login-ujian'
     this.createWindow({ initialUrl: welcomeUrl })
 
     // Test domain whitelist system in debug mode
