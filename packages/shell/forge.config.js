@@ -2,7 +2,7 @@ module.exports = {
   packagerConfig: {
     name: 'Ukom',
     asar: true,
-    extraResource: ['browser/ui'],
+    extraResource: ['browser/ui', 'native/keyhook-helper.exe'],
     icon: '../../assets/kki-icon',
     appBundleId: 'io.kki.app',
     appCategoryType: 'public.app-category.education',

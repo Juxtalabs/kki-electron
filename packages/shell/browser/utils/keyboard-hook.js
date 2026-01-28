@@ -25,17 +25,27 @@ function loadNativeAddon() {
   const appPath = app ? app.getAppPath() : process.cwd()
   
   const possiblePaths = [
+    // Build output from binding.gyp (most common after electron-rebuild)
+    path.join(appPath, 'build/Release/keyhook.node'),
     // Webpack output path (development)
     path.join(appPath, '.webpack/main/native/build/Release/keyhook.node'),
+    path.join(appPath, '.webpack/main/build/Release/keyhook.node'),
     // Source path
     path.join(appPath, 'native/build/Release/keyhook.node'),
     // Relative to this file
+    path.join(__dirname, '../../build/Release/keyhook.node'),
     path.join(__dirname, '../../native/build/Release/keyhook.node'),
     // Process cwd
+    path.join(process.cwd(), 'build/Release/keyhook.node'),
     path.join(process.cwd(), 'native/build/Release/keyhook.node'),
     path.join(process.cwd(), '.webpack/main/native/build/Release/keyhook.node'),
+    path.join(process.cwd(), '.webpack/main/build/Release/keyhook.node'),
     path.join(process.cwd(), 'browser/native/build/Release/keyhook.node'),
+    // Packaged app paths
+    path.join(process.resourcesPath || '', 'app.asar.unpacked/build/Release/keyhook.node'),
+    path.join(process.resourcesPath || '', '../build/Release/keyhook.node'),
     // Absolute resolve
+    path.resolve(__dirname, '../../build/Release/keyhook.node'),
     path.resolve(__dirname, '../../native/build/Release/keyhook.node'),
     path.resolve(process.resourcesPath || '', '../native/build/Release/keyhook.node'),
   ]

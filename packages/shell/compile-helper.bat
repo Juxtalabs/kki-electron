@@ -1,12 +1,23 @@
 @echo off
 echo Compiling native keyboard hook helper...
 
-:: Compile dengan Visual Studio Build Tools
-cl.exe /EHsc native\keyhook-helper.cpp /Fe:keyhook-helper.exe user32.lib kernel32.lib
+:: Setup Visual Studio 2022 Build Tools environment
+call "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat"
 
-:: Atau compile dengan MinGW jika tersedia
-:: g++ -o keyhook-helper.exe native/keyhook-helper.cpp -luser32 -lkernel32
+:: Compile with optimizations
+cl.exe /EHsc /O2 native\keyhook-helper.cpp /Fe:native\keyhook-helper.exe user32.lib
 
-echo Native helper compiled successfully!
-echo Run keyhook-helper.exe to test Windows key blocking.
+if %ERRORLEVEL% EQU 0 (
+    echo.
+    echo ========================================
+    echo Native helper compiled successfully!
+    echo Output: native\keyhook-helper.exe
+    echo ========================================
+) else (
+    echo.
+    echo ========================================
+    echo Compilation failed!
+    echo ========================================
+)
+
 pause

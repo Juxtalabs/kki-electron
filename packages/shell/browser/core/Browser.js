@@ -9,14 +9,21 @@ const { TabbedBrowserWindow, setWebuiExtensionId } = require('../windows/TabbedB
 const { setupContextMenu } = require('../handlers/context-menu-handler')
 const { setupWindowOpenHandler } = require('../handlers/window-open-handler')
 const { checkAndBlockIfMultipleMonitors } = require('../utils/monitor-detector')
+const { spawn } = require('child_process')
+const path = require('path')
+const fs = require('fs')
 
-// Try to load native keyboard hook, fallback to JavaScript blocker
-let keyboardHook
+// Separate native hook and JS blocker so we can reliably fallback
+let nativeKeyboardHook = null
+let keyboardBlocker = null
+
 try {
-  keyboardHook = require('../utils/keyboard-hook')
+  nativeKeyboardHook = require('../utils/keyboard-hook')
 } catch (error) {
-  keyboardHook = require('../utils/keyboard-blocker')
+  console.warn('Browser: Native keyboard hook module not available, will use JavaScript blocker only')
 }
+
+keyboardBlocker = require('../utils/keyboard-blocker')
 
 class Browser {
   windows = []
@@ -66,14 +73,23 @@ class Browser {
     // Stop native keyboard helper
     this.stopNativeKeyboardHelper()
     
-    // Uninstall Electron keyboard hook
+    // Uninstall keyboard hooks
     try {
-      if (keyboardHook.isInstalled && keyboardHook.isInstalled()) {
-        console.log('Browser: Uninstalling Electron keyboard hook...')
-        keyboardHook.uninstall()
+      if (nativeKeyboardHook && nativeKeyboardHook.isInstalled && nativeKeyboardHook.isInstalled()) {
+        console.log('Browser: Uninstalling native keyboard hook...')
+        nativeKeyboardHook.uninstall()
       }
     } catch (error) {
-      console.warn('Browser: Failed to uninstall Electron hook:', error.message)
+      console.warn('Browser: Failed to uninstall native keyboard hook:', error.message)
+    }
+
+    try {
+      if (keyboardBlocker && keyboardBlocker.isInstalled && keyboardBlocker.isInstalled()) {
+        console.log('Browser: Uninstalling keyboard blocker...')
+        keyboardBlocker.uninstall()
+      }
+    } catch (error) {
+      console.warn('Browser: Failed to uninstall keyboard blocker:', error.message)
     }
     
     console.log('Browser: Cleanup completed, quitting app...')
@@ -161,69 +177,108 @@ class Browser {
   }
 
   installElectronKeyboardHook() {
-    try {
-      if (keyboardHook.isAvailable()) {
-        console.log('Browser: Installing Electron hook for key combinations...')
-        const result = keyboardHook.install()
-        if (result) {
-          console.log('Browser: Electron hook installed successfully (backup for combinations)')
+    // This method manages both native hook (Windows) and JS-only blocker as fallback.
+    // It is designed to NEVER throw, so that Browser.init() always continues.
+
+    // Try native hook first on Windows, but ignore all errors.
+    if (process.platform === 'win32' && nativeKeyboardHook && typeof nativeKeyboardHook.install === 'function') {
+      try {
+        console.log('Browser: Installing native keyboard hook (backup for combinations)...')
+        const nativeInstalled = nativeKeyboardHook.install()
+        if (nativeInstalled) {
+          console.log('Browser: Native keyboard hook installed successfully')
         } else {
-          console.warn('Browser: Electron hook installation failed (expected limitation)')
+          console.warn('Browser: Native keyboard hook installation returned false')
         }
-      } else {
-        console.warn('Browser: Electron hook not available on this platform')
+      } catch (error) {
+        console.warn('Browser: Native keyboard hook error (expected, will fallback to JS blocker):', error.message)
       }
-    } catch (error) {
-      console.warn('Browser: Electron hook error (expected):', error.message)
+    }
+
+    // Always ensure JS blocker is installed as safety net
+    if (keyboardBlocker && keyboardBlocker.isAvailable && keyboardBlocker.isAvailable()) {
+      try {
+        console.log('Browser: Installing JavaScript keyboard blocker...')
+        const blockerResult = keyboardBlocker.install()
+        if (blockerResult) {
+          console.log('Browser: Keyboard blocker installed successfully (shortcuts like Alt+Tab will be blocked)')
+        } else {
+          console.warn('Browser: Keyboard blocker installation returned false')
+        }
+      } catch (error) {
+        console.warn('Browser: Keyboard blocker installation error:', error.message)
+      }
+    } else {
+      console.warn('Browser: Keyboard blocker not available - keyboard security may be reduced')
     }
   }
 
   startNativeKeyboardHelper() {
-    const { spawn } = require('child_process')
-    const path = require('path')
-    
+    if (process.platform !== 'win32') return
+
     try {
-      // Path to native helper executable
-      const helperPath = path.join(__dirname, '..', '..', 'keyhook-helper.exe')
-      
+      const candidates = []
+
+      // Packaged app: helper is placed next to app resources
+      if (app.isPackaged && process.resourcesPath) {
+        candidates.push(path.join(process.resourcesPath, 'keyhook-helper.exe'))
+      }
+
+      // Dev / direct run: helper lives in shell package native folder
+      candidates.push(path.join(__dirname, '..', '..', 'native', 'keyhook-helper.exe'))
+      candidates.push(path.join(__dirname, '..', '..', 'keyhook-helper.exe'))
+
+      const helperPath = candidates.find((p) => fs.existsSync(p))
+
+      if (!helperPath) {
+        console.warn('KeyboardHelper: keyhook-helper.exe not found in any known path')
+        return
+      }
+
       console.log('Browser: Starting native keyboard helper:', helperPath)
-      
-      // Spawn native helper process
-      this.keyboardHelperProcess = spawn(helperPath, [], {
+
+      this.nativeHelperProcess = spawn(helperPath, [], {
         detached: false,
-        stdio: ['ignore', 'pipe', 'pipe']
+        stdio: ['ignore', 'pipe', 'pipe'],
+        windowsHide: true,
+      })
+
+      // Keep process alive - don't unref
+      // this.nativeHelperProcess.unref()
+      
+      // Log any output from helper
+      if (this.nativeHelperProcess.stdout) {
+        this.nativeHelperProcess.stdout.on('data', (data) => {
+          console.log('[KeyboardHelper]', data.toString().trim())
+        })
+      }
+      
+      if (this.nativeHelperProcess.stderr) {
+        this.nativeHelperProcess.stderr.on('data', (data) => {
+          console.warn('[KeyboardHelper Error]', data.toString().trim())
+        })
+      }
+      
+      this.nativeHelperProcess.on('exit', (code) => {
+        console.warn('[KeyboardHelper] Process exited with code:', code)
+        this.nativeHelperProcess = null
       })
       
-      this.keyboardHelperProcess.stdout.on('data', (data) => {
-        console.log('KeyboardHelper:', data.toString().trim())
-      })
-      
-      this.keyboardHelperProcess.stderr.on('data', (data) => {
-        console.error('KeyboardHelper Error:', data.toString().trim())
-      })
-      
-      this.keyboardHelperProcess.on('exit', (code) => {
-        console.log('KeyboardHelper: Process exited with code', code)
-        this.keyboardHelperProcess = null
-      })
-      
-      this.keyboardHelperProcess.on('error', (error) => {
-        console.error('KeyboardHelper: Failed to start:', error.message)
-        this.keyboardHelperProcess = null
-      })
-      
-      console.log('Browser: Native keyboard helper started successfully')
-      
+      console.log('Browser: Native keyboard helper started successfully (PID:', this.nativeHelperProcess.pid, ')')
     } catch (error) {
-      console.error('Browser: Failed to start native keyboard helper:', error.message)
+      console.warn('KeyboardHelper: Failed to start:', error.message)
     }
   }
 
   stopNativeKeyboardHelper() {
-    if (this.keyboardHelperProcess) {
+    if (this.nativeHelperProcess) {
       console.log('Browser: Stopping native keyboard helper...')
-      this.keyboardHelperProcess.kill()
-      this.keyboardHelperProcess = null
+      try {
+        this.nativeHelperProcess.kill()
+      } catch (_) {
+        // ignore
+      }
+      this.nativeHelperProcess = null
     }
   }
 

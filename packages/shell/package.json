@@ -17,7 +17,7 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "rebuild-native": "electron-rebuild -f -w keyhook",
-    "postinstall": "npm run rebuild-native || echo 'Native addon build failed, continuing without keyboard hook'"
+    "postinstall": "echo 'Skipping native addon rebuild - using pre-compiled keyhook-helper.exe'"
   },
   "license": "MIT",
   "author": "Samuel Maddock <sam@samuelmaddock.com>",

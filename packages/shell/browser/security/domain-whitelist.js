@@ -5,16 +5,36 @@ const { ROOT_DIR } = require('../config/paths')
 class DomainWhitelist {
   constructor() {
     this.config = null
-    // Try multiple possible config locations
-    const possiblePaths = [
-      // Primary: browser config (source tree)
-      path.join(ROOT_DIR, 'packages/shell/browser/config/config.json'),
-      // Fallback: relative to bundled .webpack/main location
-      path.join(__dirname, '../config/config.json')
-    ]
-    
+    // Try multiple possible config locations for both dev and packaged builds
+    const possiblePaths = this.getPossibleConfigPaths()
+
     this.configPath = this.findConfigFile(possiblePaths)
     this.loadConfig()
+  }
+
+  getPossibleConfigPaths() {
+    const paths = []
+
+    // 1) Packaged app path (forge/electron builder)
+    try {
+      const { app } = require('electron')
+      if (app && typeof app.getAppPath === 'function') {
+        const appPath = app.getAppPath()
+
+        // When packaged, we explicitly copy config.json to this location
+        paths.push(path.join(appPath, 'browser/config/config.json'))
+      }
+    } catch (error) {
+      // Ignore, will fall back to other paths
+    }
+
+    // 2) Webpack/bundled relative path (dev with forge start)
+    paths.push(path.join(__dirname, '../config/config.json'))
+
+    // 3) Source tree path when running directly from monorepo root
+    paths.push(path.join(ROOT_DIR, 'packages/shell/browser/config/config.json'))
+
+    return paths
   }
 
   findConfigFile(paths) {
@@ -29,32 +49,41 @@ class DomainWhitelist {
   }
 
   loadConfig() {
-    console.log('DomainWhitelist: Loading configuration from file')
-    
+    console.log('DomainWhitelist: Loading configuration')
+
     try {
-      if (fs.existsSync(this.configPath)) {
+      // Primary: require bundled JSON (works in dev & in app.asar)
+      try {
+        // eslint-disable-next-line global-require, import/no-dynamic-require
+        this.config = require('../config/config.json')
+        console.log('DomainWhitelist: Configuration loaded via require')
+        return
+      } catch (requireError) {
+        console.warn('DomainWhitelist: Failed to load config via require:', requireError.message)
+      }
+
+      // Fallback: try reading from resolved configPath on filesystem
+      if (this.configPath && fs.existsSync(this.configPath)) {
         const configData = fs.readFileSync(this.configPath, 'utf8')
         this.config = JSON.parse(configData)
-        console.log('DomainWhitelist: Configuration loaded from file successfully')
-      } else {
-        console.warn('DomainWhitelist: Config file not found at:', this.configPath)
-        console.warn('DomainWhitelist: Falling back to default in-memory configuration')
-        this.config = {
-          security: {
-            admin_whitelisted_domains: [],
-            whitelisted_domains: [],
-          },
-        }
+        console.log('DomainWhitelist: Configuration loaded from file path', this.configPath)
+        return
+      }
+
+      console.warn('DomainWhitelist: No config file found, using default in-memory configuration')
+      this.config = {
+        security: {
+          admin_whitelisted_domains: [],
+          whitelisted_domains: [],
+        },
       }
     } catch (error) {
-      console.error('DomainWhitelist: Failed to load config from file, using default config:', error.message)
-      if (!this.config) {
-        this.config = {
-          security: {
-            admin_whitelisted_domains: [],
-            whitelisted_domains: [],
-          },
-        }
+      console.error('DomainWhitelist: Failed to load config, using default config:', error.message)
+      this.config = this.config || {
+        security: {
+          admin_whitelisted_domains: [],
+          whitelisted_domains: [],
+        },
       }
     }
   }
