@@ -9,3 +9,4 @@ noncompliant.txt
 yarn-error.log
 .DS_Store
 dist/*
+release/*

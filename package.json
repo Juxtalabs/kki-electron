@@ -13,6 +13,8 @@
     "start:dev-direct": "npm --prefix packages/shell run start:dev-direct",
     "package": "cd packages/shell && npm run package",
     "package:mac": "npm run build && electron-builder --mac --arm64",
+    "package:mac-intel": "npm run build && electron-builder --mac --x64",
+    "package:mac-universal": "npm run build && electron-builder --mac --x64 --arm64",
     "check:mac-icon": "node scripts/create-mac-icon.js",
     "lint": "eslint . --ext .ts,.tsx --max-warnings 0",
     "user:build": "yarn run build:context-menu && yarn run build:chrome-web-store && yarn run build:extensions && yarn run build:shell",
@@ -69,19 +71,21 @@
         {
           "target": "dmg",
           "arch": [
+            "x64",
             "arm64"
           ]
         },
         {
           "target": "zip",
           "arch": [
+            "x64",
             "arm64"
           ]
         }
       ],
       "icon": "assets/kki-icon.icns",
       "category": "public.app-category.education",
-      "artifactName": "Ukom-${version}-mac-arm64.${ext}",
+      "artifactName": "Ukom-${version}-mac-${arch}.${ext}",
       "hardenedRuntime": true,
       "gatekeeperAssess": false,
       "entitlements": "build/entitlements.mac.plist",
