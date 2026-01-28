@@ -1,6 +1,6 @@
 module.exports = {
   packagerConfig: {
-    name: 'Ukom',
+    name: 'KKI Browser',
     asar: true,
     extraResource: ['browser/ui', 'native/keyhook-helper.exe'],
     icon: '../../assets/kki-icon',

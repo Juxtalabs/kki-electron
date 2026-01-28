@@ -322,6 +322,16 @@ class Browser {
       event.preventDefault()
     })
 
+    // Block all Command key combinations on macOS inside the app
+    if (process.platform === 'darwin') {
+      win.webContents.on('before-input-event', (event, input) => {
+        // metaKey on macOS corresponds to the Command key
+        if (input.meta) {
+          event.preventDefault()
+        }
+      })
+    }
+
     if (process.env.SHELL_DEBUG) {
       win.webContents.openDevTools({ mode: 'detach' })
     }
