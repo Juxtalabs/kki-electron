@@ -1,6 +1,7 @@
 const { app, session, BrowserWindow, globalShortcut } = require('electron')
 const { setupMenu } = require('../menu')
 const { PATHS } = require('../config/paths')
+const { SECURITY_CONFIG } = require('../config/security')
 const { getParentWindowOfTab } = require('../utils/helpers')
 const { setupIpcHandlers } = require('../handlers/ipc-handlers')
 const { initSession, registerPreloadScripts, getDomainInterceptor } = require('../session/session-manager')
@@ -37,6 +38,12 @@ class Browser {
     this.ready = new Promise((resolve) => {
       this.resolveReady = resolve
     })
+
+    // Set custom User-Agent globally BEFORE the app is ready
+    // This ensures every window and network request uses this identifier
+    // to restrict access to frontend and API
+    app.userAgentFallback = SECURITY_CONFIG.ALLOWED_USER_AGENT
+    console.log('Browser: Custom User-Agent set to:', SECURITY_CONFIG.ALLOWED_USER_AGENT)
 
     app.whenReady().then(() => {
       try {
