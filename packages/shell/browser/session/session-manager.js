@@ -43,6 +43,14 @@ function registerPreloadScripts(browserSession) {
     })
   }
 
+  if (fs.existsSync(PATHS.WEBUI_PRELOAD)) {
+    preloadFiles.push({
+      id: 'webui-preload',
+      type: 'frame',
+      filePath: PATHS.WEBUI_PRELOAD,
+    })
+  }
+
   if (fs.existsSync(PATHS.WELCOME_PRELOAD)) {
     preloadFiles.push({
       id: 'welcome-preload',

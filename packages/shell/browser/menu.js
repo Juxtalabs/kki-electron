@@ -15,13 +15,7 @@ const setupMenu = (browser) => {
           label: 'Exit Kiosk Mode',
           accelerator: isMac ? 'Command+Shift+Q' : 'Ctrl+Shift+Q',
           click: () => {
-            // Force destroy all windows and quit
-            browser.windows.forEach(win => {
-              if (win.window && !win.window.isDestroyed()) {
-                win.window.destroy()
-              }
-            })
-            app.quit()
+            browser.promptExitPassword()
           }
         }
       ]

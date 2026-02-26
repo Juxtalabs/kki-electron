@@ -50,10 +50,9 @@ async function setupExtensions(browserInstance) {
       })
       return win.window
     },
-    removeWindow: (browserWindow) => {
-      const win = browserInstance.getWindowFromBrowserWindow(browserWindow)
-      win?.destroy()
-    },
+    // removeWindow is intentionally not implemented
+    // Exit is now handled via IPC (kiosk:prompt-exit) from webui
+    // This prevents issues with chrome.windows.remove() and service worker lifecycle
   })
 
   // Display <browser-action-list> extension icons.

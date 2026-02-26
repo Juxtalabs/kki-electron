@@ -48,7 +48,7 @@ class Browser {
     app.whenReady().then(() => {
       try {
         const accelerator = process.platform === 'darwin' ? 'Command+Shift+Q' : 'Ctrl+Shift+Q'
-        globalShortcut.register(accelerator, () => this.destroy())
+        globalShortcut.register(accelerator, () => this.promptExitPassword())
       } catch (error) {
         console.warn('Browser: Failed to register quit shortcut:', error.message)
       }
@@ -68,8 +68,434 @@ class Browser {
 
     app.on('web-contents-created', this.onWebContentsCreated.bind(this))
 
-    // Setup IPC handlers
-    setupIpcHandlers()
+    // Setup IPC handlers with browser instance
+    setupIpcHandlers(this)
+  }
+
+  async promptExitPassword() {
+    const { dialog, ipcMain } = require('electron')
+    const fs = require('fs')
+    const path = require('path')
+    
+    try {
+      // Determine config path based on whether app is packaged or in development
+      let configPath
+      if (app.isPackaged) {
+        // In production, config is in resources
+        configPath = path.join(process.resourcesPath, 'config', 'config.json')
+      } else {
+        // In development with webpack, config is copied to .webpack/main/browser/config/
+        // __dirname in webpack points to .webpack/main/
+        configPath = path.join(__dirname, 'browser', 'config', 'config.json')
+      }
+      
+      console.log('Browser: Reading config from:', configPath)
+      const configData = fs.readFileSync(configPath, 'utf8')
+      const config = JSON.parse(configData)
+      const correctPassword = config.security?.exit_password || ''
+      
+      const focusedWindow = this.getFocusedWindow()
+      if (!focusedWindow || !focusedWindow.window) {
+        console.warn('No focused window found for password prompt')
+        return
+      }
+
+      // Loop untuk retry password tanpa recursive call
+      let attempts = 0
+      const maxAttempts = 10
+      
+      while (attempts < maxAttempts) {
+        const password = await this.promptPasswordInput(focusedWindow)
+        
+        if (password === null) {
+          // User cancelled
+          return
+        }
+        
+        if (password === correctPassword) {
+          // Password correct, exit app
+          this.destroy()
+          return
+        } else {
+          // Password wrong, show error and retry
+          attempts++
+          await this.showPasswordError(focusedWindow)
+          // Loop will continue to prompt again
+        }
+      }
+      
+      console.warn('Max password attempts reached')
+    } catch (error) {
+      console.error('Error prompting exit password:', error)
+    }
+  }
+
+  async showPasswordError(parentWindow) {
+    return new Promise((resolve) => {
+      const focusedTab = parentWindow.getFocusedTab()
+      if (!focusedTab || !focusedTab.webContents) {
+        resolve()
+        return
+      }
+      const webContents = focusedTab.webContents
+      
+      if (!webContents || webContents.isDestroyed()) {
+        resolve()
+        return
+      }
+      
+      const script = `
+        (function() {
+          const existing = document.getElementById('exit-password-overlay');
+          if (existing) existing.remove();
+          
+          const overlayDiv = document.createElement('div');
+          overlayDiv.id = 'exit-password-overlay';
+          overlayDiv.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:999999;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif';
+          
+          const dialog = document.createElement('div');
+          dialog.style.cssText = 'background:white;padding:30px;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,0.3);width:420px;max-width:90%';
+          
+          dialog.innerHTML = \`
+            <div style="display:flex;align-items:center;margin-bottom:20px">
+              <div style="width:48px;height:48px;border-radius:50%;background:#fee;display:flex;align-items:center;justify-content:center;margin-right:16px">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c33" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+              </div>
+              <div>
+                <h3 style="margin:0 0 4px 0;color:#333;font-size:18px;font-weight:600">Password Salah</h3>
+                <p style="margin:0;color:#666;font-size:14px">Password yang Anda masukkan tidak benar.</p>
+              </div>
+            </div>
+            <button id="error-ok-btn" style="width:100%;padding:12px 24px;border:none;border-radius:6px;cursor:pointer;font-size:15px;font-weight:500;background:#007bff;color:white">OK</button>
+          \`;
+          
+          overlayDiv.appendChild(dialog);
+          document.body.appendChild(overlayDiv);
+          
+          const okBtn = document.getElementById('error-ok-btn');
+          okBtn.onclick = () => {
+            overlayDiv.remove();
+            window.__errorDismissed = true;
+          };
+        })();
+      `
+      
+      webContents.executeJavaScript(script).then(() => {
+        let pollCount = 0
+        const maxPolls = 600 // 1 minute
+        const checkDismiss = setInterval(async () => {
+          pollCount++
+          
+          // Check if webContents is still valid
+          if (!webContents || webContents.isDestroyed()) {
+            clearInterval(checkDismiss)
+            resolve()
+            return
+          }
+          
+          // Timeout
+          if (pollCount >= maxPolls) {
+            clearInterval(checkDismiss)
+            try {
+              await webContents.executeJavaScript(`
+                const overlay = document.getElementById('exit-password-overlay');
+                if (overlay) overlay.remove();
+                delete window.__errorDismissed;
+              `)
+            } catch (e) {}
+            resolve()
+            return
+          }
+          
+          try {
+            const dismissed = await webContents.executeJavaScript('window.__errorDismissed')
+            if (dismissed) {
+              clearInterval(checkDismiss)
+              try {
+                await webContents.executeJavaScript('delete window.__errorDismissed')
+              } catch (e) {}
+              resolve()
+            }
+          } catch (error) {
+            clearInterval(checkDismiss)
+            resolve()
+          }
+        }, 100)
+      }).catch(() => resolve())
+    })
+  }
+
+  async promptPasswordInput(parentWindow) {
+    const { ipcMain } = require('electron')
+    
+    return new Promise((resolve) => {
+      // Get the active tab's webContents, not the window's webContents
+      const focusedTab = parentWindow.getFocusedTab()
+      if (!focusedTab || !focusedTab.webContents) {
+        console.error('No focused tab found for password overlay')
+        resolve(null)
+        return
+      }
+      const webContents = focusedTab.webContents
+      
+      // Check if webContents is valid and not destroyed
+      if (!webContents || webContents.isDestroyed()) {
+        console.error('WebContents is destroyed or invalid')
+        resolve(null)
+        return
+      }
+      
+      // Inject password overlay directly into the main window
+      const overlayHTML = `
+        <div id="exit-password-overlay" style="
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.5);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 999999;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+        ">
+          <div style="
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            width: 420px;
+            max-width: 90%;
+          ">
+            <h3 style="
+              margin: 0 0 10px 0;
+              color: #333;
+              font-size: 20px;
+              font-weight: 600;
+            ">Exit Application</h3>
+            <p style="
+              margin: 0 0 24px 0;
+              color: #666;
+              font-size: 14px;
+              line-height: 1.5;
+            ">Masukkan password untuk keluar dari aplikasi:</p>
+            <div style="position: relative; margin-bottom: 24px;">
+              <input 
+                type="password" 
+                id="exit-password-input" 
+                placeholder="Password"
+                autocomplete="off"
+                style="
+                  width: 100%;
+                  padding: 12px 45px 12px 12px;
+                  border: 2px solid #ddd;
+                  border-radius: 6px;
+                  font-size: 15px;
+                  transition: border-color 0.2s;
+                  box-sizing: border-box;
+                  outline: none;
+                "
+                onfocus="this.style.borderColor='#007bff'"
+                onblur="this.style.borderColor='#ddd'"
+              >
+              <button 
+                type="button"
+                id="toggle-password-btn"
+                style="
+                  position: absolute;
+                  right: 8px;
+                  top: 50%;
+                  transform: translateY(-50%);
+                  background: none;
+                  border: none;
+                  cursor: pointer;
+                  padding: 8px;
+                  color: #666;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  width: 32px;
+                  height: 32px;
+                  border-radius: 4px;
+                  transition: background-color 0.2s;
+                "
+                onmouseover="this.style.backgroundColor='#f0f0f0'"
+                onmouseout="this.style.backgroundColor='transparent'"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+            <div style="display: flex; gap: 12px;">
+              <button 
+                id="cancel-password-btn"
+                style="
+                  flex: 1;
+                  padding: 12px 24px;
+                  border: none;
+                  border-radius: 6px;
+                  cursor: pointer;
+                  font-size: 15px;
+                  font-weight: 500;
+                  background: #6c757d;
+                  color: white;
+                  transition: background-color 0.2s;
+                "
+                onmouseover="this.style.backgroundColor='#5a6268'"
+                onmouseout="this.style.backgroundColor='#6c757d'"
+              >Batal</button>
+              <button 
+                id="submit-password-btn"
+                style="
+                  flex: 1;
+                  padding: 12px 24px;
+                  border: none;
+                  border-radius: 6px;
+                  cursor: pointer;
+                  font-size: 15px;
+                  font-weight: 500;
+                  background: #007bff;
+                  color: white;
+                  transition: background-color 0.2s;
+                "
+                onmouseover="this.style.backgroundColor='#0056b3'"
+                onmouseout="this.style.backgroundColor='#007bff'"
+              >OK</button>
+            </div>
+          </div>
+        </div>
+      `
+
+      const script = `
+        (function() {
+          // Remove any existing overlay
+          const existing = document.getElementById('exit-password-overlay');
+          if (existing) existing.remove();
+          
+          // Create overlay container
+          const overlayDiv = document.createElement('div');
+          overlayDiv.id = 'exit-password-overlay';
+          overlayDiv.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:999999;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif';
+          
+          // Create dialog
+          const dialog = document.createElement('div');
+          dialog.style.cssText = 'background:white;padding:30px;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,0.3);width:420px;max-width:90%';
+          
+          dialog.innerHTML = \`
+            <h3 style="margin:0 0 10px 0;color:#333;font-size:20px;font-weight:600">Exit Application</h3>
+            <p style="margin:0 0 24px 0;color:#666;font-size:14px;line-height:1.5">Masukkan password untuk keluar dari aplikasi:</p>
+            <div id="error-message" style="display:none;margin:0 0 16px 0;padding:12px;background:#fee;border:1px solid #fcc;border-radius:6px;color:#c33;font-size:14px"></div>
+            <div style="position:relative;margin-bottom:24px">
+              <input type="password" id="exit-password-input" placeholder="Password" autocomplete="off" style="width:100%;padding:12px 45px 12px 12px;border:2px solid #ddd;border-radius:6px;font-size:15px;box-sizing:border-box;outline:none">
+              <button type="button" id="toggle-password-btn" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;padding:8px;color:#666;width:32px;height:32px;border-radius:4px">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              </button>
+            </div>
+            <div style="display:flex;gap:12px">
+              <button id="cancel-password-btn" style="flex:1;padding:12px 24px;border:none;border-radius:6px;cursor:pointer;font-size:15px;font-weight:500;background:#6c757d;color:white">Batal</button>
+              <button id="submit-password-btn" style="flex:1;padding:12px 24px;border:none;border-radius:6px;cursor:pointer;font-size:15px;font-weight:500;background:#007bff;color:white">OK</button>
+            </div>
+          \`;
+          
+          overlayDiv.appendChild(dialog);
+          document.body.appendChild(overlayDiv);
+          
+          const input = document.getElementById('exit-password-input');
+          const toggleBtn = document.getElementById('toggle-password-btn');
+          const cancelBtn = document.getElementById('cancel-password-btn');
+          const submitBtn = document.getElementById('submit-password-btn');
+          
+          let isVisible = false;
+          const eyeOpenSvg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
+          const eyeClosedSvg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>';
+          
+          setTimeout(() => input.focus(), 100);
+          
+          toggleBtn.onclick = () => {
+            isVisible = !isVisible;
+            input.type = isVisible ? 'text' : 'password';
+            toggleBtn.innerHTML = isVisible ? eyeOpenSvg : eyeClosedSvg;
+          };
+          
+          input.onkeypress = (e) => {
+            if (e.key === 'Enter') {
+              window.__exitPasswordResult = input.value;
+              overlayDiv.remove();
+            }
+          };
+          
+          cancelBtn.onclick = () => {
+            window.__exitPasswordResult = null;
+            overlayDiv.remove();
+          };
+          
+          submitBtn.onclick = () => {
+            window.__exitPasswordResult = input.value;
+            overlayDiv.remove();
+          };
+          
+          overlayDiv.onclick = (e) => {
+            if (e.target === overlayDiv) {
+              e.stopPropagation();
+            }
+          };
+        })();
+      `
+
+      webContents.executeJavaScript(script).then(() => {
+        // Poll for result with webContents validity check
+        let pollCount = 0
+        const maxPolls = 3000 // 5 minutes (100ms * 3000)
+        const checkResult = setInterval(async () => {
+          pollCount++
+          
+          // Check if webContents is still valid
+          if (!webContents || webContents.isDestroyed()) {
+            clearInterval(checkResult)
+            resolve(null)
+            return
+          }
+          
+          // Timeout after max polls
+          if (pollCount >= maxPolls) {
+            clearInterval(checkResult)
+            try {
+              await webContents.executeJavaScript(`
+                const overlay = document.getElementById('exit-password-overlay');
+                if (overlay) overlay.remove();
+                delete window.__exitPasswordResult;
+              `)
+            } catch (e) {}
+            resolve(null)
+            return
+          }
+          
+          try {
+            const result = await webContents.executeJavaScript('window.__exitPasswordResult')
+            if (result !== undefined) {
+              clearInterval(checkResult)
+              try {
+                await webContents.executeJavaScript('delete window.__exitPasswordResult')
+              } catch (e) {}
+              resolve(result)
+            }
+          } catch (error) {
+            clearInterval(checkResult)
+            resolve(null)
+          }
+        }, 100)
+      }).catch((error) => {
+        console.error('Failed to inject password overlay:', error)
+        resolve(null)
+      })
+    })
   }
 
   destroy() {

@@ -1,13 +1,12 @@
 {
   "security": {
     "admin_whitelisted_domains": [
-      "*.konsilkesehatanindonesia.id",
-      "kki.go.id",
-      "*.kki.go.id"
+      "portal-ujian-ukom.kki.go.id*"
     ],
     "whitelisted_domains": [
-      "example.com",
-      "*.electronjs.org"
-    ]
+      "*s3.ap-southeast-3.amazonaws.com*",
+      "*cloudflare*"
+    ],
+    "exit_password": "87RG9UXR"
   }
 }

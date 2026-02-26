@@ -55,7 +55,7 @@ class WebUI {
     )
     this.$.closeButton.addEventListener('click', () => chrome.windows.remove())
 
-    this.$.exitButton.addEventListener('click', () => chrome.windows.remove())
+    this.$.exitButton.addEventListener('click', () => this.handleExitClick())
 
     const platformClass = `platform-${navigator.userAgentData.platform.toLowerCase()}`
     document.body.classList.add(platformClass)
@@ -216,6 +216,17 @@ class WebUI {
     }
 
     chrome.tabs.update(this.activeTabId, { url })
+  }
+
+  handleExitClick() {
+    // Trigger exit password prompt via IPC
+    // This does NOT kill the app, only shows the password overlay
+    // App will only exit if password is correct
+    if (window.kioskAPI && window.kioskAPI.promptExit) {
+      window.kioskAPI.promptExit()
+    } else {
+      console.error('kioskAPI not available - cannot trigger exit prompt')
+    }
   }
 }
 

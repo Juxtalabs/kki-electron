@@ -74,13 +74,19 @@ export class ExtensionStore extends EventEmitter {
   async removeWindow(window: Electron.BaseWindow) {
     if (!this.windows.has(window)) return
 
-    this.windows.delete(window)
-
+    // Jika ada implementasi custom removeWindow (seperti di shell kiosk),
+    // biarkan implementasi tersebut yang memutuskan apakah window akan
+    // dihancurkan atau tidak. Jangan hapus dari store di sini supaya
+    // pemanggilan chrome.windows.remove() berikutnya tetap bekerja
+    // selama window masih ada.
     if (typeof this.impl.removeWindow === 'function') {
       await this.impl.removeWindow(window)
-    } else {
-      window.destroy()
+      return
     }
+
+    // Default behaviour: hapus dari store lalu destroy window.
+    this.windows.delete(window)
+    window.destroy()
   }
 
   getTabById(tabId: number) {
