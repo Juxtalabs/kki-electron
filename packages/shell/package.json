@@ -16,6 +16,9 @@
     "start:trace": "electron-forge start -- --trace-startup=\"*\" --trace-startup-file=\"$HOME/Desktop/trace.json\"",
     "package": "electron-forge package",
     "make": "electron-forge make",
+    "make:x64": "electron-forge make --arch=x64",
+    "make:arm64": "electron-forge make --arch=arm64",
+    "make:universal": "npm run make:x64 && npm run make:arm64",
     "rebuild-native": "electron-rebuild -f -w keyhook",
     "postinstall": "echo 'Skipping native addon rebuild - using pre-compiled keyhook-helper.exe'"
   },

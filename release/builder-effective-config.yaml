@@ -3,12 +3,12 @@ directories:
   buildResources: assets
   app: .
 appId: io.kki.app
-productName: Ukom
+productName: KKI Browser
 win:
   target:
     - nsis
   icon: assets/kki-icon.ico
-  artifactName: Ukom-${version}-win.${ext}
+  artifactName: KKI-Browser-${version}-win.${ext}
 mac:
   target:
     - target: dmg
@@ -21,7 +21,7 @@ mac:
         - arm64
   icon: assets/kki-icon.icns
   category: public.app-category.education
-  artifactName: Ukom-${version}-mac-${arch}.${ext}
+  artifactName: KKI-Browser-${version}-mac-${arch}.${ext}
   hardenedRuntime: true
   gatekeeperAssess: false
   entitlements: build/entitlements.mac.plist
@@ -34,7 +34,7 @@ dmg:
       'y': 220
       type: link
       path: /Applications
-  title: Ukom ${version}
+  title: KKI Browser ${version}
   window:
     width: 540
     height: 380

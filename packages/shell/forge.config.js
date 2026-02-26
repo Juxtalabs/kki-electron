@@ -8,6 +8,7 @@ module.exports = {
     appCategoryType: 'public.app-category.education',
     osxSign: {},
     osxNotarize: undefined,
+    arch: ['x64', 'arm64'],
   },
   rebuildConfig: {},
   makers: [
