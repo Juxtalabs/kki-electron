@@ -734,6 +734,7 @@ class Browser {
       ...options,
       urls: this.urls,
       extensions: this.extensions,
+      browserInstance: this,
       window: {
         frame: false,
         kiosk: true,
