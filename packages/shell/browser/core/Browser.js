@@ -10,6 +10,7 @@ const { TabbedBrowserWindow, setWebuiExtensionId } = require('../windows/TabbedB
 const { setupContextMenu } = require('../handlers/context-menu-handler')
 const { setupWindowOpenHandler } = require('../handlers/window-open-handler')
 const { checkAndBlockIfMultipleMonitors } = require('../utils/monitor-detector')
+const { disableAllSystemShortcuts, enableAllSystemShortcuts } = require('../utils/disable-alttab')
 const { spawn } = require('child_process')
 const path = require('path')
 const fs = require('fs')
@@ -74,25 +75,10 @@ class Browser {
 
   async promptExitPassword() {
     const { dialog, ipcMain } = require('electron')
-    const fs = require('fs')
-    const path = require('path')
     
     try {
-      // Determine config path based on whether app is packaged or in development
-      let configPath
-      if (app.isPackaged) {
-        // In production, config is in resources
-        configPath = path.join(process.resourcesPath, 'config', 'config.json')
-      } else {
-        // In development with webpack, config is copied to .webpack/main/browser/config/
-        // __dirname in webpack points to .webpack/main/
-        configPath = path.join(__dirname, 'browser', 'config', 'config.json')
-      }
-      
-      console.log('Browser: Reading config from:', configPath)
-      const configData = fs.readFileSync(configPath, 'utf8')
-      const config = JSON.parse(configData)
-      const correctPassword = config.security?.exit_password || ''
+      // Use hardcoded password from security config
+      const correctPassword = SECURITY_CONFIG.EXIT_PASSWORD
       
       const focusedWindow = this.getFocusedWindow()
       if (!focusedWindow || !focusedWindow.window) {
@@ -525,6 +511,13 @@ class Browser {
       console.warn('Browser: Failed to uninstall keyboard blocker:', error.message)
     }
     
+    // Re-enable system shortcuts via Registry
+    try {
+      enableAllSystemShortcuts()
+    } catch (error) {
+      console.warn('Browser: Failed to re-enable system shortcuts:', error.message)
+    }
+    
     console.log('Browser: Cleanup completed, quitting app...')
 
     // Force-destroy windows because we intentionally prevent user-driven closes.
@@ -603,6 +596,9 @@ class Browser {
       
       // Backup: Install Electron addon (handles key combinations)
       this.installElectronKeyboardHook()
+      
+      // Additional: Disable system shortcuts via Registry (Win+L, Win+G, Ctrl+Alt+Del Task Manager)
+      disableAllSystemShortcuts()
     }
 
     this.createInitialWindow()

@@ -30,12 +30,6 @@ module.exports = {
           to: 'native/build/Release/keyhook.node',
           noErrorOnMissing: true,
         },
-        // Copy security config so it is available in both dev & packaged builds
-        {
-          from: path.resolve(__dirname, 'browser/config/config.json'),
-          to: 'browser/config/config.json',
-          noErrorOnMissing: false,
-        },
       ],
     }),
   ],

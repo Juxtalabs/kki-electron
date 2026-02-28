@@ -10,8 +10,9 @@ const BLOCKED_SHORTCUTS = [
   
   // Task manager and system
   'Alt+Escape',
-  'CommandOrControl+Escape',
+  'CommandOrControl+Escape', // Ctrl+Esc (Start Menu on Windows)
   'CommandOrControl+Shift+Escape', // Task Manager on Windows
+  // Note: Ctrl+Alt+Del cannot be blocked - it's a Secure Attention Sequence handled by Windows kernel
   
   // Close window/application
   'Alt+F4',
@@ -24,7 +25,8 @@ const BLOCKED_SHORTCUTS = [
   
   // Windows key combinations (Windows only)
   'Super+D', // Show desktop
-  'Super+L', // Lock screen
+  'Super+L', // Lock screen (Win+L)
+  'Super+G', // Game Bar (Win+G)
   'Super+Tab', // Task view
   'Super+E', // File Explorer
   'Super+R', // Run dialog

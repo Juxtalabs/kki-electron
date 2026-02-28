@@ -2,7 +2,7 @@ module.exports = {
   packagerConfig: {
     name: 'KKI Browser',
     asar: true,
-    extraResource: ['browser/ui', 'browser/config', 'native/keyhook-helper.exe'],
+    extraResource: ['browser/ui', 'native/keyhook-helper.exe'],
     icon: '../../assets/kki-icon',
     appBundleId: 'io.kki.app',
     appCategoryType: 'public.app-category.education',

@@ -1,7 +1,6 @@
 const { ipcMain, app } = require('electron')
 const os = require('os')
-const fs = require('fs')
-const path = require('path')
+const { SECURITY_CONFIG } = require('../config/security')
 
 let browserInstance = null
 
@@ -28,11 +27,7 @@ function setupIpcHandlers(browser) {
   // IPC handler for exit password verification
   ipcMain.handle('sejati:verifyExitPassword', async (event, password) => {
     try {
-      const configPath = path.join(__dirname, '..', 'config', 'config.json')
-      const configData = fs.readFileSync(configPath, 'utf8')
-      const config = JSON.parse(configData)
-      const correctPassword = config.security?.exit_password || ''
-      
+      const correctPassword = SECURITY_CONFIG.EXIT_PASSWORD
       return password === correctPassword
     } catch (error) {
       console.error('Error verifying exit password:', error)
