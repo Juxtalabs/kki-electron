@@ -11,7 +11,7 @@ const { setupContextMenu } = require('../handlers/context-menu-handler')
 const { setupWindowOpenHandler } = require('../handlers/window-open-handler')
 const { checkAndBlockIfMultipleMonitors } = require('../utils/monitor-detector')
 const { disableAllSystemShortcuts, enableAllSystemShortcuts } = require('../utils/disable-alttab')
-const { spawn } = require('child_process')
+const { spawn, exec } = require('child_process')
 const path = require('path')
 const fs = require('fs')
 
@@ -30,6 +30,7 @@ keyboardBlocker = require('../utils/keyboard-blocker')
 class Browser {
   windows = []
   isQuitting = false
+  processKillerInterval = null
 
   urls = {
     newtab: 'https://portal-ujian-ukom.kki.go.id/login-ujian',
@@ -71,6 +72,65 @@ class Browser {
 
     // Setup IPC handlers with browser instance
     setupIpcHandlers(this)
+  }
+
+  checkAndKillBlockedProcesses() {
+    const blockedProcesses = SECURITY_CONFIG.BLOCKED_PROCESSES || []
+    if (!blockedProcesses.length) return
+
+    if (process.platform === 'win32') {
+      // Windows: use tasklist and taskkill
+      exec('tasklist', (err, stdout) => {
+        if (err) {
+          console.warn('Browser: Failed to get process list:', err.message)
+          return
+        }
+
+        blockedProcesses.forEach((processName) => {
+          // More flexible regex: match process name anywhere in the line
+          const escapedName = processName.replace(/\./g, '\\.')
+          const regex = new RegExp(`\\b${escapedName}\\b`, 'i')
+          
+          if (regex.test(stdout)) {
+            console.log(`Browser: Detected blocked process "${processName}", killing...`)
+            exec(`taskkill /F /IM "${processName}" /T`, (killErr, killStdout, killStderr) => {
+              if (killErr) {
+                console.warn(`Browser: Failed to kill ${processName}:`, killErr.message)
+                if (killStderr) console.warn('Browser: Kill stderr:', killStderr)
+              } else {
+                console.log(`Browser: Successfully killed ${processName}`)
+                if (killStdout) console.log('Browser: Kill output:', killStdout.trim())
+              }
+            })
+          }
+        })
+      })
+    } else if (process.platform === 'darwin') {
+      // macOS: use ps aux and killall
+      exec('ps aux', (err, stdout) => {
+        if (err) {
+          console.warn('Browser: Failed to get process list:', err.message)
+          return
+        }
+
+        blockedProcesses.forEach((processName) => {
+          // Remove .exe extension for macOS (e.g., WhatsApp.exe -> WhatsApp)
+          const macProcessName = processName.replace(/\.exe$/i, '')
+          const regex = new RegExp(`\\s${macProcessName}(\\s|$)`, 'i')
+          
+          if (regex.test(stdout)) {
+            console.log(`Browser: Detected blocked process "${macProcessName}", killing...`)
+            exec(`killall -9 "${macProcessName}"`, (killErr) => {
+              if (killErr) {
+                console.warn(`Browser: Failed to kill ${macProcessName}:`, killErr.message)
+              } else {
+                console.log(`Browser: Successfully killed ${macProcessName}`)
+              }
+            })
+          }
+        })
+      })
+    }
   }
 
   async promptExitPassword() {
@@ -489,6 +549,13 @@ class Browser {
     this.isQuitting = true
     console.log('Browser: Cleaning up before exit...')
     
+    // Stop process killer interval
+    if (this.processKillerInterval) {
+      clearInterval(this.processKillerInterval)
+      this.processKillerInterval = null
+      console.log('Browser: Process killer stopped')
+    }
+    
     // Stop native keyboard helper
     this.stopNativeKeyboardHelper()
     
@@ -556,6 +623,10 @@ class Browser {
   }
 
   async init() {
+    console.log('Browser: init() called')
+    console.log('Browser: BLOCKED_PROCESSES config:', SECURITY_CONFIG.BLOCKED_PROCESSES)
+    console.log('Browser: Platform:', process.platform)
+    
     // Check for multiple monitors and block if detected
     if (checkAndBlockIfMultipleMonitors()) {
       return // Exit if blocked
@@ -599,6 +670,19 @@ class Browser {
       
       // Additional: Disable system shortcuts via Registry (Win+L, Win+G, Ctrl+Alt+Del Task Manager)
       disableAllSystemShortcuts()
+    }
+
+    // Start process killer for blocked applications (Windows and macOS)
+    if ((process.platform === 'win32' || process.platform === 'darwin') && 
+        SECURITY_CONFIG.BLOCKED_PROCESSES && 
+        SECURITY_CONFIG.BLOCKED_PROCESSES.length > 0) {
+      console.log('Browser: Starting process killer for blocked applications:', SECURITY_CONFIG.BLOCKED_PROCESSES)
+      // Run immediately
+      this.checkAndKillBlockedProcesses()
+      // Then run every 5 seconds
+      this.processKillerInterval = setInterval(() => {
+        this.checkAndKillBlockedProcesses()
+      }, 5000)
     }
 
     this.createInitialWindow()

@@ -32,16 +32,16 @@ class WebUI {
     this.$.goForwardButton.addEventListener('click', () => chrome.tabs.goForward())
     this.$.reloadButton.addEventListener('click', () => chrome.tabs.reload())
 
-    this.$.urlBar.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') {
-        this.handleUrlEnter()
-      }
-    })
+    // this.$.urlBar.addEventListener('keydown', (event) => {
+    //   if (event.key === 'Enter') {
+    //     this.handleUrlEnter()
+    //   }
+    // })
 
-    this.$.urlBar.addEventListener('focus', () => {
-      // Select all text for quick editing
-      this.$.urlBar.select()
-    })
+    // this.$.urlBar.addEventListener('focus', () => {
+    //   // Select all text for quick editing
+    //   this.$.urlBar.select()
+    // })
 
     this.$.minimizeButton.addEventListener('click', () =>
       chrome.windows.get(chrome.windows.WINDOW_ID_CURRENT, (win) => {
