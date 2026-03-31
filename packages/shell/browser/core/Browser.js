@@ -116,7 +116,8 @@ class Browser {
         blockedProcesses.forEach((processName) => {
           // Remove .exe extension for macOS (e.g., WhatsApp.exe -> WhatsApp)
           const macProcessName = processName.replace(/\.exe$/i, '')
-          const regex = new RegExp(`\\s${macProcessName}(\\s|$)`, 'i')
+          // Match process name in ps aux output (more flexible pattern)
+          const regex = new RegExp(`/${macProcessName}(\\.app)?(/|\\s|$)`, 'i')
           
           if (regex.test(stdout)) {
             console.log(`Browser: Detected blocked process "${macProcessName}", killing...`)

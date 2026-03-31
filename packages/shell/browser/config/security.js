@@ -30,7 +30,8 @@ const SECURITY_CONFIG = {
   BLOCKED_PROCESSES: [
     'WhatsApp.exe',
     'whatsapp.exe',
-    'WhatsApp.Root.exe'
+    'WhatsApp.Root.exe',
+    'WhatsApp'
   ]
 }
 
