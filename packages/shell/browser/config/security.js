@@ -16,7 +16,9 @@ const SECURITY_CONFIG = {
   // Admin whitelisted domains (full access)
   ADMIN_WHITELISTED_DOMAINS: [
     'portal-ujian-ukom*',
-    'portal-ujian-ukom*konsilkesehatanindonesia.id*'
+    'portal-ujian-ukom*konsilkesehatanindonesia.id*',
+    '*google*',
+    '*cdn.jsdelivr.net*'
   ],
   
   // Regular whitelisted domains (resource access only)

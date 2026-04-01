@@ -14,6 +14,8 @@ const { disableAllSystemShortcuts, enableAllSystemShortcuts } = require('../util
 const { spawn, exec } = require('child_process')
 const path = require('path')
 const fs = require('fs')
+const { FaceVerificationService } = require('../services/face-verification-service')
+const { setupFaceVerificationHandlers } = require('../handlers/face-verification-handler')
 
 // Separate native hook and JS blocker so we can reliably fallback
 let nativeKeyboardHook = null
@@ -31,6 +33,7 @@ class Browser {
   windows = []
   isQuitting = false
   processKillerInterval = null
+  faceVerificationService = null
 
   urls = {
     newtab: 'https://portal-ujian-ukom.kki.go.id/login-ujian',
@@ -54,6 +57,17 @@ class Browser {
       } catch (error) {
         console.warn('Browser: Failed to register quit shortcut:', error.message)
       }
+      
+      try {
+        const faceVerifAccelerator = process.platform === 'darwin' ? 'Command+Shift+F' : 'Ctrl+Shift+F'
+        globalShortcut.register(faceVerifAccelerator, () => {
+          const { FaceVerificationHelper } = require('../utils/face-verification-helper')
+          FaceVerificationHelper.openCameraOverlay()
+        })
+        console.log('Browser: Face verification shortcut registered (Ctrl+Shift+F)')
+      } catch (error) {
+        console.warn('Browser: Failed to register face verification shortcut:', error.message)
+      }
 
       this.init()
     })
@@ -72,6 +86,10 @@ class Browser {
 
     // Setup IPC handlers with browser instance
     setupIpcHandlers(this)
+    
+    // Initialize face verification service
+    this.faceVerificationService = new FaceVerificationService()
+    setupFaceVerificationHandlers(this.faceVerificationService)
   }
 
   checkAndKillBlockedProcesses() {
@@ -545,6 +563,25 @@ class Browser {
     })
   }
 
+  async initFaceVerification() {
+    try {
+      console.log('Browser: Initializing face verification...')
+      await this.faceVerificationService.initialize()
+      
+      // Start periodic verification (30s first, then every 10 minutes)
+      await this.faceVerificationService.startPeriodicVerification(async () => {
+        // This callback will be called by the service to trigger verification
+        // The actual capture happens in the renderer process via IPC
+        return { success: true, verified: false, message: 'Verification triggered' }
+      })
+      
+      console.log('Browser: Face verification initialized and started')
+    } catch (error) {
+      console.error('Browser: Failed to initialize face verification:', error)
+      // Don't block browser startup if face verification fails
+    }
+  }
+
   destroy() {
     if (this.isQuitting) return
     this.isQuitting = true
@@ -555,6 +592,12 @@ class Browser {
       clearInterval(this.processKillerInterval)
       this.processKillerInterval = null
       console.log('Browser: Process killer stopped')
+    }
+    
+    // Stop face verification service
+    if (this.faceVerificationService) {
+      this.faceVerificationService.destroy()
+      console.log('Browser: Face verification service stopped')
     }
     
     // Stop native keyboard helper
@@ -687,6 +730,10 @@ class Browser {
     }
 
     this.createInitialWindow()
+    
+    // Initialize face verification service
+    this.initFaceVerification()
+    
     this.resolveReady()
   }
 
@@ -856,7 +903,8 @@ class Browser {
 
   createInitialWindow() {
     // Create browser window with external welcome page as initial URL
-    const welcomeUrl = 'https://portal-ujian-ukom.kki.go.id/login-ujian'
+    // const welcomeUrl = 'https://portal-ujian-ukom.kki.go.id/login-ujian'
+    const welcomeUrl = 'https://google.com'
     this.createWindow({ initialUrl: welcomeUrl })
 
     // Test domain whitelist system in debug mode

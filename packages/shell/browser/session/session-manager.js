@@ -59,6 +59,14 @@ function registerPreloadScripts(browserSession) {
     })
   }
 
+  if (fs.existsSync(PATHS.FACE_VERIFICATION_PRELOAD)) {
+    preloadFiles.push({
+      id: 'face-verification-preload',
+      type: 'frame',
+      filePath: PATHS.FACE_VERIFICATION_PRELOAD,
+    })
+  }
+
   if (!preloadFiles.length) {
     return
   }

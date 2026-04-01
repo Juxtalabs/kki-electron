@@ -1,0 +1,3576 @@
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=Generator content="Microsoft Word 15 (filtered)">
+<title>Face API Docs - Bima</title>
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:8.0pt;
+	margin-left:0cm;
+	line-height:107%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	color:black;}
+h1
+	{mso-style-link:"Heading 1 Char";
+	margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:.5pt;
+	text-indent:-.5pt;
+	line-height:107%;
+	page-break-after:avoid;
+	font-size:23.0pt;
+	font-family:"Arial",sans-serif;
+	color:black;}
+h2
+	{mso-style-link:"Heading 2 Char";
+	margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:.5pt;
+	text-indent:-.5pt;
+	line-height:107%;
+	page-break-after:avoid;
+	font-size:16.0pt;
+	font-family:"Arial",sans-serif;
+	color:black;}
+h3
+	{mso-style-link:"Heading 3 Char";
+	margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:3.5pt;
+	margin-left:.5pt;
+	text-indent:-.5pt;
+	line-height:107%;
+	page-break-after:avoid;
+	font-size:13.0pt;
+	font-family:"Calibri",sans-serif;
+	color:green;}
+h4
+	{mso-style-link:"Heading 4 Char";
+	margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:7.65pt;
+	margin-left:.5pt;
+	text-indent:-.5pt;
+	line-height:110%;
+	page-break-after:avoid;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	color:black;}
+h5
+	{mso-style-link:"Heading 5 Char";
+	margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:7.65pt;
+	margin-left:.5pt;
+	text-indent:-.5pt;
+	line-height:110%;
+	page-break-after:avoid;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	color:black;}
+span.Heading5Char
+	{mso-style-name:"Heading 5 Char";
+	mso-style-link:"Heading 5";
+	font-family:"Calibri",sans-serif;
+	color:black;
+	font-weight:bold;}
+span.Heading2Char
+	{mso-style-name:"Heading 2 Char";
+	mso-style-link:"Heading 2";
+	font-family:"Arial",sans-serif;
+	color:black;
+	font-weight:bold;}
+span.Heading1Char
+	{mso-style-name:"Heading 1 Char";
+	mso-style-link:"Heading 1";
+	font-family:"Arial",sans-serif;
+	color:black;
+	font-weight:bold;}
+span.Heading3Char
+	{mso-style-name:"Heading 3 Char";
+	mso-style-link:"Heading 3";
+	font-family:"Calibri",sans-serif;
+	color:green;
+	font-weight:bold;}
+span.Heading4Char
+	{mso-style-name:"Heading 4 Char";
+	mso-style-link:"Heading 4";
+	font-family:"Calibri",sans-serif;
+	color:black;
+	font-weight:bold;}
+.MsoChpDefault
+	{font-size:12.0pt;}
+.MsoPapDefault
+	{margin-bottom:8.0pt;
+	line-height:115%;}
+ /* Page Definitions */
+ @page WordSection1
+	{size:612.0pt 792.0pt;
+	margin:73.5pt 64.0pt 73.55pt 72.0pt;}
+div.WordSection1
+	{page:WordSection1;}
+@page WordSection2
+	{size:612.0pt 792.0pt;
+	margin:72.0pt 99.85pt 127.5pt 72.0pt;}
+div.WordSection2
+	{page:WordSection2;}
+@page WordSection3
+	{size:612.0pt 792.0pt;
+	margin:72.0pt 78.25pt 75.85pt 72.0pt;}
+div.WordSection3
+	{page:WordSection3;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0cm;}
+ul
+	{margin-bottom:0cm;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-US style='word-wrap:break-word'>
+
+<div class=WordSection1>
+
+<p class=MsoNormal align=right style='margin-bottom:4.45pt;text-align:right'><img
+width=624 height=642 id="Picture 22"
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image001.gif"><b><span
+style='font-size:18.0pt;line-height:107%;font-family:"Arial",sans-serif'> </span></b></p>
+
+<p class=MsoNormal style='margin-bottom:4.45pt'><b><span style='font-size:18.0pt;
+line-height:107%;font-family:"Arial",sans-serif'> </span></b></p>
+
+<p class=MsoNormal style='margin-bottom:4.45pt'><b><span style='font-size:18.0pt;
+line-height:107%;font-family:"Arial",sans-serif'> </span></b></p>
+
+<p class=MsoNormal style='margin-bottom:5.4pt'><b><span style='font-size:18.0pt;
+line-height:107%;font-family:"Arial",sans-serif'> </span></b></p>
+
+<p class=MsoNormal align=center style='margin-top:0cm;margin-right:8.0pt;
+margin-bottom:.3pt;margin-left:0cm;text-align:center'><b><span
+style='font-size:19.0pt;line-height:107%;font-family:"Arial",sans-serif'>FACE
+RECOGNITION API GUIDELINE </span></b></p>
+
+<p class=MsoNormal style='margin-bottom:4.45pt'><b><span style='font-size:18.0pt;
+line-height:107%;font-family:"Arial",sans-serif'> </span></b></p>
+
+<p class=MsoNormal style='margin-bottom:0cm'><b><span style='font-size:18.0pt;
+line-height:107%;font-family:"Arial",sans-serif'> </span></b></p>
+
+<h1 style='margin-left:-.25pt'>Version </h1>
+
+<p class=MsoNormal style='margin-bottom:0cm'><span style='font-family:"Arial",sans-serif'> </span></p>
+
+<table class=TableGrid border=0 cellspacing=0 cellpadding=0 width=624
+ style='width:468.0pt;margin-left:.4pt;border-collapse:collapse'>
+ <tr style='height:26.9pt'>
+  <td width=95 style='width:71.15pt;border:solid black 1.0pt;background:#D9D9D9;
+  padding:0cm 5.75pt 0cm 4.9pt;height:26.9pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Version </span></b></p>
+  </td>
+  <td width=148 style='width:111.0pt;border:solid black 1.0pt;border-left:none;
+  background:#D9D9D9;padding:0cm 5.75pt 0cm 4.9pt;height:26.9pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:.15pt'><b><span style='font-size:13.0pt;line-height:107%;
+  font-family:"Arial",sans-serif'>Release Date </span></b></p>
+  </td>
+  <td width=381 style='width:285.9pt;border:solid black 1.0pt;border-left:none;
+  background:#D9D9D9;padding:0cm 5.75pt 0cm 4.9pt;height:26.9pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:.15pt'><b><span style='font-size:13.0pt;line-height:107%;
+  font-family:"Arial",sans-serif'>Remarks </span></b></p>
+  </td>
+ </tr>
+ <tr style='height:26.0pt'>
+  <td width=95 style='width:71.15pt;border:solid black 1.0pt;border-top:none;
+  padding:0cm 5.75pt 0cm 4.9pt;height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>2.0.0 </span></p>
+  </td>
+  <td width=148 style='width:111.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 5.75pt 0cm 4.9pt;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:.15pt'><span style='font-size:13.0pt;line-height:107%;font-family:
+  "Arial",sans-serif'>2024/06/03 </span></p>
+  </td>
+  <td width=381 style='width:285.9pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 5.75pt 0cm 4.9pt;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:.15pt'><span style='font-size:13.0pt;line-height:107%;font-family:
+  "Arial",sans-serif'>Initial Release </span></p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal style='margin-bottom:9.15pt'><b><span style='font-size:18.0pt;
+line-height:107%;font-family:"Arial",sans-serif'> </span></b></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+margin-left:-.25pt;text-indent:-.5pt'><b><span style='font-size:23.0pt;
+line-height:107%;font-family:"Arial",sans-serif'>Credentials </span></b></p>
+
+<p class=MsoNormal style='margin-bottom:0cm'><b><span style='font-family:"Arial",sans-serif'> </span></b></p>
+
+<table class=TableGrid border=0 cellspacing=0 cellpadding=0 width=624
+ style='width:468.0pt;margin-left:.4pt;border-collapse:collapse'>
+ <tr style='height:28.95pt'>
+  <td width=208 style='width:156.15pt;border:solid black 1.0pt;background:#D9D9D9;
+  padding:8.55pt 5.75pt 0cm 4.75pt;height:28.95pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:.15pt'><b><span style='font-size:13.0pt;line-height:107%;
+  font-family:"Arial",sans-serif'>Header Field </span></b></p>
+  </td>
+  <td width=208 style='width:156.0pt;border:solid black 1.0pt;border-left:none;
+  background:#D9D9D9;padding:8.55pt 5.75pt 0cm 4.75pt;height:28.95pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Value </span></b></p>
+  </td>
+  <td width=208 style='width:155.9pt;border:solid black 1.0pt;border-left:none;
+  background:#D9D9D9;padding:8.55pt 5.75pt 0cm 4.75pt;height:28.95pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Description </span></b></p>
+  </td>
+ </tr>
+ <tr style='height:45.0pt'>
+  <td width=208 valign=top style='width:156.15pt;border:solid black 1.0pt;
+  border-top:none;padding:8.55pt 5.75pt 0cm 4.75pt;height:45.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:.15pt'><b><span style='font-size:13.0pt;line-height:107%;
+  font-family:"Arial",sans-serif'>X-Clientid </span></b></p>
+  </td>
+  <td width=208 valign=top style='width:156.0pt;border-top:none;border-left:
+  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+  padding:8.55pt 5.75pt 0cm 4.75pt;height:45.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>bima </span></b></p>
+  </td>
+  <td width=208 style='width:155.9pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.55pt 5.75pt 0cm 4.75pt;
+  height:45.0pt'>
+  <p class=MsoNormal style='margin-bottom:1.05pt'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>use this value for </span></p>
+  <p class=MsoNormal style='margin-bottom:0cm'><b><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>X-Clientid</span></b><span
+  style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif'>
+  header field </span></p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal style='margin-bottom:.9pt'><b><span style='font-family:"Arial",sans-serif'> </span></b></p>
+
+<p class=MsoNormal style='margin-bottom:.9pt'><b><span style='font-family:"Arial",sans-serif'> </span></b></p>
+
+<p class=MsoNormal style='margin-bottom:7.45pt'><span style='font-family:"Arial",sans-serif'> </span></p>
+
+<p class=MsoNormal align=right style='margin-top:0cm;margin-right:354.45pt;
+margin-bottom:0cm;margin-left:0cm;text-align:right'><b><span style='font-size:
+19.0pt;line-height:107%;font-family:"Arial",sans-serif;color:#90A4AE'> </span></b><br
+clear=all style='page-break-before:always'>
+</p>
+
+<h1 style='margin-left:-.25pt'>Table of Contents </h1>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:.5pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>Version...................................................................................................................2</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:.5pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>Table of
+Contents...................................................................................................3</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:.5pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>Foundation.............................................................................................................5</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:18.5pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>Face
+Identification.............................................................................................5</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:18.5pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>Face
+Verification................................................................................................6</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:18.5pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>Reference Image
+Requirements.......................................................................7</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:18.5pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>Device Set-Up
+Requirements..........................................................................10</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:36.5pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>Constraints.................................................................................................10</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:36.5pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>Camera
+Set-Up..........................................................................................10</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:36.5pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>Trigger........................................................................................................11</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:.5pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>API
+Documentation..............................................................................................12</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:18.5pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>Base
+URL........................................................................................................12</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:18.5pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>Postman
+Collection.........................................................................................12</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:18.5pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>API
+Endpoints.................................................................................................
+12</span><span style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:36.5pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>GET
+/facegallery/my-facegalleries.............................................................12</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:53.75pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>Request.................................................................................................12</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:53.75pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>Response..............................................................................................13</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:36.5pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>POST
+/facegallery/create-facegallery........................................................
+14</span><span style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:53.75pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>Request.................................................................................................14</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:53.75pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>Response..............................................................................................15</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:36.5pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>DELETE
+/facegallery/delete-facegallery....................................................
+16</span><span style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:53.75pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>Request.................................................................................................16</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:53.75pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>Response..............................................................................................17</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:36.5pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>POST
+/facegallery/enroll-face....................................................................18</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:53.75pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>Request.................................................................................................18</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:53.75pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>Response..............................................................................................19</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:36.5pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>GET /facegallery/list-faces.........................................................................20</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:53.75pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>Request.................................................................................................20</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:53.75pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>Response..............................................................................................21</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:36.5pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>POST
+/facegallery/verify-face....................................................................
+22</span><span style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:53.75pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>Request.................................................................................................22</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:53.75pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>Response..............................................................................................23</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:3.4pt;
+margin-left:54.0pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-18.0pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>POST
+/facegallery/identify-face..................................................................25</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span><span
+style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>Request.................................................................................................25</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span><span
+style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>Response..............................................................................................26</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal align=right style='margin-top:0cm;margin-right:7.25pt;
+margin-bottom:1.8pt;margin-left:.5pt;text-align:right;text-indent:-.5pt'><span
+style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>DELETE
+/facegallery/delete-face...............................................................28</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:53.75pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>Request.................................................................................................28</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:53.75pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>Response..............................................................................................29</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal align=right style='margin-top:0cm;margin-right:7.25pt;
+margin-bottom:1.8pt;margin-left:.5pt;text-align:right;text-indent:-.5pt'><span
+style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>POST
+/compare-images.............................................................................30</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:53.75pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>Request.................................................................................................30</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:53.75pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>Response..............................................................................................31</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal align=right style='margin-top:0cm;margin-right:7.25pt;
+margin-bottom:8.2pt;margin-left:.5pt;text-align:right;text-indent:-.5pt'><span
+style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif;
+color:#1155CC'>List of Status
+Code..........................................................................................32</span><span
+style='font-family:"Arial",sans-serif;color:#1155CC'> </span></p>
+
+<p class=MsoNormal style='margin-bottom:1.85pt'><b><span style='font-size:23.0pt;
+line-height:107%;font-family:"Arial",sans-serif'> </span></b></p>
+
+<p class=MsoNormal style='margin-bottom:1.85pt'><b><span style='font-size:23.0pt;
+line-height:107%;font-family:"Arial",sans-serif'> </span></b></p>
+
+<p class=MsoNormal style='margin-bottom:1.85pt'><b><span style='font-size:23.0pt;
+line-height:107%;font-family:"Arial",sans-serif'> </span></b></p>
+
+<p class=MsoNormal style='margin-bottom:1.85pt'><b><span style='font-size:23.0pt;
+line-height:107%;font-family:"Arial",sans-serif'> </span></b></p>
+
+<p class=MsoNormal style='margin-bottom:1.85pt'><b><span style='font-size:23.0pt;
+line-height:107%;font-family:"Arial",sans-serif'> </span></b></p>
+
+<p class=MsoNormal style='margin-bottom:1.85pt'><b><span style='font-size:23.0pt;
+line-height:107%;font-family:"Arial",sans-serif'> </span></b></p>
+
+<p class=MsoNormal style='margin-bottom:1.85pt'><b><span style='font-size:23.0pt;
+line-height:107%;font-family:"Arial",sans-serif'> </span></b></p>
+
+<p class=MsoNormal style='margin-bottom:1.85pt'><b><span style='font-size:23.0pt;
+line-height:107%;font-family:"Arial",sans-serif'> </span></b></p>
+
+<p class=MsoNormal style='margin-bottom:1.85pt'><b><span style='font-size:23.0pt;
+line-height:107%;font-family:"Arial",sans-serif'> </span></b></p>
+
+<p class=MsoNormal style='margin-bottom:1.85pt'><b><span style='font-size:23.0pt;
+line-height:107%;font-family:"Arial",sans-serif'> </span></b></p>
+
+<p class=MsoNormal style='margin-bottom:1.85pt'><b><span style='font-size:23.0pt;
+line-height:107%;font-family:"Arial",sans-serif'> </span></b></p>
+
+<p class=MsoNormal style='margin-bottom:1.85pt'><b><span style='font-size:23.0pt;
+line-height:107%;font-family:"Arial",sans-serif'> </span></b></p>
+
+<p class=MsoNormal style='margin-bottom:1.85pt'><b><span style='font-size:23.0pt;
+line-height:107%;font-family:"Arial",sans-serif'> </span></b></p>
+
+<p class=MsoNormal style='margin-bottom:1.85pt'><b><span style='font-size:23.0pt;
+line-height:107%;font-family:"Arial",sans-serif'> </span></b></p>
+
+<p class=MsoNormal style='margin-bottom:1.85pt'><b><span style='font-size:23.0pt;
+line-height:107%;font-family:"Arial",sans-serif'> </span></b></p>
+
+<p class=MsoNormal style='margin-bottom:0cm'><b><span style='font-size:23.0pt;
+line-height:107%;font-family:"Arial",sans-serif'> </span></b></p>
+
+<p class=MsoNormal style='margin-bottom:1.85pt'><b><span style='font-size:23.0pt;
+line-height:107%;font-family:"Arial",sans-serif'> </span></b></p>
+
+<h1 style='margin-left:-.25pt'>Foundation </h1>
+
+<p class=MsoNormal style='margin-bottom:5.6pt'><span style='font-family:"Arial",sans-serif'> </span></p>
+
+<h2 style='margin-left:-.25pt'>Face Identification </h2>
+
+<p class=MsoNormal style='margin-bottom:2.75pt'><span style='font-family:"Arial",sans-serif'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+.45pt;margin-left:.5pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-.5pt;line-height:111%'><span style='font-size:13.0pt;line-height:
+111%;font-family:"Arial",sans-serif'>This is 1:N authentication means that the
+system will recognize a person without knowing their identity in the database.
+This method is superior in user-friendliness because it doesn't need other authentication.
+</span></p>
+
+<p class=MsoNormal align=right style='margin-top:0cm;margin-right:1.95pt;
+margin-bottom:2.75pt;margin-left:0cm;text-align:right'><img width=624
+height=349 id="Picture 538"
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image002.jpg"><span
+style='font-family:"Arial",sans-serif'> </span></p>
+
+<p class=MsoNormal align=center style='margin-top:0cm;margin-right:8.0pt;
+margin-bottom:16.05pt;margin-left:.5pt;text-align:center;text-indent:-.5pt'><span
+style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif'>Face
+Identification </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+21.25pt;margin-left:.5pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-.5pt;line-height:111%'><span style='font-size:13.0pt;line-height:
+111%;font-family:"Arial",sans-serif'>The user’s face image is registered into a
+database (FaceGalleries), contains the user's data from the same
+group/organization/etc. The system will be able to recognize the user faces
+after the registration process is completed. </span></p>
+
+<p class=MsoNormal style='margin-bottom:19.3pt'><b><span style='font-size:16.0pt;
+line-height:107%;font-family:"Arial",sans-serif'> </span></b></p>
+
+<p class=MsoNormal style='margin-bottom:2.6pt'><b><span style='font-size:16.0pt;
+line-height:107%;font-family:"Arial",sans-serif'> </span></b></p>
+
+<p class=MsoNormal style='margin-bottom:0cm'><span style='font-family:"Arial",sans-serif'> </span></p>
+
+<h2 style='margin-top:0cm;margin-right:0cm;margin-bottom:4.45pt;margin-left:
+-.25pt'>Face Verification </h2>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+.45pt;margin-left:.5pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-.5pt;line-height:111%'><span style='font-size:13.0pt;line-height:
+111%;font-family:"Arial",sans-serif'>This is 1:1 authentication means that the
+system ensures the person is actually who claims the identity. This method is
+more accurate and secure than Face Identification but inferior in user-friendliness
+due to needing for other authentication like RFID, NFC, KTP, or printed QRCode.
+</span></p>
+
+<p class=MsoNormal align=right style='margin-top:0cm;margin-right:1.95pt;
+margin-bottom:2.75pt;margin-left:0cm;text-align:right'><img width=625
+height=351 id="Picture 726"
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image003.jpg"><span
+style='font-family:"Arial",sans-serif'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+.45pt;margin-left:.5pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-.5pt;line-height:111%'><span style='font-size:13.0pt;line-height:
+111%;font-family:"Arial",sans-serif'>User register by taking a frontal picture
+of their face and adding a unique identifier such as citizen ID or employee ID
+to the system. After the registration is completed, the system can verify
+whether the ID belongs to the correct user. </span></p>
+
+<p class=MsoNormal style='margin-bottom:23.6pt'><span style='font-family:"Arial",sans-serif'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+margin-left:116.25pt'><b><span style='font-size:16.0pt;line-height:107%;
+font-family:"Arial",sans-serif'> </span></b></p>
+
+<h2 style='margin-top:0cm;margin-right:0cm;margin-bottom:13.45pt;margin-left:
+-.25pt'>Reference Image Requirements </h2>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+15.45pt;margin-left:.5pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-.5pt;line-height:111%'><span style='font-size:13.0pt;line-height:
+111%;font-family:"Arial",sans-serif'>To provide more accuracy and precision of
+facial comparison results, we recommend that you use the following guidelines
+when choosing <b>reference photos for registration</b>. </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+5.8pt;margin-left:35.25pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-18.0pt;line-height:111%'><span style='font-size:13.0pt;line-height:
+111%;font-family:"Arial",sans-serif'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:13.0pt;line-height:111%;font-family:"Arial",sans-serif'>Use
+an image of a face with a straight-on camera. </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+5.8pt;margin-left:35.25pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-18.0pt;line-height:111%'><span style='font-size:13.0pt;line-height:
+111%;font-family:"Arial",sans-serif'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:13.0pt;line-height:111%;font-family:"Arial",sans-serif'>Use
+an image of a face with both eyes open and visible. </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+5.8pt;margin-left:35.25pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-18.0pt;line-height:111%'><span style='font-size:13.0pt;line-height:
+111%;font-family:"Arial",sans-serif'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:13.0pt;line-height:111%;font-family:"Arial",sans-serif'>The
+image should contain the full head and shoulders of the person. </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+5.8pt;margin-left:35.25pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-18.0pt;line-height:111%'><span style='font-size:13.0pt;line-height:
+111%;font-family:"Arial",sans-serif'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:13.0pt;line-height:111%;font-family:"Arial",sans-serif'>Avoid
+items that block the face, such as masks, headbands. </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+5.8pt;margin-left:35.25pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-18.0pt;line-height:111%'><span style='font-size:13.0pt;line-height:
+111%;font-family:"Arial",sans-serif'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:13.0pt;line-height:111%;font-family:"Arial",sans-serif'>Use
+color images. </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+0cm;margin-left:35.25pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-18.0pt;line-height:150%'><span style='font-size:13.0pt;line-height:
+150%;font-family:"Arial",sans-serif'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:13.0pt;line-height:150%;font-family:"Arial",sans-serif'>Use
+images of faces with neutral facial expressions with mouth closed and little to
+no smile. </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+5.8pt;margin-left:35.25pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-18.0pt;line-height:111%'><span style='font-size:13.0pt;line-height:
+111%;font-family:"Arial",sans-serif'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:13.0pt;line-height:111%;font-family:"Arial",sans-serif'>Use
+images with flat lighting on the face. </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+5.8pt;margin-left:35.25pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-18.0pt;line-height:111%'><span style='font-size:13.0pt;line-height:
+111%;font-family:"Arial",sans-serif'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:13.0pt;line-height:111%;font-family:"Arial",sans-serif'>Use
+images that are bright and sharp. </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+0cm;margin-left:35.25pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-18.0pt;line-height:150%'><span style='font-size:13.0pt;line-height:
+150%;font-family:"Arial",sans-serif'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:13.0pt;line-height:150%;font-family:"Arial",sans-serif'>Use
+images that have sufficient contrast with the background. A high-contrast
+monochrome background works well. </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+0cm;margin-left:35.25pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-18.0pt;line-height:150%'><span style='font-size:13.0pt;line-height:
+150%;font-family:"Arial",sans-serif'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:13.0pt;line-height:150%;font-family:"Arial",sans-serif'>The
+minimum face resolution is 150 x 150 pixels. Higher-resolution images require a
+larger minimum face size. </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+5.8pt;margin-left:35.25pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-18.0pt;line-height:111%'><span style='font-size:13.0pt;line-height:
+111%;font-family:"Arial",sans-serif'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:13.0pt;line-height:111%;font-family:"Arial",sans-serif'>Format
+image: JPG (JPEG) and PNG. </span></p>
+
+<p class=MsoNormal align=right style='margin-top:0cm;margin-right:1.95pt;
+margin-bottom:2.75pt;margin-left:0cm;text-align:right'><img width=624
+height=348 id="Picture 1060"
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image004.jpg"><span
+style='font-family:"Arial",sans-serif'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+0cm;margin-left:138.8pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-.5pt;line-height:111%'><span style='font-size:13.0pt;line-height:
+111%;font-family:"Arial",sans-serif'>Recommended Reference Image </span></p>
+
+<p class=MsoNormal align=right style='margin-top:0cm;margin-right:1.95pt;
+margin-bottom:2.75pt;margin-left:0cm;text-align:right'><img width=625
+height=349 id="Picture 1062"
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image005.jpg"><span
+style='font-family:"Arial",sans-serif'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+0cm;margin-left:133.0pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-.5pt;line-height:111%'><span style='font-size:13.0pt;line-height:
+111%;font-family:"Arial",sans-serif'>Unrecommended Reference Image </span></p>
+
+<p class=MsoNormal align=right style='margin-top:0cm;margin-right:1.95pt;
+margin-bottom:2.75pt;margin-left:0cm;text-align:right'><img width=624
+height=349 id="Picture 1073"
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image006.jpg"><span
+style='font-family:"Arial",sans-serif'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+21.4pt;margin-left:160.45pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-.5pt;line-height:111%'><span style='font-size:13.0pt;line-height:
+111%;font-family:"Arial",sans-serif'>Image Recommendations </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+margin-left:116.25pt'><b><span style='font-size:16.0pt;line-height:107%;
+font-family:"Arial",sans-serif'> </span></b><br clear=all style='page-break-before:
+always'>
+</p>
+
+<h2 style='margin-top:0cm;margin-right:0cm;margin-bottom:8.45pt;margin-left:
+-.25pt'>Device Set-Up Requirements </h2>
+
+<h3 style='margin-top:0cm;margin-right:0cm;margin-bottom:16.05pt;margin-left:
+-.25pt'><span style='font-family:"Arial",sans-serif;color:black'>Constraints </span></h3>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+15.6pt;margin-left:.5pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-.5pt;line-height:111%'><span style='font-size:13.0pt;line-height:
+111%;font-family:"Arial",sans-serif'>There are several constraints set in order
+to obtain an optimal performance: </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+5.8pt;margin-left:35.25pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-18.0pt;line-height:111%'><span style='font-size:13.0pt;line-height:
+111%;font-family:"Arial",sans-serif'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:13.0pt;line-height:111%;font-family:"Arial",sans-serif'>The
+camera is placed in a hallway with a  minimum length of 3 meters. </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+0cm;margin-left:35.25pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-18.0pt;line-height:150%'><span style='font-size:13.0pt;line-height:
+150%;font-family:"Arial",sans-serif'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:13.0pt;line-height:150%;font-family:"Arial",sans-serif'>Users
+are not allowed to wear face attributes other than eyeglasses or a mask. </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+0cm;margin-left:35.25pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-18.0pt;line-height:150%'><span style='font-size:13.0pt;line-height:
+150%;font-family:"Arial",sans-serif'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:13.0pt;line-height:150%;font-family:"Arial",sans-serif'>If
+there is a recognition failure when the user is wearing glasses or a mask, the
+user is expected to take off the glasses or mask in order to provide more
+features for recognition. </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+5.8pt;margin-left:35.25pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-18.0pt;line-height:111%'><span style='font-size:13.0pt;line-height:
+111%;font-family:"Arial",sans-serif'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:13.0pt;line-height:111%;font-family:"Arial",sans-serif'>Users’
+faces need to be evenly illuminated. </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+15.8pt;margin-left:35.25pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-18.0pt;line-height:111%'><span style='font-size:13.0pt;line-height:
+111%;font-family:"Arial",sans-serif'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:13.0pt;line-height:111%;font-family:"Arial",sans-serif'>Users
+need to walk at an average walking pace. </span></p>
+
+<h3 style='margin-top:0cm;margin-right:0cm;margin-bottom:16.05pt;margin-left:
+-.25pt'><span style='font-family:"Arial",sans-serif;color:black'>Image/Camera
+Set-Up </span></h3>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+0cm;margin-left:35.25pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-18.0pt;line-height:150%'><span style='font-size:13.0pt;line-height:
+150%;font-family:"Arial",sans-serif'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><b><span style='font-size:13.0pt;line-height:150%;font-family:
+"Arial",sans-serif'>The face resolution must be at least 125 x 125 pixels</span></b><span
+style='font-size:13.0pt;line-height:150%;font-family:"Arial",sans-serif'>. For
+example, if you have a 360p camera resolution, the distance camera to people
+should be less than 45 cm. </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+0cm;margin-left:35.25pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-18.0pt;line-height:150%'><span style='font-size:13.0pt;line-height:
+150%;font-family:"Arial",sans-serif'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><b><span style='font-size:13.0pt;line-height:150%;font-family:
+"Arial",sans-serif'>Image size should be no larger than 500KiB</span></b><span
+style='font-size:13.0pt;line-height:150%;font-family:"Arial",sans-serif'>. This
+is to ensure the best possible latency for sending the image request through
+the network. Higher sized images will yield slower latency. </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+0cm;margin-left:35.25pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-18.0pt;line-height:150%'><span style='font-size:13.0pt;line-height:
+150%;font-family:"Arial",sans-serif'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:13.0pt;line-height:150%;font-family:"Arial",sans-serif'>Point
+the camera to a good lighting environment, not too dark or bright and with no
+backlight. </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+5.8pt;margin-left:35.25pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-18.0pt;line-height:111%'><span style='font-size:13.0pt;line-height:
+111%;font-family:"Arial",sans-serif'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:13.0pt;line-height:111%;font-family:"Arial",sans-serif'>Camera
+height should be between 1.5 m - 1.75 m. </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+0cm;margin-left:35.25pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-18.0pt;line-height:150%'><span style='font-size:13.0pt;line-height:
+150%;font-family:"Arial",sans-serif'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:13.0pt;line-height:150%;font-family:"Arial",sans-serif'>If
+video camera based, frame rate, the recommended frame rate is 30 fps. (at least
+25 fps) </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+5.8pt;margin-left:35.25pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-18.0pt;line-height:111%'><span style='font-size:13.0pt;line-height:
+111%;font-family:"Arial",sans-serif'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:13.0pt;line-height:111%;font-family:"Arial",sans-serif'>Encoder
+Bitrate, the recommended encoder bitrate is 3 Mbps. </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+5.8pt;margin-left:35.25pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-18.0pt;line-height:111%'><span style='font-size:13.0pt;line-height:
+111%;font-family:"Arial",sans-serif'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:13.0pt;line-height:111%;font-family:"Arial",sans-serif'>Codec,
+the codec should be h.264 or h.265. </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+5.8pt;margin-left:35.25pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-18.0pt;line-height:150%'><span style='font-size:13.0pt;line-height:
+150%;font-family:"Arial",sans-serif'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:13.0pt;line-height:150%;font-family:"Arial",sans-serif'>Give
+a marker place approximately less than 3 m from the camera to take pictures. </span></p>
+
+<p class=MsoNormal style='margin-bottom:4.5pt'><span style='font-family:"Arial",sans-serif'> </span></p>
+
+<p class=MsoNormal align=center style='margin-top:0cm;margin-right:3.45pt;
+margin-bottom:2.75pt;margin-left:0cm;text-align:center'><img width=200
+height=200 id="Picture 1659"
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image007.jpg"><span
+style='font-family:"Arial",sans-serif'> </span></p>
+
+<p class=MsoNormal align=center style='margin-top:0cm;margin-right:8.0pt;
+margin-bottom:11.05pt;margin-left:.5pt;text-align:center;text-indent:-.5pt'><span
+style='font-size:13.0pt;line-height:107%;font-family:"Arial",sans-serif'>Marker
+Example </span></p>
+
+<h3 style='margin-top:0cm;margin-right:0cm;margin-bottom:16.05pt;margin-left:
+-.25pt'><span style='font-family:"Arial",sans-serif;color:black'>Trigger </span></h3>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+15.6pt;margin-left:.5pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-.5pt;line-height:111%'><span style='font-size:13.0pt;line-height:
+111%;font-family:"Arial",sans-serif'>Some ideas that can be used to trigger
+photo submissions to the API: </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+5.8pt;margin-left:35.25pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-18.0pt;line-height:111%'><span style='font-size:13.0pt;line-height:
+111%;font-family:"Arial",sans-serif'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:13.0pt;line-height:111%;font-family:"Arial",sans-serif'>Printed
+QR Code </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+5.8pt;margin-left:35.25pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-18.0pt;line-height:111%'><span style='font-size:13.0pt;line-height:
+111%;font-family:"Arial",sans-serif'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:13.0pt;line-height:111%;font-family:"Arial",sans-serif'>RFID
+</span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+5.8pt;margin-left:35.25pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-18.0pt;line-height:111%'><span style='font-size:13.0pt;line-height:
+111%;font-family:"Arial",sans-serif'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:13.0pt;line-height:111%;font-family:"Arial",sans-serif'>NFC
+</span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+5.8pt;margin-left:35.25pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-18.0pt;line-height:111%'><span style='font-size:13.0pt;line-height:
+111%;font-family:"Arial",sans-serif'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:13.0pt;line-height:111%;font-family:"Arial",sans-serif'>Ultrasonic
+Module </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+5.8pt;margin-left:35.25pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-18.0pt;line-height:111%'><span style='font-size:13.0pt;line-height:
+111%;font-family:"Arial",sans-serif'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:13.0pt;line-height:111%;font-family:"Arial",sans-serif'>Infrared
+Module </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:7.95pt;margin-bottom:
+3.95pt;margin-left:35.25pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-18.0pt;line-height:111%'><span style='font-size:13.0pt;line-height:
+111%;font-family:"Arial",sans-serif'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:13.0pt;line-height:111%;font-family:"Arial",sans-serif'>Face
+location and minimal size </span></p>
+
+<p class=MsoNormal style='margin-bottom:12.15pt'><span style='font-family:"Arial",sans-serif'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+margin-left:116.25pt'><b><span style='font-size:23.0pt;line-height:107%;
+font-family:"Arial",sans-serif'> </span></b></p>
+
+<h1 style='margin-left:-.25pt'>API Documentation </h1>
+
+<p class=MsoNormal style='margin-bottom:15.5pt'><b><span style='font-size:17.0pt;
+line-height:107%;font-family:"Arial",sans-serif'> </span></b></p>
+
+<h2 style='margin-top:0cm;margin-right:0cm;margin-bottom:1.7pt;margin-left:
+-.25pt'>Base URL </h2>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:25.3pt;
+margin-left:-.25pt;text-indent:-.5pt;line-height:110%'><a
+href="https://api.luqmanr.xyz/face"><b><span style='font-size:13.0pt;
+line-height:110%;font-family:"Arial",sans-serif;color:#1155CC'>https://api.riset.ai/face</span></b></a><b><span
+style='font-size:13.0pt;line-height:110%;font-family:"Arial",sans-serif;
+color:#90A4AE'> </span></b></p>
+
+<h2 style='margin-top:0cm;margin-right:0cm;margin-bottom:4.45pt;margin-left:
+0cm;text-indent:0cm'><a
+href="https://drive.google.com/file/d/1Vsxk71Oz4u1rAxiMLWEJQ8LTUcWsSvYH/view?usp=sharing"><span
+style='color:black'>Postman</span></a><a
+href="https://drive.google.com/file/d/1Vsxk71Oz4u1rAxiMLWEJQ8LTUcWsSvYH/view?usp=sharing"><span
+style='color:black'> </span></a><a
+href="https://drive.google.com/file/d/1Vsxk71Oz4u1rAxiMLWEJQ8LTUcWsSvYH/view?usp=sharing"><span
+style='color:black'>Collection</span></a> </h2>
+
+<p class=MsoNormal style='margin-bottom:8.55pt'><b><span style='font-size:13.0pt;
+line-height:107%;font-family:"Arial",sans-serif;color:#90A4AE'> </span></b></p>
+
+<h2 style='margin-left:0cm;text-indent:0cm'><span style='font-size:17.0pt;
+line-height:107%'>API Endpoints </span></h2>
+
+<p class=MsoNormal style='margin-bottom:7.5pt'><span style='font-family:"Arial",sans-serif'> </span></p>
+
+<p class=MsoNormal style='margin-bottom:0cm'><b><span style='font-size:15.0pt;
+line-height:107%;font-family:"Arial",sans-serif'>Example URL for </span></b><b><span
+style='font-size:17.0pt;line-height:107%;font-family:"Arial",sans-serif'>Facegallery
+</span></b><b><span style='font-size:15.0pt;line-height:107%;font-family:"Arial",sans-serif'>Endpoints:
+</span></b></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:4.5pt;
+margin-left:-.25pt;text-indent:-.5pt;line-height:110%'><a
+href="https://api.riset.ai/face/facegallery/my-facegalleries"><b><span
+style='font-size:13.0pt;line-height:110%;font-family:"Arial",sans-serif;
+color:#1155CC'>https://api.riset.ai/face/facegallery/my-facegalleries</span></b></a><span
+style='font-size:13.0pt;line-height:110%;font-family:"Arial",sans-serif;
+color:#90A4AE'> </span></p>
+
+<p class=MsoNormal style='margin-bottom:5.5pt'><b><span style='font-size:13.0pt;
+line-height:107%;font-family:"Arial",sans-serif;color:#90A4AE'> </span></b></p>
+
+<h3 style='margin-left:-.25pt'><span style='color:black'>GET</span><span
+style='color:#90A4AE'> </span>/facegallery/my-facegalleries </h3>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:.2pt;margin-bottom:8.9pt;
+margin-left:.5pt;text-indent:-.5pt;line-height:110%'>This API gives the list of
+facegallery. </p>
+
+<h4 style='margin-top:0cm;margin-right:0cm;margin-bottom:2.7pt;margin-left:
+-.25pt'>Request </h4>
+
+<p class=MsoNormal style='margin-bottom:2.1pt'><span style='font-family:"Arial",sans-serif'> </span></p>
+
+<h5 style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:-.25pt'>Headers
+KEY       VALUE   VALUE EXAMPLE </h5>
+
+<p class=MsoNormal style='margin-bottom:4.65pt'><img border=0 width=617
+height=2 id="Group 30139"
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image008.gif"></p>
+
+<p class=MsoNormal style='margin-bottom:13.45pt;line-height:110%'>X-Clientid                                                  client_id
+identification                               absensi_live </p>
+
+<h5 style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:-.25pt'>Body
+</h5>
+
+<p class=MsoNormal style='margin-bottom:2.2pt'><img border=0 width=624
+height=76 src="Face%20API%20Docs%20-%20Bima.pdf_files/image009.gif"></p>
+
+<p class=MsoNormal style='margin-bottom:9.2pt'><span style='color:#90A4AE'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+margin-left:116.25pt'><b> </b></p>
+
+</div>
+
+<span style='font-size:11.0pt;line-height:107%;font-family:"Calibri",sans-serif;
+color:black'><br clear=all style='page-break-before:always'>
+</span>
+
+<div class=WordSection2>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:.2pt;margin-bottom:7.65pt;
+margin-left:.5pt;text-indent:-.5pt;line-height:110%'>Headers </p>
+
+<h5 style='margin:0cm;text-indent:0cm'>KEY                                          VALUE
+</h5>
+
+<p class=MsoNormal style='margin-bottom:4.55pt'><img border=0 width=308
+height=2 id="Group 32680"
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image010.gif"></p>
+
+<p class=MsoNormal style='margin-bottom:0cm;line-height:110%'>Content-Type                               application/json
+</p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:-27.85pt;margin-bottom:
+2.2pt;margin-left:0cm'><img border=0 width=624 height=256
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image011.gif"></p>
+
+<p class=MsoNormal style='margin-bottom:0cm'><span style='color:#90A4AE'> </span></p>
+
+<table class=TableGrid border=0 cellspacing=0 cellpadding=0 width=621
+ style='width:466.0pt;border-collapse:collapse'>
+ <tr style='height:28.45pt'>
+  <td width=196 valign=top style='width:147.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:28.45pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><b>Key </b></p>
+  </td>
+  <td width=85 valign=top style='width:63.75pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:28.45pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>Type </b></p>
+  </td>
+  <td width=340 valign=top style='width:255.25pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.75pt 0cm 0cm;height:28.45pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>Description </b></p>
+  </td>
+ </tr>
+ <tr style='height:50.0pt'>
+  <td width=196 valign=top style='width:147.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>status </span></p>
+  </td>
+  <td width=85 valign=top style='width:63.75pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=340 valign=top style='width:255.25pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.75pt 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>Describing the condition of API
+  hit, please refer to <u><span style='color:#1155CC'>List of Status Code</span></u>
+  </p>
+  </td>
+ </tr>
+ <tr style='height:66.0pt'>
+  <td width=196 valign=top style='width:147.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:66.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>status_message </span></p>
+  </td>
+  <td width=85 valign=top style='width:63.75pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:66.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=340 valign=top style='width:255.25pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.75pt 0cm 0cm;height:66.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>The verbose message of API hit
+  status, please refer to <u><span style='color:#1155CC'>List of</span></u><span
+  style='color:#1155CC'> <u>Status Code</u></span> </p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal style='margin-bottom:15.55pt'><span style='color:green'>facegallery_id
+                                      list                            </span>List
+of facegallery </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+margin-left:116.25pt'><b><span style='font-family:"Arial",sans-serif;
+color:#90A4AE'> </span></b></p>
+
+<h3 style='margin-left:-.25pt'><span style='color:black'>POST </span>/facegallery/create-facegallery
+</h3>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:.2pt;margin-bottom:8.9pt;
+margin-left:.5pt;text-indent:-.5pt;line-height:110%'>This API creates the new
+facegallery. </p>
+
+<h4 style='margin-top:0cm;margin-right:0cm;margin-bottom:2.7pt;margin-left:
+-.25pt'>Request </h4>
+
+<p class=MsoNormal style='margin-bottom:2.1pt'><span style='font-family:"Arial",sans-serif'> </span></p>
+
+<table class=TableGrid border=0 cellspacing=0 cellpadding=0 align=left
+ width=585 style='width:438.85pt;border-collapse:collapse;margin-left:-2.25pt;
+ margin-right:-2.25pt'>
+ <tr style='height:26.0pt'>
+  <td width=130 valign=top style='width:97.3pt;padding:0cm 0cm 0cm 0cm;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>KEY </b></p>
+  </td>
+  <td width=332 valign=top style='width:249.2pt;padding:0cm 0cm 0cm 0cm;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:39.2pt'><b>VALUE </b></p>
+  </td>
+  <td width=123 valign=top style='width:92.35pt;padding:0cm 0cm 0cm 0cm;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;text-align:justify;text-justify:
+  inter-ideograph'><b>VALUE EXAMPLE </b></p>
+  </td>
+ </tr>
+ <tr style='height:26.0pt'>
+  <td width=130 valign=bottom style='width:97.3pt;padding:0cm 0cm 0cm 0cm;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>X-Clientid </p>
+  </td>
+  <td width=332 valign=bottom style='width:249.2pt;padding:0cm 0cm 0cm 0cm;
+  height:26.0pt'>
+  <p class=MsoNormal align=center style='margin-top:0cm;margin-right:12.45pt;
+  margin-bottom:0cm;margin-left:0cm;text-align:center'>client_id identification
+  </p>
+  </td>
+  <td width=123 valign=bottom style='width:92.35pt;padding:0cm 0cm 0cm 0cm;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;text-align:justify;text-justify:
+  inter-ideograph'>absensi_live </p>
+  </td>
+ </tr>
+</table>
+
+<h5 style='margin-left:-.25pt'><img width=620 height=2
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image012.gif" align=left hspace=12>Headers
+</h5>
+
+<h5 style='margin-top:13.95pt;margin-right:0cm;margin-bottom:3.9pt;margin-left:
+-.25pt'>Body </h5>
+
+<p class=MsoNormal style='margin-bottom:0cm'><b> </b></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:-27.85pt;margin-bottom:
+2.2pt;margin-left:0cm'><img border=0 width=624 height=142
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image013.gif"></p>
+
+<p class=MsoNormal style='margin-bottom:0cm'> </p>
+
+<table class=TableGrid border=0 cellspacing=0 cellpadding=0 width=623
+ style='width:467.0pt;border-collapse:collapse'>
+ <tr style='height:27.95pt'>
+  <td width=171 valign=top style='width:128.25pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.75pt 0cm 0cm;height:27.95pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><b>Key </b></p>
+  </td>
+  <td width=91 valign=top style='width:68.25pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:27.95pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>Type </b></p>
+  </td>
+  <td width=361 valign=top style='width:270.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:27.95pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>Description </b></p>
+  </td>
+ </tr>
+ <tr style='height:33.0pt'>
+  <td width=171 valign=top style='width:128.25pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.75pt 0cm 0cm;height:33.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>facegallery_id </span></p>
+  </td>
+  <td width=91 valign=top style='width:68.25pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:33.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=361 valign=top style='width:270.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:33.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>Name of facegallery </p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal style='margin-bottom:1.9pt;line-height:110%'><span
+style='color:green'>trx_id                                              string                               </span>Unique
+transaction identifier, for </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:.2pt;margin-bottom:13.45pt;
+margin-left:197.0pt;text-indent:-.5pt;line-height:110%'>transaction logging and
+debugging purposes </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+margin-left:116.25pt'><b> </b></p>
+
+<p class=MsoNormal style='margin-bottom:2.1pt'><span style='font-family:"Arial",sans-serif'> </span></p>
+
+<h5 style='margin-left:-.25pt'>Headers </h5>
+
+<p class=MsoNormal style='margin-bottom:0cm;line-height:110%'>KEY                                      VALUE
+</p>
+
+<p class=MsoNormal style='margin-bottom:4.1pt'><img border=0 width=352
+height=2 id="Group 32126"
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image014.gif"></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:.2pt;margin-bottom:13.45pt;
+margin-left:8.0pt;text-indent:-.5pt;line-height:110%'>Content-Type
+application/json </p>
+
+<h5 style='margin-top:0cm;margin-right:0cm;margin-bottom:3.9pt;margin-left:
+-.25pt'>Body </h5>
+
+<p class=MsoNormal style='margin-bottom:0cm'><b> </b></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:-27.85pt;margin-bottom:
+2.2pt;margin-left:0cm'><img border=0 width=624 height=165
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image015.gif"></p>
+
+<p class=MsoNormal style='margin-bottom:0cm'> </p>
+
+<table class=TableGrid border=0 cellspacing=0 cellpadding=0 width=625
+ style='width:469.0pt;border-collapse:collapse'>
+ <tr style='height:28.25pt'>
+  <td width=160 valign=top style='width:120.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:28.25pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><b>Key </b></p>
+  </td>
+  <td width=96 valign=top style='width:72.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:28.25pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>Type </b></p>
+  </td>
+  <td width=369 valign=top style='width:277.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:28.25pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>Description </b></p>
+  </td>
+ </tr>
+ <tr style='height:50.0pt'>
+  <td width=160 valign=top style='width:120.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>status </span></p>
+  </td>
+  <td width=96 valign=top style='width:72.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=369 valign=top style='width:277.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>Describing the condition of API
+  hit, please refer to <u><span style='color:#1155CC'>List of Status Code</span></u>
+  </p>
+  </td>
+ </tr>
+ <tr style='height:49.0pt'>
+  <td width=160 valign=top style='width:120.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:49.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>status_message </span></p>
+  </td>
+  <td width=96 valign=top style='width:72.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:49.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=369 valign=top style='width:277.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:49.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>The verbose message of API hit
+  status, please refer to <u><span style='color:#1155CC'>List of Status Code</span></u>
+  </p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal style='margin-bottom:12.7pt'><span style='color:green'>facegallery_id
+string                                                  </span>Name of facegallery
+</p>
+
+<p class=MsoNormal style='margin-bottom:3.9pt'><span style='font-family:"Arial",sans-serif'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+margin-left:116.25pt'><span style='font-family:"Arial",sans-serif'> </span></p>
+
+<h3 style='margin-left:-.25pt'><span style='color:black'>DELETE </span>/facegallery/delete-facegallery
+</h3>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:.2pt;margin-bottom:8.9pt;
+margin-left:.5pt;text-indent:-.5pt;line-height:110%'>This API deletes a
+facegallery. </p>
+
+<h4 style='margin-top:0cm;margin-right:0cm;margin-bottom:2.7pt;margin-left:
+-.25pt'>Request </h4>
+
+<p class=MsoNormal style='margin-bottom:2.1pt'><span style='font-family:"Arial",sans-serif'> </span></p>
+
+<table class=TableGrid border=0 cellspacing=0 cellpadding=0 align=left
+ width=572 style='width:429.1pt;border-collapse:collapse;margin-left:-2.25pt;
+ margin-right:-2.25pt'>
+ <tr style='height:23.7pt'>
+  <td width=179 valign=top style='width:134.25pt;padding:0cm 0cm 0cm 0cm;
+  height:23.7pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>KEY </b></p>
+  </td>
+  <td width=270 valign=top style='width:202.5pt;padding:0cm 0cm 0cm 0cm;
+  height:23.7pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>VALUE </b></p>
+  </td>
+  <td width=123 valign=top style='width:92.35pt;padding:0cm 0cm 0cm 0cm;
+  height:23.7pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;text-align:justify;text-justify:
+  inter-ideograph'><b>VALUE EXAMPLE </b></p>
+  </td>
+ </tr>
+ <tr style='height:23.7pt'>
+  <td width=179 valign=bottom style='width:134.25pt;padding:0cm 0cm 0cm 0cm;
+  height:23.7pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>X-Clientid </p>
+  </td>
+  <td width=270 valign=bottom style='width:202.5pt;padding:0cm 0cm 0cm 0cm;
+  height:23.7pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>client_id identification </p>
+  </td>
+  <td width=123 valign=bottom style='width:92.35pt;padding:0cm 0cm 0cm 0cm;
+  height:23.7pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;text-align:justify;text-justify:
+  inter-ideograph'>absensi_live </p>
+  </td>
+ </tr>
+</table>
+
+<h5 style='margin-left:-.25pt'><img width=624 height=2
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image016.gif" align=left hspace=12>Headers
+</h5>
+
+<p class=MsoNormal style='margin-top:13.95pt;margin-right:-27.85pt;margin-bottom:
+2.2pt;margin-left:0cm'><img border=0 width=624 height=167
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image017.gif"></p>
+
+<p class=MsoNormal style='margin-bottom:0cm'> </p>
+
+<table class=TableGrid border=0 cellspacing=0 cellpadding=0 width=623
+ style='width:467.0pt;border-collapse:collapse'>
+ <tr style='height:28.2pt'>
+  <td width=206 valign=top style='width:154.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:28.2pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><b>Key </b></p>
+  </td>
+  <td width=117 valign=top style='width:87.75pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:28.2pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>Type </b></p>
+  </td>
+  <td width=300 valign=top style='width:224.75pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.75pt 0cm 0cm;height:28.2pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>Description </b></p>
+  </td>
+ </tr>
+ <tr style='height:33.0pt'>
+  <td width=206 valign=top style='width:154.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:33.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>facegallery_id </span></p>
+  </td>
+  <td width=117 valign=top style='width:87.75pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:33.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=300 valign=top style='width:224.75pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.75pt 0cm 0cm;height:33.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>Name of facegallery </p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal style='margin-bottom:1.9pt;line-height:110%'><span
+style='color:green'>trx_id                                                         string
+                                        </span>Unique transaction identifier, </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:.2pt;margin-bottom:13.45pt;
+margin-left:242.75pt;text-indent:-.5pt;line-height:110%'>for transaction
+logging and debugging purposes </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+margin-left:116.25pt'><b> </b></p>
+
+<p class=MsoNormal style='margin-bottom:2.1pt'><span style='font-family:"Arial",sans-serif'> </span></p>
+
+<h5 style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:-.25pt'>Headers
+KEY       VALUE </h5>
+
+<p class=MsoNormal style='margin-bottom:4.1pt'><img border=0 width=353
+height=2 id="Group 32310"
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image018.gif"></p>
+
+<p class=MsoNormal style='margin-bottom:0cm;line-height:110%'>Content-Type                                   application/json
+</p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:-27.85pt;margin-bottom:
+2.2pt;margin-left:0cm'><img border=0 width=624 height=190
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image019.gif"></p>
+
+<p class=MsoNormal style='margin-bottom:0cm'> </p>
+
+<table class=TableGrid border=0 cellspacing=0 cellpadding=0 width=621
+ style='width:466.0pt;border-collapse:collapse'>
+ <tr style='height:27.95pt'>
+  <td width=162 valign=top style='width:121.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:27.95pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><b>Key </b></p>
+  </td>
+  <td width=96 valign=top style='width:72.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:27.95pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>Type </b></p>
+  </td>
+  <td width=363 valign=top style='width:272.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:27.95pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>Description </b></p>
+  </td>
+ </tr>
+ <tr style='height:50.0pt'>
+  <td width=162 valign=top style='width:121.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>status </span></p>
+  </td>
+  <td width=96 valign=top style='width:72.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=363 valign=top style='width:272.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>Describing the condition of API
+  hit, please refer to <u><span style='color:#1155CC'>List of Status Code</span></u>
+  </p>
+  </td>
+ </tr>
+ <tr style='height:50.0pt'>
+  <td width=162 valign=top style='width:121.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>status_message </span></p>
+  </td>
+  <td width=96 valign=top style='width:72.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=363 valign=top style='width:272.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>The verbose message of API hit
+  status, please refer to <u><span style='color:#1155CC'>List of Status Code</span></u>
+  </p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal style='margin-bottom:15.75pt;line-height:110%'><span
+style='color:green'>facegallery_id string                                                      </span>Name
+of deleted facegallery </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+margin-left:116.25pt'><span style='font-size:13.0pt;line-height:107%'> </span></p>
+
+<h3 style='margin-left:0cm;text-indent:0cm'><span style='color:black'>POST
+/facegallery/enroll-face </span></h3>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:.2pt;margin-bottom:8.9pt;
+margin-left:.5pt;text-indent:-.5pt;line-height:110%'>This API registers a user
+to the database. </p>
+
+<h4 style='margin-top:0cm;margin-right:0cm;margin-bottom:2.7pt;margin-left:
+-.25pt'>Request </h4>
+
+<p class=MsoNormal style='margin-bottom:2.1pt'><span style='font-family:"Arial",sans-serif'> </span></p>
+
+<table class=TableGrid border=0 cellspacing=0 cellpadding=0 align=left
+ width=590 style='width:442.6pt;border-collapse:collapse;margin-left:-2.25pt;
+ margin-right:-2.25pt'>
+ <tr style='height:26.0pt'>
+  <td width=147 valign=top style='width:110.5pt;padding:0cm 0cm 0cm 0cm;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>KEY </b></p>
+  </td>
+  <td width=320 valign=top style='width:239.75pt;padding:0cm 0cm 0cm 0cm;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:17.75pt'><b>VALUE </b></p>
+  </td>
+  <td width=123 valign=top style='width:92.35pt;padding:0cm 0cm 0cm 0cm;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;text-align:justify;text-justify:
+  inter-ideograph'><b>VALUE EXAMPLE </b></p>
+  </td>
+ </tr>
+ <tr style='height:26.0pt'>
+  <td width=147 valign=bottom style='width:110.5pt;padding:0cm 0cm 0cm 0cm;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>X-Clientid </p>
+  </td>
+  <td width=320 valign=bottom style='width:239.75pt;padding:0cm 0cm 0cm 0cm;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:17.75pt'>client_id identification </p>
+  </td>
+  <td width=123 valign=bottom style='width:92.35pt;padding:0cm 0cm 0cm 0cm;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;text-align:justify;text-justify:
+  inter-ideograph'>absensi_live </p>
+  </td>
+ </tr>
+</table>
+
+<h5 style='margin-left:-.25pt'><img width=624 height=2
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image016.gif" align=left hspace=12>Headers
+</h5>
+
+<h5 style='margin-top:13.95pt;margin-right:0cm;margin-bottom:10.4pt;margin-left:
+-.25pt'>Body </h5>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:5.65pt;
+margin-left:17.75pt;text-indent:-.5pt'><span style='font-size:9.0pt;line-height:
+107%;color:#747775'>JavaScript</span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.2pt;
+margin-left:17.75pt;text-indent:-.5pt'><span style='color:#37474F'>{</span> </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:65.95pt;margin-bottom:
+2.0pt;margin-left:17.75pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-.5pt'>  <span style='color:#188038'>&quot;user_id&quot;</span><span
+style='color:#37474F'>:</span>          <span style='color:#188038'>&quot;absensi_live1234&quot;</span><span
+style='color:#37474F'>,</span>   <span style='color:#188038'>&quot;user_name&quot;</span><span
+style='color:#37474F'>:</span>        <span style='color:#188038'>&quot;Person
+Username1&quot;</span><span style='color:#37474F'>,</span> </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:17.75pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'>  <span style='color:#188038'>&quot;facegallery_id&quot;</span><span
+style='color:#37474F'>:</span>   <span style='color:#188038'>&quot;absensi_live@production&quot;</span><span
+style='color:#37474F'>,</span> </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:46.15pt;margin-bottom:
+19.8pt;margin-left:17.75pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-.5pt'><span style='position:absolute;z-index:-1895822336;
+left:0px;margin-left:8px;margin-top:2959px;width:780px;height:261px'><img
+width=624 height=209 src="Face%20API%20Docs%20-%20Bima.pdf_files/image020.gif"></span> 
+<span style='color:#188038'>&quot;image&quot;</span><span style='color:#37474F'>:</span>           
+<span style='color:#188038'>&quot;/9j/4AAQSkZJRgABAQEASABIAAD/4...&quot;</span><span
+style='color:#37474F'>,</span>   <span style='color:#188038'>&quot;trx_id&quot;</span><span
+style='color:#37474F'>:</span>           <span style='color:#188038'>&quot;alphanumericalstring1234&quot;</span>
+<span style='color:#37474F'>}</span><span style='color:#188038'> </span></p>
+
+<p class=MsoNormal style='margin-bottom:0cm'> </p>
+
+<table class=TableGrid border=0 cellspacing=0 cellpadding=0 width=619
+ style='width:464.0pt;border-collapse:collapse'>
+ <tr style='height:28.6pt'>
+  <td width=178 valign=top style='width:133.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:28.6pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><b>Key </b></p>
+  </td>
+  <td width=89 valign=top style='width:66.75pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:28.6pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>Type </b></p>
+  </td>
+  <td width=106 valign=top style='width:79.15pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:28.6pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;text-align:justify;text-justify:
+  inter-ideograph'><b>Description </b></p>
+  </td>
+  <td width=246 valign=top style='width:184.6pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:28.6pt'>
+  <p class=MsoNormal>&nbsp;</p>
+  </td>
+ </tr>
+ <tr style='height:49.0pt'>
+  <td width=178 valign=top style='width:133.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:49.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>user_id </span></p>
+  </td>
+  <td width=89 valign=top style='width:66.75pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:49.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=106 valign=top style='width:79.15pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:49.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>Unique user (eg. #NIK) </p>
+  </td>
+  <td width=246 valign=top style='width:184.6pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:49.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>identifier, alphanumeric </p>
+  </td>
+ </tr>
+ <tr style='height:50.0pt'>
+  <td width=178 valign=top style='width:133.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>user_name </span></p>
+  </td>
+  <td width=89 valign=top style='width:66.75pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=106 valign=top style='width:79.15pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>The name of user_id </p>
+  </td>
+  <td width=246 valign=top style='width:184.6pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>the person who has the </p>
+  </td>
+ </tr>
+ <tr style='height:66.0pt'>
+  <td width=178 valign=top style='width:133.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:66.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>facegallery_id </span></p>
+  </td>
+  <td width=89 valign=top style='width:66.75pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:66.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=352 colspan=2 valign=top style='width:263.75pt;border:none;
+  border-bottom:solid black 1.0pt;padding:0cm 0cm 0cm 0cm;height:66.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>Unique FaceGallery identifier,
+  alphanumeric (eg. LocationName, CompanyName, etc) </p>
+  </td>
+ </tr>
+ <tr style='height:33.0pt'>
+  <td width=178 valign=top style='width:133.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:33.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>image </span></p>
+  </td>
+  <td width=89 valign=top style='width:66.75pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:33.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=352 colspan=2 valign=top style='width:263.75pt;border:none;
+  border-bottom:solid black 1.0pt;padding:0cm 0cm 0cm 0cm;height:33.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>Base64 encoded JPG or PNG image </p>
+  </td>
+ </tr>
+</table>
+
+</div>
+
+<span style='font-size:11.0pt;line-height:107%;font-family:"Calibri",sans-serif;
+color:black'><br clear=all style='page-break-before:always'>
+</span>
+
+<div class=WordSection3>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:-2.25pt;margin-bottom:
+4.0pt;margin-left:0cm'><img border=0 width=620 height=2 id="Group 32108"
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image012.gif"></p>
+
+<p class=MsoNormal style='margin-bottom:1.9pt;line-height:110%'><span
+style='color:green'>trx_id                                                string
+                              </span>Unique transaction identifier, for </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:.2pt;margin-bottom:13.45pt;
+margin-left:200.75pt;text-indent:-.5pt;line-height:110%'>transaction logging
+and debugging purposes </p>
+
+<h4 style='margin-top:0cm;margin-right:358.85pt;margin-bottom:3.45pt;
+margin-left:-.25pt;line-height:137%'><span style='font-size:10.5pt;line-height:
+137%'>Response </span></h4>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:358.85pt;margin-bottom:
+3.45pt;margin-left:-.25pt;text-indent:-.5pt;line-height:137%'><b>Headers </b></p>
+
+<p class=MsoNormal style='margin-bottom:.15pt'><b><span style='font-size:10.5pt;
+line-height:107%'>KEY                                          VALUE </span></b></p>
+
+<p class=MsoNormal style='margin-bottom:4.35pt'><img border=0 width=358
+height=2 id="Group 32109"
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image021.gif"></p>
+
+<p class=MsoNormal style='margin-bottom:14.35pt'><span style='font-size:10.5pt;
+line-height:107%'>Content-Type                               application/json </span></p>
+
+<p class=MsoNormal style='margin-bottom:4.2pt'> </p>
+
+<h5 style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:-.25pt'>Body
+</h5>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:-6.25pt;margin-bottom:
+2.1pt;margin-left:0cm'><img border=0 width=624 height=138
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image022.gif"></p>
+
+<p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:10.5pt;
+line-height:107%'> </span></p>
+
+<table class=TableGrid border=0 cellspacing=0 cellpadding=0 width=620
+ style='width:465.0pt;border-collapse:collapse'>
+ <tr style='height:27.25pt'>
+  <td width=166 valign=top style='width:124.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 17.4pt 0cm 0cm;height:27.25pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><b><span style='font-size:10.5pt;line-height:107%'>Key </span></b></p>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 17.4pt 0cm 0cm;height:27.25pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b><span style='font-size:10.5pt;
+  line-height:107%'>Type </span></b></p>
+  </td>
+  <td width=372 valign=top style='width:279.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 17.4pt 0cm 0cm;height:27.25pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b><span style='font-size:10.5pt;
+  line-height:107%'>Description </span></b></p>
+  </td>
+ </tr>
+ <tr style='height:49.0pt'>
+  <td width=166 valign=top style='width:124.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 17.4pt 0cm 0cm;height:49.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='font-size:10.5pt;line-height:107%;
+  color:green'>status </span></p>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 17.4pt 0cm 0cm;height:49.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:10.5pt;
+  line-height:107%;color:green'>string </span></p>
+  </td>
+  <td width=372 valign=top style='width:279.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 17.4pt 0cm 0cm;height:49.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;text-align:justify;text-justify:
+  inter-ideograph'><span style='font-size:10.5pt;line-height:107%'>Describing
+  the condition of API hit, please refer to </span><u><span style='color:#1155CC'>List
+  of Status Code</span></u><span style='font-size:10.5pt;line-height:107%'> </span></p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:11.85pt;
+margin-left:185.75pt;text-indent:-178.25pt'><span style='font-size:10.5pt;
+line-height:107%;color:green'>status_message string </span><span
+style='font-size:10.5pt;line-height:107%'>The verbose message of API hit
+status, please refer to </span><u><span style='color:#1155CC'>List of Status
+Code</span></u><span style='font-size:10.5pt;line-height:107%'> </span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+margin-left:116.25pt'><span style='font-family:"Arial",sans-serif'> </span></p>
+
+<h3 style='margin-left:-.25pt'><span style='color:black'>GET </span>/facegallery/list-faces
+</h3>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:.2pt;margin-bottom:8.9pt;
+margin-left:.5pt;text-indent:-.5pt;line-height:110%'>This API gives a list of
+the registered user. </p>
+
+<h4 style='margin-top:0cm;margin-right:0cm;margin-bottom:2.7pt;margin-left:
+-.25pt'>Request </h4>
+
+<p class=MsoNormal style='margin-bottom:2.1pt'><span style='font-family:"Arial",sans-serif'> </span></p>
+
+<h5 style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:-.25pt'>Headers
+KEY       VALUE   VALUE EXAMPLE </h5>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:-3.25pt;margin-bottom:
+4.5pt;margin-left:0cm'><img border=0 width=621 height=2 id="Group 31477"
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image023.gif"></p>
+
+<p class=MsoNormal style='margin-bottom:0cm;line-height:110%'>X-Clientid                                                    client_id
+identification                                   absensi_live </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:-6.25pt;margin-bottom:
+2.2pt;margin-left:0cm'><img border=0 width=624 height=167
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image024.gif"></p>
+
+<p class=MsoNormal style='margin-bottom:0cm'> </p>
+
+<table class=TableGrid border=0 cellspacing=0 cellpadding=0 width=619
+ style='width:464.0pt;border-collapse:collapse'>
+ <tr style='height:28.2pt'>
+  <td width=171 valign=top style='width:128.25pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.75pt 0cm 0cm;height:28.2pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><b>Key </b></p>
+  </td>
+  <td width=75 valign=top style='width:56.25pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:28.2pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>Type </b></p>
+  </td>
+  <td width=373 valign=top style='width:279.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:28.2pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>Description </b></p>
+  </td>
+ </tr>
+ <tr style='height:67.0pt'>
+  <td width=171 valign=top style='width:128.25pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.75pt 0cm 0cm;height:67.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>facegallery_id </span></p>
+  </td>
+  <td width=75 valign=top style='width:56.25pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:67.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=373 valign=top style='width:279.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:67.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>Unique FaceGallery identifier,
+  alphanumeric (eg. LocationName, CompanyName, etc) </p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal style='margin-bottom:1.9pt;line-height:110%'><span
+style='color:green'>trx_id                                                                 string
+</span>Unique transaction identifier, for </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:.2pt;margin-bottom:13.45pt;
+margin-left:185.0pt;text-indent:-.5pt;line-height:110%'>transaction logging and
+debugging purposes </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+margin-left:116.25pt'><b> </b></p>
+
+<h4 style='margin-top:0cm;margin-right:0cm;margin-bottom:2.7pt;margin-left:
+-.25pt'>Response </h4>
+
+<p class=MsoNormal style='margin-bottom:2.1pt'><span style='font-family:"Arial",sans-serif'> </span></p>
+
+<h5 style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:-.25pt'>Headers
+KEY       VALUE </h5>
+
+<p class=MsoNormal style='margin-bottom:4.1pt'><img border=0 width=404
+height=2 id="Group 35704"
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image025.gif"></p>
+
+<p class=MsoNormal style='margin-bottom:0cm;line-height:110%'>Content-Type                                   application/json
+</p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:-6.25pt;margin-bottom:
+2.2pt;margin-left:0cm'><img border=0 width=624 height=390
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image026.gif"></p>
+
+<p class=MsoNormal style='margin-bottom:0cm'> </p>
+
+<table class=TableGrid border=0 cellspacing=0 cellpadding=0 width=623
+ style='width:467.0pt;border-collapse:collapse'>
+ <tr style='height:28.8pt'>
+  <td width=165 valign=top style='width:123.75pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.75pt 0cm 0cm;height:28.8pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><b>Key </b></p>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:28.8pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>Type </b></p>
+  </td>
+  <td width=376 valign=top style='width:281.75pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.75pt 0cm 0cm;height:28.8pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>Description </b></p>
+  </td>
+ </tr>
+ <tr style='height:49.0pt'>
+  <td width=165 valign=top style='width:123.75pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.75pt 0cm 0cm;height:49.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>status </span></p>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:49.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=376 valign=top style='width:281.75pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.75pt 0cm 0cm;height:49.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>Describing the condition of API
+  hit, please refer to <u><span style='color:#1155CC'>List of Status Code</span></u>
+  </p>
+  </td>
+ </tr>
+ <tr style='height:50.0pt'>
+  <td width=165 valign=top style='width:123.75pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.75pt 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>status_message </span></p>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=376 valign=top style='width:281.75pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.75pt 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>The verbose message of API hit
+  status, please refer to <u><span style='color:#1155CC'>List of Status Code</span></u>
+  </p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal style='margin-bottom:13.45pt;line-height:110%'><span
+style='color:green'>faces                                             list                             </span>List
+of registered user </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+margin-left:116.25pt'> </p>
+
+<h3 style='margin-left:-.25pt'><span style='color:black'>POST </span>/facegallery/verify-face
+</h3>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:.2pt;margin-bottom:8.5pt;
+margin-left:.5pt;text-indent:-.5pt;line-height:110%'>This API verifies an
+user_id and an image with a registered user or it does 1:1 authentication. </p>
+
+<h4 style='margin-top:0cm;margin-right:0cm;margin-bottom:2.7pt;margin-left:
+-.25pt'>Request </h4>
+
+<p class=MsoNormal style='margin-bottom:2.1pt'><span style='font-family:"Arial",sans-serif'> </span></p>
+
+<h5 style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:-.25pt'>Headers
+</h5>
+
+<table class=TableGrid border=0 cellspacing=0 cellpadding=0 width=616
+ style='width:462.0pt;border-collapse:collapse'>
+ <tr style='height:47.2pt'>
+  <td width=175 valign=top style='width:131.25pt;padding:0cm 0cm 0cm 0cm;
+  height:47.2pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><b>KEY </b></p>
+  </td>
+  <td width=337 valign=top style='width:252.75pt;padding:0cm 0cm 0cm 0cm;
+  height:47.2pt'>
+  <p class=MsoNormal style='margin-bottom:15.75pt'><b>VALUE </b></p>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:-78.0pt;margin-bottom:
+  0cm;margin-left:-131.25pt'><img border=0 width=617 height=2 id="Group 35104"
+  src="Face%20API%20Docs%20-%20Bima.pdf_files/image008.gif"></p>
+  </td>
+  <td width=104 valign=top style='width:78.0pt;padding:0cm 0cm 0cm 0cm;
+  height:47.2pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>VALUE EXAMPLE </b></p>
+  </td>
+ </tr>
+ <tr style='height:16.95pt'>
+  <td width=175 valign=top style='width:131.25pt;padding:0cm 0cm 0cm 0cm;
+  height:16.95pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'>X-Clientid </p>
+  </td>
+  <td width=337 valign=top style='width:252.75pt;padding:0cm 0cm 0cm 0cm;
+  height:16.95pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>client_id identification </p>
+  </td>
+  <td width=104 valign=top style='width:78.0pt;padding:0cm 0cm 0cm 0cm;
+  height:16.95pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>absensi_li</p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal align=right style='margin-top:0cm;margin-right:64.55pt;
+margin-bottom:13.95pt;margin-left:.5pt;text-align:right;text-indent:-.5pt'>ve </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:.2pt;margin-bottom:10.4pt;
+margin-left:.5pt;text-indent:-.5pt;line-height:110%'>Body<b> </b></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:5.65pt;
+margin-left:17.75pt;text-indent:-.5pt'><span style='font-size:9.0pt;line-height:
+107%;color:#747775'>JavaScript</span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.2pt;
+margin-left:17.75pt;text-indent:-.5pt'><span style='color:#37474F'>{</span> </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:17.75pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'>  <span style='color:#188038'>&quot;user_id&quot;</span><span
+style='color:#37474F'>:</span>          <span style='color:#188038'>&quot;absensi_live1234&quot;</span><span
+style='color:#37474F'>,</span> </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:17.75pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'>  <span style='color:#188038'>&quot;facegallery_id&quot;</span><span
+style='color:#37474F'>:</span>   <span style='color:#188038'>&quot;absensi_live@production&quot;</span><span
+style='color:#37474F'>,</span> </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:61.15pt;margin-bottom:
+19.8pt;margin-left:17.75pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-.5pt'><span style='position:absolute;z-index:-1895821312;
+left:0px;margin-left:8px;margin-top:3657px;width:780px;height:234px'><img
+width=624 height=187 src="Face%20API%20Docs%20-%20Bima.pdf_files/image027.gif"></span> 
+<span style='color:#188038'>&quot;image&quot;</span><span style='color:#37474F'>:</span>           
+<span style='color:#188038'>&quot;/9j/4AAQSkZJRgABAQEASABIAAD/4Q...&quot;</span><span
+style='color:#37474F'>,</span>   <span style='color:#188038'>&quot;trx_id&quot;</span><span
+style='color:#37474F'>:</span>           <span style='color:#188038'>&quot;alphanumericalstring1234&quot;</span>
+<span style='color:#37474F'>} </span></p>
+
+<p class=MsoNormal style='margin-bottom:0cm'> </p>
+
+<table class=TableGrid border=0 cellspacing=0 cellpadding=0 width=619
+ style='width:464.0pt;border-collapse:collapse'>
+ <tr style='height:28.8pt'>
+  <td width=173 valign=top style='width:129.75pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.75pt 0cm 0cm;height:28.8pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><b>Key </b></p>
+  </td>
+  <td width=88 valign=top style='width:66.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:28.8pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>Type </b></p>
+  </td>
+  <td width=358 valign=top style='width:268.25pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.75pt 0cm 0cm;height:28.8pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>Description </b></p>
+  </td>
+ </tr>
+ <tr style='height:49.0pt'>
+  <td width=173 valign=top style='width:129.75pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.75pt 0cm 0cm;height:49.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>user_id </span></p>
+  </td>
+  <td width=88 valign=top style='width:66.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:49.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=358 valign=top style='width:268.25pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.75pt 0cm 0cm;height:49.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>Unique user identifier,
+  alphanumeric (eg. #NIK) </p>
+  </td>
+ </tr>
+ <tr style='height:67.0pt'>
+  <td width=173 valign=top style='width:129.75pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.75pt 0cm 0cm;height:67.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>facegallery_id </span></p>
+  </td>
+  <td width=88 valign=top style='width:66.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:67.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=358 valign=top style='width:268.25pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.75pt 0cm 0cm;height:67.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>Unique FaceGallery identifier,
+  alphanumeric (eg. LocationName, CompanyName, etc) </p>
+  </td>
+ </tr>
+ <tr style='height:32.0pt'>
+  <td width=173 valign=top style='width:129.75pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.75pt 0cm 0cm;height:32.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>image </span></p>
+  </td>
+  <td width=88 valign=top style='width:66.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:32.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=358 valign=top style='width:268.25pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.75pt 0cm 0cm;height:32.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>Base64 encoded JPG or PNG image </p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal style='margin-bottom:1.9pt;line-height:110%'><span
+style='color:green'>trx_id                                              string                               </span>Unique
+transaction identifier, for </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:.2pt;margin-bottom:13.45pt;
+margin-left:196.25pt;text-indent:-.5pt;line-height:110%'>transaction logging
+and debugging purposes </p>
+
+<h4 style='margin-top:0cm;margin-right:0cm;margin-bottom:3.35pt;margin-left:
+0cm;text-indent:0cm;line-height:107%'><span style='font-size:12.0pt;line-height:
+107%'>Response </span></h4>
+
+<h5 style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:-.25pt'>Headers
+KEY       VALUE </h5>
+
+<p class=MsoNormal style='margin-bottom:4.05pt'><img border=0 width=328
+height=2 id="Group 36728"
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image028.gif"></p>
+
+<p class=MsoNormal style='margin-bottom:13.45pt;line-height:110%'>Content-Type                                application/json
+</p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:.2pt;margin-bottom:3.9pt;
+margin-left:.5pt;text-indent:-.5pt;line-height:110%'>Body </p>
+
+<p class=MsoNormal style='margin-bottom:0cm'><b> </b></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:-6.25pt;margin-bottom:
+2.2pt;margin-left:0cm'><img border=0 width=624 height=254
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image029.gif"></p>
+
+<p class=MsoNormal style='margin-bottom:0cm'> </p>
+
+<table class=TableGrid border=0 cellspacing=0 cellpadding=0 width=623
+ style='width:467.0pt;border-collapse:collapse'>
+ <tr style='height:28.55pt'>
+  <td width=171 valign=top style='width:128.25pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 0cm 0cm 0cm;height:28.55pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><b>Key </b></p>
+  </td>
+  <td width=91 valign=top style='width:68.25pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:28.55pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>Type </b></p>
+  </td>
+  <td width=361 colspan=2 valign=top style='width:270.5pt;border:none;
+  border-bottom:solid black 1.0pt;padding:0cm 0cm 0cm 0cm;height:28.55pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>Description </b></p>
+  </td>
+ </tr>
+ <tr style='height:50.0pt'>
+  <td width=171 valign=top style='width:128.25pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 0cm 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>status </span></p>
+  </td>
+  <td width=91 valign=top style='width:68.25pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=361 colspan=2 valign=top style='width:270.5pt;border:none;
+  border-bottom:solid black 1.0pt;padding:0cm 0cm 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>Describing the condition of API
+  hit, please refer to <u><span style='color:#1155CC'>List of Status Code</span></u>
+  </p>
+  </td>
+ </tr>
+ <tr style='height:49.0pt'>
+  <td width=171 valign=top style='width:128.25pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 0cm 0cm 0cm;height:49.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>status_message </span></p>
+  </td>
+  <td width=91 valign=top style='width:68.25pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:49.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=211 valign=top style='width:158.3pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:49.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>The verbose message of please
+  refer to <u><span style='color:#1155CC'>List of </span></u></p>
+  </td>
+  <td width=150 valign=top style='width:112.2pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:49.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;text-indent:-6.6pt'>API hit
+  status, <u><span style='color:#1155CC'>Status Code</span></u> </p>
+  </td>
+ </tr>
+ <tr style='height:33.0pt'>
+  <td width=171 valign=top style='width:128.25pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 0cm 0cm 0cm;height:33.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>user_name </span></p>
+  </td>
+  <td width=91 valign=top style='width:68.25pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:33.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=211 valign=top style='width:158.3pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:33.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>Username </p>
+  </td>
+  <td width=150 valign=top style='width:112.2pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:33.0pt'>
+  <p class=MsoNormal>&nbsp;</p>
+  </td>
+ </tr>
+ <tr style='height:20.15pt'>
+  <td width=171 valign=top style='width:128.25pt;border:none;padding:0cm 0cm 0cm 0cm;
+  height:20.15pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>similarity </span></p>
+  </td>
+  <td width=91 valign=top style='width:68.25pt;border:none;padding:0cm 0cm 0cm 0cm;
+  height:20.15pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>float </span></p>
+  </td>
+  <td width=211 valign=top style='width:158.3pt;border:none;padding:0cm 0cm 0cm 0cm;
+  height:20.15pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;text-align:justify;text-justify:
+  inter-ideograph'>Describe the comparison </p>
+  </td>
+  <td width=150 valign=top style='width:112.2pt;border:none;padding:0cm 0cm 0cm 0cm;
+  height:20.15pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>of facial </p>
+  </td>
+ </tr>
+ <tr style='height:45.85pt'>
+  <td width=171 valign=top style='width:128.25pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 0cm 0cm 0cm;height:45.85pt'>
+  <p class=MsoNormal>&nbsp;</p>
+  </td>
+  <td width=91 valign=top style='width:68.25pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:45.85pt'>
+  <p class=MsoNormal>&nbsp;</p>
+  </td>
+  <td width=211 valign=top style='width:158.3pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:45.85pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>similarities, scale 0.0 to 100%
+  similar) </p>
+  </td>
+  <td width=150 valign=top style='width:112.2pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:45.85pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>to 1.0 (from 0% </p>
+  </td>
+ </tr>
+ <tr style='height:50.0pt'>
+  <td width=171 valign=top style='width:128.25pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 0cm 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>masker </span></p>
+  </td>
+  <td width=91 valign=top style='width:68.25pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>boolean
+  </span></p>
+  </td>
+  <td width=361 colspan=2 valign=top style='width:270.5pt;border:none;
+  border-bottom:solid black 1.0pt;padding:0cm 0cm 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-bottom:2.2pt'>If a person’s face wearing a
+  mask, will </p>
+  <p class=MsoNormal style='margin-bottom:0cm'>return True, else return False </p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:-5.25pt;margin-bottom:
+4.0pt;margin-left:0cm'><img border=0 width=624 height=2 id="Group 32492"
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image016.gif"></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:.2pt;margin-bottom:16.4pt;
+margin-left:195.75pt;text-indent:-188.25pt;line-height:110%'><span
+style='color:green'>verified                                                                boolean
+</span>If similarity above set config parameter(eg. threshold = 0.75), return
+True, else return False </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+margin-left:116.25pt'> <br clear=all style='page-break-before:always'>
+</p>
+
+<h3 style='margin-left:-.25pt'><span style='color:black'>POST </span>/facegallery/identify-face
+</h3>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:.2pt;margin-bottom:8.5pt;
+margin-left:.5pt;text-indent:-.5pt;line-height:110%'>This API identify an image
+with a registered user or it do1:N authentication. </p>
+
+<h4 style='margin-top:0cm;margin-right:0cm;margin-bottom:2.7pt;margin-left:
+-.25pt'>Request </h4>
+
+<p class=MsoNormal style='margin-bottom:2.1pt'><span style='font-family:"Arial",sans-serif'> </span></p>
+
+<table class=TableGrid border=0 cellspacing=0 cellpadding=0 align=left
+ width=598 style='width:448.45pt;border-collapse:collapse;margin-left:-2.25pt;
+ margin-right:-2.25pt'>
+ <tr style='height:40.4pt'>
+  <td width=147 valign=top style='width:110.5pt;padding:0cm 0cm 0cm 0cm;
+  height:40.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>KEY </b></p>
+  </td>
+  <td width=363 valign=top style='width:272.0pt;padding:0cm 0cm 0cm 0cm;
+  height:40.4pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:4.25pt'><b>VALUE </b></p>
+  </td>
+  <td width=88 valign=top style='width:65.95pt;padding:0cm 0cm 0cm 0cm;
+  height:40.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>VALUE EXAMPLE </b></p>
+  </td>
+ </tr>
+ <tr style='height:23.7pt'>
+  <td width=147 valign=bottom style='width:110.5pt;padding:0cm 0cm 0cm 0cm;
+  height:23.7pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>X-Clientid </p>
+  </td>
+  <td width=363 valign=bottom style='width:272.0pt;padding:0cm 0cm 0cm 0cm;
+  height:23.7pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:4.25pt'>client_id identification </p>
+  </td>
+  <td width=88 valign=bottom style='width:65.95pt;padding:0cm 0cm 0cm 0cm;
+  height:23.7pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;text-align:justify;text-justify:
+  inter-ideograph'>absensi_li</p>
+  </td>
+ </tr>
+</table>
+
+<h5 style='margin-left:-.25pt'><img width=628 height=2
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image030.gif" align=left hspace=12>Headers
+</h5>
+
+<p class=MsoNormal align=right style='margin-top:2.2pt;margin-right:57.8pt;
+margin-bottom:13.95pt;margin-left:.5pt;text-align:right;text-indent:-.5pt'>ve </p>
+
+<h5 style='margin-top:0cm;margin-right:0cm;margin-bottom:3.9pt;margin-left:
+-.25pt'>Body </h5>
+
+<p class=MsoNormal style='margin-bottom:0cm'> </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:-6.25pt;margin-bottom:
+2.2pt;margin-left:0cm'><img border=0 width=624 height=165
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image031.gif"></p>
+
+<p class=MsoNormal style='margin-bottom:0cm'> </p>
+
+<table class=TableGrid border=0 cellspacing=0 cellpadding=0 width=619
+ style='width:464.0pt;border-collapse:collapse'>
+ <tr style='height:28.8pt'>
+  <td width=177 valign=top style='width:132.75pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.75pt 0cm 0cm;height:28.8pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><b>Key </b></p>
+  </td>
+  <td width=81 valign=top style='width:60.75pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:28.8pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>Type </b></p>
+  </td>
+  <td width=361 valign=top style='width:270.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:28.8pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>Description </b></p>
+  </td>
+ </tr>
+ <tr style='height:66.0pt'>
+  <td width=177 valign=top style='width:132.75pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.75pt 0cm 0cm;height:66.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>facegallery_id </span></p>
+  </td>
+  <td width=81 valign=top style='width:60.75pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:66.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=361 valign=top style='width:270.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:66.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>Unique FaceGallery identifier,
+  alphanumeric (eg. LocationName, CompanyName, etc) </p>
+  </td>
+ </tr>
+ <tr style='height:33.0pt'>
+  <td width=177 valign=top style='width:132.75pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.75pt 0cm 0cm;height:33.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>image </span></p>
+  </td>
+  <td width=81 valign=top style='width:60.75pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:33.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=361 valign=top style='width:270.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:33.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>Base64 encoded JPG or PNG image </p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal style='margin-bottom:1.9pt;line-height:110%'><span
+style='color:green'>trx_id                                                                    string
+</span>Unique transaction identifier, for </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:.2pt;margin-bottom:13.45pt;
+margin-left:194.0pt;text-indent:-.5pt;line-height:110%'>transaction logging and
+debugging purposes </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+margin-left:116.25pt'><b> </b></p>
+
+<h3 style='margin-top:0cm;margin-right:0cm;margin-bottom:2.7pt;margin-left:
+-.25pt;line-height:110%'><span style='font-size:11.0pt;line-height:110%;
+color:black'>Response </span></h3>
+
+<p class=MsoNormal style='margin-bottom:2.1pt'><span style='font-family:"Arial",sans-serif'> </span></p>
+
+<h5 style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:-.25pt'>Headers
+KEY       VALUE </h5>
+
+<p class=MsoNormal style='margin-bottom:4.1pt'><img border=0 width=345
+height=2 id="Group 35789"
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image032.gif"></p>
+
+<p class=MsoNormal style='margin-bottom:13.45pt;line-height:110%'>Content-Type                                 application/json
+</p>
+
+<h5 style='margin-top:0cm;margin-right:0cm;margin-bottom:3.9pt;margin-left:
+-.25pt'>Body </h5>
+
+<p class=MsoNormal style='margin-bottom:0cm'> </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:-6.25pt;margin-bottom:
+2.2pt;margin-left:0cm'><img border=0 width=624 height=342
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image033.gif"></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:455.15pt;margin-bottom:
+0cm;margin-left:0cm'>  </p>
+
+<table class=TableGrid border=0 cellspacing=0 cellpadding=0 width=620
+ style='width:465.0pt;border-collapse:collapse'>
+ <tr style='height:28.1pt'>
+  <td width=186 valign=top style='width:139.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.7pt 0cm 0cm;height:28.1pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><b>Key </b></p>
+  </td>
+  <td width=101 valign=top style='width:75.75pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.7pt 0cm 0cm;height:28.1pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>Type </b></p>
+  </td>
+  <td width=333 valign=top style='width:249.75pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.7pt 0cm 0cm;height:28.1pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>Description </b></p>
+  </td>
+ </tr>
+ <tr style='height:50.0pt'>
+  <td width=186 valign=top style='width:139.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.7pt 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>status </span></p>
+  </td>
+  <td width=101 valign=top style='width:75.75pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.7pt 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=333 valign=top style='width:249.75pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.7pt 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>Describing the condition of API
+  hit, please refer to <u><span style='color:#1155CC'>List of Status Code</span></u>
+  </p>
+  </td>
+ </tr>
+ <tr style='height:66.0pt'>
+  <td width=186 valign=top style='width:139.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.7pt 0cm 0cm;height:66.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>status_message </span></p>
+  </td>
+  <td width=101 valign=top style='width:75.75pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.7pt 0cm 0cm;height:66.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=333 valign=top style='width:249.75pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.7pt 0cm 0cm;height:66.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>The verbose message of API hit
+  status, please refer to <u><span style='color:#1155CC'>List of</span></u><span
+  style='color:#1155CC'> <u>Status Code</u></span> </p>
+  </td>
+ </tr>
+ <tr style='height:66.0pt'>
+  <td width=186 valign=top style='width:139.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.7pt 0cm 0cm;height:66.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>confidence_level </span></p>
+  </td>
+  <td width=101 valign=top style='width:75.75pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.7pt 0cm 0cm;height:66.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>float </span></p>
+  </td>
+  <td width=333 valign=top style='width:249.75pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.7pt 0cm 0cm;height:66.0pt'>
+  <p class=MsoNormal style='margin-bottom:2.2pt'>Describe confidence of model,
+  scale </p>
+  <p class=MsoNormal style='margin-bottom:0cm'>0.0 to 1.0 (from 0% to 100% confidence)
+  </p>
+  </td>
+ </tr>
+ <tr style='height:49.0pt'>
+  <td width=186 valign=top style='width:139.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.7pt 0cm 0cm;height:49.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>mask </span></p>
+  </td>
+  <td width=101 valign=top style='width:75.75pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.7pt 0cm 0cm;height:49.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>boolean
+  </span></p>
+  </td>
+  <td width=333 valign=top style='width:249.75pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.7pt 0cm 0cm;height:49.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>If a person’s face wearing a
+  mask, will return True, else return False </p>
+  </td>
+ </tr>
+ <tr style='height:50.0pt'>
+  <td width=186 valign=top style='width:139.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.7pt 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>user_id </span></p>
+  </td>
+  <td width=101 valign=top style='width:75.75pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.7pt 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=333 valign=top style='width:249.75pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.7pt 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>Unique user identifier,
+  alphanumeric (eg. #NIK) </p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:.2pt;margin-bottom:13.45pt;
+margin-left:214.5pt;text-indent:-207.0pt;line-height:110%'><span
+style='color:green'>user_name                                                                 string
+    </span>The name of the person who has the user_id </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+margin-left:116.25pt'> <br clear=all style='page-break-before:always'>
+</p>
+
+<h2 style='margin-top:0cm;margin-right:0cm;margin-bottom:3.5pt;margin-left:
+-.25pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Calibri",sans-serif'>DELETE
+</span><span style='font-size:13.0pt;line-height:107%;font-family:"Calibri",sans-serif;
+color:green'>/facegallery/delete-face </span></h2>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:.2pt;margin-bottom:8.9pt;
+margin-left:.5pt;text-indent:-.5pt;line-height:110%'>This API deletes a user. </p>
+
+<h3 style='margin-top:0cm;margin-right:0cm;margin-bottom:2.7pt;margin-left:
+-.25pt;line-height:110%'><span style='font-size:11.0pt;line-height:110%;
+color:black'>Request </span></h3>
+
+<p class=MsoNormal style='margin-bottom:2.1pt'><span style='font-family:"Arial",sans-serif'> </span></p>
+
+<h5 style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:-.25pt'>Headers
+KEY       VALUE   VALUE EXAMPLE </h5>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:-5.25pt;margin-bottom:
+4.5pt;margin-left:0cm'><img border=0 width=624 height=2 id="Group 34851"
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image016.gif"></p>
+
+<p class=MsoNormal style='margin-bottom:13.45pt;line-height:110%'>X-Clientid                                           client_id
+identification                              absensi_live </p>
+
+<h5 style='margin-top:0cm;margin-right:0cm;margin-bottom:3.9pt;margin-left:
+-.25pt'>Body </h5>
+
+<p class=MsoNormal style='margin-bottom:0cm'> </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:-6.25pt;margin-bottom:
+2.2pt;margin-left:0cm'><img border=0 width=624 height=165
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image034.gif"></p>
+
+<p class=MsoNormal style='margin-bottom:0cm'> </p>
+
+<table class=TableGrid border=0 cellspacing=0 cellpadding=0 width=620
+ style='width:465.0pt;border-collapse:collapse'>
+ <tr style='height:28.85pt'>
+  <td width=166 valign=top style='width:124.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:28.85pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><b>Key </b></p>
+  </td>
+  <td width=85 valign=top style='width:63.75pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:28.85pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>Type </b></p>
+  </td>
+  <td width=369 valign=top style='width:276.75pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.75pt 0cm 0cm;height:28.85pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>Description </b></p>
+  </td>
+ </tr>
+ <tr style='height:49.0pt'>
+  <td width=166 valign=top style='width:124.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:49.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>user_id </span></p>
+  </td>
+  <td width=85 valign=top style='width:63.75pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:49.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=369 valign=top style='width:276.75pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.75pt 0cm 0cm;height:49.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:.55pt;margin-bottom:
+  0cm;margin-left:0cm'>Unique user identifier, alphanumeric (eg. #NIK) </p>
+  </td>
+ </tr>
+ <tr style='height:66.0pt'>
+  <td width=166 valign=top style='width:124.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:66.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>facegallery_id </span></p>
+  </td>
+  <td width=85 valign=top style='width:63.75pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:66.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=369 valign=top style='width:276.75pt;border:none;border-bottom:
+  solid black 1.0pt;padding:0cm 5.75pt 0cm 0cm;height:66.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>Unique FaceGallery identifier,
+  alphanumeric (eg. LocationName, CompanyName, etc) </p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal style='margin-bottom:1.9pt;line-height:110%'><span
+style='color:green'>trx_id                                                                 string
+</span>Unique transaction identifier, for </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:.2pt;margin-bottom:13.45pt;
+margin-left:188.75pt;text-indent:-.5pt;line-height:110%'>transaction logging
+and debugging purposes </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+margin-left:116.25pt'><b> </b></p>
+
+<h3 style='margin-top:0cm;margin-right:0cm;margin-bottom:7.65pt;margin-left:
+-.25pt;line-height:110%'><span style='font-size:11.0pt;line-height:110%;
+color:black'>Response </span></h3>
+
+<table class=TableGrid border=0 cellspacing=0 cellpadding=0 align=left
+ width=355 style='width:265.9pt;border-collapse:collapse;margin-left:-2.25pt;
+ margin-right:-2.25pt'>
+ <tr style='height:23.7pt'>
+  <td width=205 valign=top style='width:153.75pt;padding:0cm 0cm 0cm 0cm;
+  height:23.7pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>KEY </b></p>
+  </td>
+  <td width=150 valign=top style='width:112.15pt;padding:0cm 0cm 0cm 0cm;
+  height:23.7pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>VALUE </b></p>
+  </td>
+ </tr>
+ <tr style='height:23.7pt'>
+  <td width=205 valign=bottom style='width:153.75pt;padding:0cm 0cm 0cm 0cm;
+  height:23.7pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>Content-Type </p>
+  </td>
+  <td width=150 valign=bottom style='width:112.15pt;padding:0cm 0cm 0cm 0cm;
+  height:23.7pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;text-align:justify;text-justify:
+  inter-ideograph'>application/json </p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:7.65pt;
+margin-left:-.25pt;text-indent:-.5pt;line-height:110%'><img width=616 height=2
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image035.gif" align=left hspace=12><b>Headers
+</b></p>
+
+<p class=MsoNormal style='margin-top:13.95pt;margin-right:-6.25pt;margin-bottom:
+2.2pt;margin-left:0cm'><img border=0 width=624 height=167
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image036.gif"></p>
+
+<p class=MsoNormal style='margin-bottom:0cm'> </p>
+
+<table class=TableGrid border=0 cellspacing=0 cellpadding=0 width=624
+ style='width:468.0pt;border-collapse:collapse'>
+ <tr style='height:28.15pt'>
+  <td width=164 valign=top style='width:123.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:28.15pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><b>Key </b></p>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:28.15pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>Type </b></p>
+  </td>
+  <td width=378 valign=top style='width:10.0cm;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:28.15pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>Description </b></p>
+  </td>
+ </tr>
+ <tr style='height:50.0pt'>
+  <td width=164 valign=top style='width:123.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>status </span></p>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=378 valign=top style='width:10.0cm;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>Describing the condition of API
+  hit, please refer to <u><span style='color:#1155CC'>List of Status Code</span></u>
+  </p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:.2pt;margin-bottom:16.4pt;
+margin-left:183.75pt;text-indent:-176.25pt;line-height:110%'><span
+style='color:green'>status_message string </span>The verbose message of API hit
+status, please refer to <u><span style='color:#1155CC'>List of Status Code</span></u>
+</p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+margin-left:116.25pt'> </p>
+
+<h2 style='margin-top:0cm;margin-right:0cm;margin-bottom:3.5pt;margin-left:
+-.25pt'><span style='font-size:13.0pt;line-height:107%;font-family:"Calibri",sans-serif'>POST
+</span><span style='font-size:13.0pt;line-height:107%;font-family:"Calibri",sans-serif;
+color:green'>/compare-images </span></h2>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:.2pt;margin-bottom:8.5pt;
+margin-left:.5pt;text-indent:-.5pt;line-height:110%'>This API compares the two
+images to determine if they are verified or not. This API does not use the
+information in the database. </p>
+
+<h3 style='margin-top:0cm;margin-right:0cm;margin-bottom:3.9pt;margin-left:
+-.25pt;line-height:110%'><span style='font-size:11.0pt;line-height:110%;
+color:black'>Request </span></h3>
+
+<table class=TableGrid border=0 cellspacing=0 cellpadding=0 align=left
+ width=605 style='width:453.85pt;border-collapse:collapse;margin-left:-2.25pt;
+ margin-right:-2.25pt'>
+ <tr style='height:26.0pt'>
+  <td width=112 valign=top style='width:84.1pt;padding:0cm 0cm 0cm 0cm;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>KEY </b></p>
+  </td>
+  <td width=273 valign=top style='width:204.5pt;padding:0cm 0cm 0cm 0cm;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:26.9pt'><b>VALUE </b></p>
+  </td>
+  <td width=220 valign=top style='width:165.25pt;padding:0cm 0cm 0cm 0cm;
+  height:26.0pt'>
+  <p class=MsoNormal align=right style='margin-top:0cm;margin-right:6.6pt;
+  margin-bottom:0cm;margin-left:0cm;text-align:right'><b>VALUE EXAMPLE </b></p>
+  </td>
+ </tr>
+ <tr style='height:26.0pt'>
+  <td width=112 valign=bottom style='width:84.1pt;padding:0cm 0cm 0cm 0cm;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>X-Clientid </p>
+  </td>
+  <td width=273 valign=bottom style='width:204.5pt;padding:0cm 0cm 0cm 0cm;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:26.9pt'>client_id identification </p>
+  </td>
+  <td width=220 valign=bottom style='width:165.25pt;padding:0cm 0cm 0cm 0cm;
+  height:26.0pt'>
+  <p class=MsoNormal align=right style='margin-top:0cm;margin-right:13.2pt;
+  margin-bottom:0cm;margin-left:0cm;text-align:right'>absensi_live </p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:.2pt;margin-bottom:7.65pt;
+margin-left:.5pt;text-indent:-.5pt;line-height:110%'><img width=620 height=2
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image012.gif" align=left hspace=12>Headers
+</p>
+
+<p class=MsoNormal style='margin-top:13.95pt;margin-right:.2pt;margin-bottom:
+3.9pt;margin-left:.5pt;text-indent:-.5pt;line-height:110%'>Body </p>
+
+<p class=MsoNormal style='margin-bottom:8.65pt'> </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:5.65pt;
+margin-left:17.75pt;text-indent:-.5pt'><span style='font-size:9.0pt;line-height:
+107%;color:#747775'>JavaScript</span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.2pt;
+margin-left:17.75pt;text-indent:-.5pt'><span style='color:#37474F'>{</span> </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:17.75pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'>  <span style='color:#188038'>&quot;source_image&quot;</span><span
+style='color:#37474F'>:</span> <span style='color:#188038'>&quot;/9j/4AAQSkZJRgABAQEASABIAAD/4QBMRXhpZgAA...&quot;</span><span
+style='color:#37474F'>,</span> </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:2.0pt;
+margin-left:17.75pt;text-align:justify;text-justify:inter-ideograph;text-indent:
+-.5pt'>  <span style='color:#188038'>&quot;target_image&quot;</span><span
+style='color:#37474F'>:</span> <span style='color:#188038'>&quot;/9j/4AAQSkZJRgABAQEASABIAAD/389sdAxcZisA...&quot;</span><span
+style='color:#37474F'>,</span> </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:140.3pt;margin-bottom:
+19.8pt;margin-left:17.75pt;text-align:justify;text-justify:inter-ideograph;
+text-indent:-.5pt'><span style='position:absolute;z-index:-1895817216;
+left:0px;margin-left:8px;margin-top:4826px;width:780px;height:205px'><img
+width=624 height=164 src="Face%20API%20Docs%20-%20Bima.pdf_files/image037.gif"></span> 
+<span style='color:#188038'>&quot;trx_id&quot;</span><span style='color:#37474F'>:</span>      
+<span style='color:#188038'>&quot;alphanumericalstring1234&quot;</span> <span
+style='color:#37474F'>}</span> </p>
+
+<p class=MsoNormal style='margin-bottom:2.2pt'> </p>
+
+<p class=MsoNormal style='margin-bottom:0cm'> </p>
+
+<table class=TableGrid border=0 cellspacing=0 cellpadding=0 width=623
+ style='width:467.0pt;border-collapse:collapse'>
+ <tr style='height:28.45pt'>
+  <td width=152 valign=top style='width:114.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:28.45pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><b>Key </b></p>
+  </td>
+  <td width=104 valign=top style='width:78.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:28.45pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>Type </b></p>
+  </td>
+  <td width=367 valign=top style='width:275.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:28.45pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>Description </b></p>
+  </td>
+ </tr>
+ <tr style='height:50.0pt'>
+  <td width=152 valign=top style='width:114.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>source_image </span></p>
+  </td>
+  <td width=104 valign=top style='width:78.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=367 valign=top style='width:275.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>Base64 encoded JPG or PNG of compared
+  image </p>
+  </td>
+ </tr>
+ <tr style='height:49.0pt'>
+  <td width=152 valign=top style='width:114.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:49.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>target_image </span></p>
+  </td>
+  <td width=104 valign=top style='width:78.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:49.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=367 valign=top style='width:275.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 5.75pt 0cm 0cm;height:49.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>Base64 encoded JPG or PNG of the
+  reference image </p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal style='margin-bottom:1.9pt;line-height:110%'><span
+style='color:green'>trx_id                                        string                                    </span>Unique
+transaction identifier, for </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:.2pt;margin-bottom:13.45pt;
+margin-left:192.5pt;text-indent:-.5pt;line-height:110%'>transaction logging and
+debugging purposes </p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+margin-left:116.25pt'><b> </b></p>
+
+<h3 style='margin-top:0cm;margin-right:356.2pt;margin-bottom:0cm;margin-left:
+-.25pt;line-height:139%'><span style='font-size:11.0pt;line-height:139%;
+color:black'>Response </span></h3>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:356.2pt;margin-bottom:
+0cm;margin-left:-.25pt;text-indent:-.5pt;line-height:139%'>Headers <b>KEY  VALUE
+</b></p>
+
+<p class=MsoNormal style='margin-bottom:4.55pt'><img border=0 width=356
+height=2 id="Group 36672"
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image038.gif"></p>
+
+<p class=MsoNormal style='margin-bottom:0cm;line-height:110%'>Content-Type                                  application/json
+</p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:-6.25pt;margin-bottom:
+2.2pt;margin-left:0cm'><img border=0 width=624 height=234
+src="Face%20API%20Docs%20-%20Bima.pdf_files/image039.gif"></p>
+
+<p class=MsoNormal style='margin-bottom:2.2pt'> </p>
+
+<p class=MsoNormal style='margin-bottom:0cm'> </p>
+
+<table class=TableGrid border=0 cellspacing=0 cellpadding=0 width=621
+ style='width:466.0pt;border-collapse:collapse'>
+ <tr style='height:28.45pt'>
+  <td width=180 valign=top style='width:135.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:28.45pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><b>Key </b></p>
+  </td>
+  <td width=98 valign=top style='width:73.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:28.45pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>Type </b></p>
+  </td>
+  <td width=343 colspan=2 valign=top style='width:257.5pt;border:none;
+  border-bottom:solid black 1.0pt;padding:0cm 0cm 0cm 0cm;height:28.45pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b>Description </b></p>
+  </td>
+ </tr>
+ <tr style='height:50.0pt'>
+  <td width=180 valign=top style='width:135.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>status </span></p>
+  </td>
+  <td width=98 valign=top style='width:73.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=343 colspan=2 valign=top style='width:257.5pt;border:none;
+  border-bottom:solid black 1.0pt;padding:0cm 0cm 0cm 0cm;height:50.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>Describing the condition of API
+  hit, please refer to <u><span style='color:#1155CC'>List of Status Code</span></u>
+  </p>
+  </td>
+ </tr>
+ <tr style='height:66.0pt'>
+  <td width=180 valign=top style='width:135.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:66.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>status_message </span></p>
+  </td>
+  <td width=98 valign=top style='width:73.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:66.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>string
+  </span></p>
+  </td>
+  <td width=211 valign=top style='width:158.3pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:66.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>The verbose message of status,
+  please refer to <u><span style='color:#1155CC'>Code</span></u> </p>
+  </td>
+  <td width=132 valign=top style='width:99.2pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:66.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:26.6pt;margin-bottom:
+  0cm;margin-left:0cm;text-indent:-6.6pt'>API hit <u><span style='color:#1155CC'>List
+  Status</span></u><span style='color:#1155CC'> </span></p>
+  </td>
+ </tr>
+ <tr style='height:20.0pt'>
+  <td width=180 valign=top style='width:135.0pt;border:none;padding:0cm 0cm 0cm 0cm;
+  height:20.0pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>similarity </span></p>
+  </td>
+  <td width=98 valign=top style='width:73.5pt;border:none;padding:0cm 0cm 0cm 0cm;
+  height:20.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>float </span></p>
+  </td>
+  <td width=211 valign=top style='width:158.3pt;border:none;padding:0cm 0cm 0cm 0cm;
+  height:20.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;text-align:justify;text-justify:
+  inter-ideograph'>Describe the comparison </p>
+  </td>
+  <td width=132 valign=top style='width:99.2pt;border:none;padding:0cm 0cm 0cm 0cm;
+  height:20.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>of facial </p>
+  </td>
+ </tr>
+ <tr style='height:46.0pt'>
+  <td width=180 valign=top style='width:135.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:46.0pt'>
+  <p class=MsoNormal>&nbsp;</p>
+  </td>
+  <td width=98 valign=top style='width:73.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:46.0pt'>
+  <p class=MsoNormal>&nbsp;</p>
+  </td>
+  <td width=211 valign=top style='width:158.3pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:46.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>similarities, scale 0.0 0% to
+  100% similar) </p>
+  </td>
+  <td width=132 valign=top style='width:99.2pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:46.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>to 1.0 (from </p>
+  </td>
+ </tr>
+ <tr style='height:20.3pt'>
+  <td width=180 valign=top style='width:135.0pt;border:none;padding:0cm 0cm 0cm 0cm;
+  height:20.3pt'>
+  <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;
+  margin-left:8.25pt'><span style='color:green'>verified </span></p>
+  </td>
+  <td width=98 valign=top style='width:73.5pt;border:none;padding:0cm 0cm 0cm 0cm;
+  height:20.3pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='color:green'>boolean
+  </span></p>
+  </td>
+  <td width=211 valign=top style='width:158.3pt;border:none;padding:0cm 0cm 0cm 0cm;
+  height:20.3pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;text-align:justify;text-justify:
+  inter-ideograph'>If similarity above set </p>
+  </td>
+  <td width=132 valign=top style='width:99.2pt;border:none;padding:0cm 0cm 0cm 0cm;
+  height:20.3pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>config </p>
+  </td>
+ </tr>
+ <tr style='height:16.7pt'>
+  <td width=180 valign=top style='width:135.0pt;padding:0cm 0cm 0cm 0cm;
+  height:16.7pt'>
+  <p class=MsoNormal>&nbsp;</p>
+  </td>
+  <td width=98 valign=top style='width:73.5pt;padding:0cm 0cm 0cm 0cm;
+  height:16.7pt'>
+  <p class=MsoNormal>&nbsp;</p>
+  </td>
+  <td width=211 valign=top style='width:158.3pt;padding:0cm 0cm 0cm 0cm;
+  height:16.7pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;text-align:justify;text-justify:
+  inter-ideograph'>parameter(eg. threshold </p>
+  </td>
+  <td width=132 valign=top style='width:99.2pt;padding:0cm 0cm 0cm 0cm;
+  height:16.7pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>= 0.75), </p>
+  </td>
+ </tr>
+ <tr style='height:30.0pt'>
+  <td width=180 valign=top style='width:135.0pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:30.0pt'>
+  <p class=MsoNormal>&nbsp;</p>
+  </td>
+  <td width=98 valign=top style='width:73.5pt;border:none;border-bottom:solid black 1.0pt;
+  padding:0cm 0cm 0cm 0cm;height:30.0pt'>
+  <p class=MsoNormal>&nbsp;</p>
+  </td>
+  <td width=343 colspan=2 valign=top style='width:257.5pt;border:none;
+  border-bottom:solid black 1.0pt;padding:0cm 0cm 0cm 0cm;height:30.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'>return True, else return False </p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal style='margin-bottom:1.9pt;line-height:110%'><span
+style='color:green'>masker                                             boolean                             </span>If
+a person’s face wearing a mask, </p>
+
+<p class=MsoNormal align=right style='margin-top:0cm;margin-right:21.6pt;
+margin-bottom:0cm;margin-left:.5pt;text-align:right;text-indent:-.5pt'>will
+return True, else return False </p>
+
+<h1 style='margin-left:-.25pt'><span style='font-size:16.0pt;line-height:107%'>List
+of Status Code </span></h1>
+
+<table class=TableGrid border=0 cellspacing=0 cellpadding=0 width=649
+ style='width:487.0pt;margin-left:-12.5pt;border-collapse:collapse'>
+ <tr style='height:41.0pt'>
+  <td width=80 style='width:60.0pt;border:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:41.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Status Code </span></b></p>
+  </td>
+  <td width=248 valign=top style='width:186.0pt;border:solid black 1.0pt;
+  border-left:none;padding:8.25pt 5.75pt 0cm 9.5pt;height:41.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Type </span></b></p>
+  </td>
+  <td width=321 valign=top style='width:241.0pt;border:solid black 1.0pt;
+  border-left:none;padding:8.25pt 5.75pt 0cm 9.5pt;height:41.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><b><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Description </span></b></p>
+  </td>
+ </tr>
+ <tr style='height:26.0pt'>
+  <td width=80 style='width:60.0pt;border:solid black 1.0pt;border-top:none;
+  padding:8.25pt 5.75pt 0cm 9.5pt;height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>200 </span></p>
+  </td>
+  <td width=248 style='width:186.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Success </span></p>
+  </td>
+  <td width=321 style='width:241.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Success messages </span></p>
+  </td>
+ </tr>
+ <tr style='height:26.0pt'>
+  <td width=80 style='width:60.0pt;border:solid black 1.0pt;border-top:none;
+  padding:8.25pt 5.75pt 0cm 9.5pt;height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>400 </span></p>
+  </td>
+  <td width=248 style='width:186.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>General Error </span></p>
+  </td>
+  <td width=321 style='width:241.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Request malformed </span></p>
+  </td>
+ </tr>
+ <tr style='height:26.0pt'>
+  <td width=80 valign=top style='width:60.0pt;border:solid black 1.0pt;
+  border-top:none;padding:8.25pt 5.75pt 0cm 9.5pt;height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>401 </span></p>
+  </td>
+  <td width=248 valign=top style='width:186.0pt;border-top:none;border-left:
+  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+  padding:8.25pt 5.75pt 0cm 9.5pt;height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>General Error </span></p>
+  </td>
+  <td width=321 valign=top style='width:241.0pt;border-top:none;border-left:
+  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+  padding:8.25pt 5.75pt 0cm 9.5pt;height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Not authorized </span></p>
+  </td>
+ </tr>
+ <tr style='height:27.0pt'>
+  <td width=80 style='width:60.0pt;border:solid black 1.0pt;border-top:none;
+  padding:8.25pt 5.75pt 0cm 9.5pt;height:27.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>403 </span></p>
+  </td>
+  <td width=248 style='width:186.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:27.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>General Error </span></p>
+  </td>
+  <td width=321 style='width:241.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:27.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Requested resource denied </span></p>
+  </td>
+ </tr>
+ <tr style='height:28.0pt'>
+  <td width=80 style='width:60.0pt;border:solid black 1.0pt;border-top:none;
+  padding:8.25pt 5.75pt 0cm 9.5pt;height:28.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>411 </span></p>
+  </td>
+  <td width=248 style='width:186.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:28.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Business Process Warning </span></p>
+  </td>
+  <td width=321 style='width:241.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:28.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Face not verified or
+  unregistered </span></p>
+  </td>
+ </tr>
+ <tr style='height:28.0pt'>
+  <td width=80 style='width:60.0pt;border:solid black 1.0pt;border-top:none;
+  padding:8.25pt 5.75pt 0cm 9.5pt;height:28.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>412 </span></p>
+  </td>
+  <td width=248 style='width:186.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:28.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Business Process Warning </span></p>
+  </td>
+  <td width=321 style='width:241.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:28.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Face not detected </span></p>
+  </td>
+ </tr>
+ <tr style='height:28.0pt'>
+  <td width=80 style='width:60.0pt;border:solid black 1.0pt;border-top:none;
+  padding:8.25pt 5.75pt 0cm 9.5pt;height:28.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>413 </span></p>
+  </td>
+  <td width=248 style='width:186.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:28.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Business Process Warning </span></p>
+  </td>
+  <td width=321 style='width:241.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:28.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Face too small </span></p>
+  </td>
+ </tr>
+ <tr style='height:27.0pt'>
+  <td width=80 style='width:60.0pt;border:solid black 1.0pt;border-top:none;
+  padding:8.25pt 5.75pt 0cm 9.5pt;height:27.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>415 </span></p>
+  </td>
+  <td width=248 style='width:186.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:27.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Resource Not Found </span></p>
+  </td>
+  <td width=321 style='width:241.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:27.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>user_id not found </span></p>
+  </td>
+ </tr>
+ <tr style='height:26.0pt'>
+  <td width=80 style='width:60.0pt;border:solid black 1.0pt;border-top:none;
+  padding:8.25pt 5.75pt 0cm 9.5pt;height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>416 </span></p>
+  </td>
+  <td width=248 style='width:186.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Resource Not Found </span></p>
+  </td>
+  <td width=321 style='width:241.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>facegallery_id not found </span></p>
+  </td>
+ </tr>
+ <tr style='height:26.0pt'>
+  <td width=80 style='width:60.0pt;border:solid black 1.0pt;border-top:none;
+  padding:8.25pt 5.75pt 0cm 9.5pt;height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>451 </span></p>
+  </td>
+  <td width=248 style='width:186.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Resource Not Found </span></p>
+  </td>
+  <td width=321 style='width:241.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>image is null </span></p>
+  </td>
+ </tr>
+ <tr style='height:26.0pt'>
+  <td width=80 style='width:60.0pt;border:solid black 1.0pt;border-top:none;
+  padding:8.25pt 5.75pt 0cm 9.5pt;height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>452 </span></p>
+  </td>
+  <td width=248 style='width:186.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Data Format Error </span></p>
+  </td>
+  <td width=321 style='width:241.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>user_id is null </span></p>
+  </td>
+ </tr>
+ <tr style='height:26.0pt'>
+  <td width=80 valign=top style='width:60.0pt;border:solid black 1.0pt;
+  border-top:none;padding:8.25pt 5.75pt 0cm 9.5pt;height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>453 </span></p>
+  </td>
+  <td width=248 valign=top style='width:186.0pt;border-top:none;border-left:
+  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+  padding:8.25pt 5.75pt 0cm 9.5pt;height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Data Format Error </span></p>
+  </td>
+  <td width=321 valign=top style='width:241.0pt;border-top:none;border-left:
+  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+  padding:8.25pt 5.75pt 0cm 9.5pt;height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>user_name is null </span></p>
+  </td>
+ </tr>
+ <tr style='height:27.0pt'>
+  <td width=80 style='width:60.0pt;border:solid black 1.0pt;border-top:none;
+  padding:8.25pt 5.75pt 0cm 9.5pt;height:27.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>454 </span></p>
+  </td>
+  <td width=248 style='width:186.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:27.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Data Format Error </span></p>
+  </td>
+  <td width=321 style='width:241.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:27.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>facegallery_id is null </span></p>
+  </td>
+ </tr>
+ <tr style='height:26.0pt'>
+  <td width=80 style='width:60.0pt;border:solid black 1.0pt;border-top:none;
+  padding:8.25pt 5.75pt 0cm 9.5pt;height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>455 </span></p>
+  </td>
+  <td width=248 style='width:186.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Data Format Error </span></p>
+  </td>
+  <td width=321 style='width:241.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>target_image is null </span></p>
+  </td>
+ </tr>
+ <tr style='height:26.0pt'>
+  <td width=80 style='width:60.0pt;border:solid black 1.0pt;border-top:none;
+  padding:8.25pt 5.75pt 0cm 9.5pt;height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>456 </span></p>
+  </td>
+  <td width=248 style='width:186.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Data Format Error </span></p>
+  </td>
+  <td width=321 style='width:241.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>source_image is null </span></p>
+  </td>
+ </tr>
+ <tr style='height:26.0pt'>
+  <td width=80 style='width:60.0pt;border:solid black 1.0pt;border-top:none;
+  padding:8.25pt 5.75pt 0cm 9.5pt;height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>490 </span></p>
+  </td>
+  <td width=248 style='width:186.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Image Error </span></p>
+  </td>
+  <td width=321 style='width:241.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Cannot decode image base64 </span></p>
+  </td>
+ </tr>
+ <tr style='height:26.0pt'>
+  <td width=80 valign=top style='width:60.0pt;border:solid black 1.0pt;
+  border-top:none;padding:8.25pt 5.75pt 0cm 9.5pt;height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>491 </span></p>
+  </td>
+  <td width=248 valign=top style='width:186.0pt;border-top:none;border-left:
+  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+  padding:8.25pt 5.75pt 0cm 9.5pt;height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Image Error </span></p>
+  </td>
+  <td width=321 valign=top style='width:241.0pt;border-top:none;border-left:
+  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+  padding:8.25pt 5.75pt 0cm 9.5pt;height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>image type not recognized </span></p>
+  </td>
+ </tr>
+ <tr style='height:30.0pt'>
+  <td width=80 style='width:60.0pt;border:solid black 1.0pt;border-top:none;
+  padding:8.25pt 5.75pt 0cm 9.5pt;height:30.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>492 </span></p>
+  </td>
+  <td width=248 style='width:186.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:30.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Image Error </span></p>
+  </td>
+  <td width=321 style='width:241.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:30.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Cannot decode target_image
+  base64 </span></p>
+  </td>
+ </tr>
+ <tr style='height:26.0pt'>
+  <td width=80 style='width:60.0pt;border:solid black 1.0pt;border-top:none;
+  padding:8.25pt 5.75pt 0cm 9.5pt;height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>493 </span></p>
+  </td>
+  <td width=248 style='width:186.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Image Error </span></p>
+  </td>
+  <td width=321 style='width:241.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>image error </span></p>
+  </td>
+ </tr>
+ <tr style='height:29.0pt'>
+  <td width=80 style='width:60.0pt;border:solid black 1.0pt;border-top:none;
+  padding:8.25pt 5.75pt 0cm 9.5pt;height:29.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>494 </span></p>
+  </td>
+  <td width=248 style='width:186.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:29.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Image Error </span></p>
+  </td>
+  <td width=321 style='width:241.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:29.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Cannot decode source_image
+  base64 </span></p>
+  </td>
+ </tr>
+ <tr style='height:26.0pt'>
+  <td width=80 style='width:60.0pt;border:solid black 1.0pt;border-top:none;
+  padding:8.25pt 5.75pt 0cm 9.5pt;height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>495 </span></p>
+  </td>
+  <td width=248 style='width:186.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>Image Error </span></p>
+  </td>
+  <td width=321 style='width:241.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:8.25pt 5.75pt 0cm 9.5pt;
+  height:26.0pt'>
+  <p class=MsoNormal style='margin-bottom:0cm'><span style='font-size:13.0pt;
+  line-height:107%;font-family:"Arial",sans-serif'>source_image type not
+  recognized </span></p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal style='margin-bottom:0cm'><span style='font-family:"Arial",sans-serif'> </span></p>
+
+</div>
+
+</body>
+
+</html>

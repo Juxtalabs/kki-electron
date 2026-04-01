@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Face Verification</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #1a1a1a;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    #camera-container {
+      position: fixed;
+      top: 80px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: none;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    #camera-container.active {
+      display: flex;
+    }
+
+    #video {
+      max-width: 640px;
+      max-height: 480px;
+      border: 3px solid #4CAF50;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(76, 175, 80, 0.3);
+    }
+
+    #canvas {
+      display: none;
+    }
+
+    .controls {
+      margin-top: 20px;
+      display: flex;
+      gap: 15px;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+    }
+
+    #capture-btn {
+      background: #4CAF50;
+      color: white;
+    }
+
+    #capture-btn:hover {
+      background: #45a049;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+    }
+
+    #close-btn {
+      background: #f44336;
+      color: white;
+    }
+
+    #close-btn:hover {
+      background: #da190b;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(244, 67, 54, 0.4);
+    }
+
+    #set-reference-btn {
+      background: #2196F3;
+      color: white;
+    }
+
+    #set-reference-btn:hover {
+      background: #0b7dda;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+    }
+
+    .status {
+      margin-top: 15px;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .status.success {
+      background: rgba(76, 175, 80, 0.2);
+      border: 1px solid #4CAF50;
+      color: #4CAF50;
+      display: block;
+    }
+
+    .status.error {
+      background: rgba(244, 67, 54, 0.2);
+      border: 1px solid #f44336;
+      color: #f44336;
+      display: block;
+    }
+
+    .status.info {
+      background: rgba(33, 150, 243, 0.2);
+      border: 1px solid #2196F3;
+      color: #2196F3;
+      display: block;
+    }
+
+    .countdown {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 15px 25px;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #4CAF50;
+      display: none;
+    }
+
+    .countdown.active {
+      display: block;
+    }
+
+    .loading {
+      display: none;
+      margin-top: 15px;
+    }
+
+    .loading.active {
+      display: block;
+    }
+
+    .spinner {
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top: 3px solid #4CAF50;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .info-text {
+      margin-top: 20px;
+      text-align: center;
+      color: #aaa;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div id="camera-container">
+    <div class="countdown" id="countdown"></div>
+    
+    <video id="video" autoplay playsinline></video>
+    <canvas id="canvas"></canvas>
+    
+    <div class="controls">
+      <button id="capture-btn">Capture & Verify</button>
+      <button id="set-reference-btn">Set as Reference Photo</button>
+      <button id="close-btn">Close Camera</button>
+    </div>
+    
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+    </div>
+    
+    <div class="status" id="status"></div>
+    
+    <div class="info-text">
+      <p>Automatic verification will run in 30 seconds, then every 10 minutes</p>
+    </div>
+  </div>
+
+  <!-- Load face-api.js from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.min.js"></script>
+  <script src="face-verification-ui.js"></script>
+</body>
+</html>

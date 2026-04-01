@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Train Face from Photo</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      padding: 40px;
+      max-width: 800px;
+      width: 100%;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 28px;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+
+    .upload-area {
+      border: 3px dashed #667eea;
+      border-radius: 12px;
+      padding: 40px;
+      text-align: center;
+      margin-bottom: 30px;
+      background: #f8f9ff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .upload-area:hover {
+      border-color: #764ba2;
+      background: #f0f2ff;
+    }
+
+    .upload-area.dragover {
+      border-color: #4CAF50;
+      background: #e8f5e9;
+    }
+
+    #file-input {
+      display: none;
+    }
+
+    .upload-icon {
+      font-size: 48px;
+      margin-bottom: 15px;
+    }
+
+    .preview-container {
+      display: none;
+      margin-bottom: 30px;
+    }
+
+    #preview-image {
+      max-width: 100%;
+      max-height: 400px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    #canvas {
+      display: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 10px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background: #e0e0e0;
+    }
+
+    .status {
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: none;
+      font-size: 14px;
+    }
+
+    .status.info {
+      background: #e3f2fd;
+      color: #1976d2;
+      border-left: 4px solid #2196F3;
+      display: block;
+    }
+
+    .status.success {
+      background: #e8f5e9;
+      color: #2e7d32;
+      border-left: 4px solid #4CAF50;
+      display: block;
+    }
+
+    .status.error {
+      background: #ffebee;
+      color: #c62828;
+      border-left: 4px solid #f44336;
+      display: block;
+    }
+
+    .descriptor-output {
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 20px;
+      display: none;
+      max-height: 200px;
+      overflow-y: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      word-break: break-all;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .spinner {
+      border: 3px solid rgba(102, 126, 234, 0.3);
+      border-top: 3px solid #667eea;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 10px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .instructions {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      color: #856404;
+    }
+
+    .instructions ol {
+      margin-left: 20px;
+      margin-top: 10px;
+    }
+
+    .instructions li {
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎯 Train Face from Photo</h1>
+    <p class="subtitle">Extract face descriptor dari foto untuk dijadikan reference</p>
+
+    <div class="instructions">
+      <strong>📋 Cara Penggunaan:</strong>
+      <ol>
+        <li>Upload foto yang ingin dijadikan reference (pas foto, dll)</li>
+        <li>Tunggu proses face detection selesai</li>
+        <li>Copy descriptor yang dihasilkan</li>
+        <li>Paste ke browser console atau simpan ke file</li>
+      </ol>
+    </div>
+
+    <div class="status" id="status"></div>
+
+    <div class="upload-area" id="upload-area">
+      <div class="upload-icon">📸</div>
+      <h3>Click atau Drag & Drop Foto</h3>
+      <p style="color: #666; margin-top: 10px;">Supported: JPG, PNG, JPEG</p>
+      <input type="file" id="file-input" accept="image/*">
+    </div>
+
+    <div class="preview-container" id="preview-container">
+      <h3 style="margin-bottom: 15px; color: #333;">Preview:</h3>
+      <img id="preview-image" alt="Preview">
+    </div>
+
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+      <p>Loading face detection models...</p>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <button class="btn-primary" id="extract-btn" disabled>Extract Face Descriptor</button>
+    <button class="btn-secondary" id="copy-btn" style="display: none;">Copy Descriptor to Clipboard</button>
+
+    <div class="descriptor-output" id="descriptor-output"></div>
+  </div>
+
+  <!-- Load face-api.js from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.min.js"></script>
+  
+  <script>
+    let modelsLoaded = false;
+    let currentDescriptor = null;
+    let selectedFile = null;
+
+    const uploadArea = document.getElementById('upload-area');
+    const fileInput = document.getElementById('file-input');
+    const previewContainer = document.getElementById('preview-container');
+    const previewImage = document.getElementById('preview-image');
+    const extractBtn = document.getElementById('extract-btn');
+    const copyBtn = document.getElementById('copy-btn');
+    const status = document.getElementById('status');
+    const loading = document.getElementById('loading');
+    const descriptorOutput = document.getElementById('descriptor-output');
+
+    // Load models on page load
+    async function loadModels() {
+      try {
+        showStatus('Initializing TensorFlow.js...', 'info');
+        loading.style.display = 'block';
+
+        // Force CPU backend for better compatibility
+        await faceapi.tf.setBackend('cpu');
+        await faceapi.tf.ready();
+        
+        console.log('TensorFlow.js backend:', faceapi.tf.getBackend());
+        
+        showStatus('Loading face detection models from CDN...', 'info');
+
+        const MODEL_URL = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model/';
+        
+        await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
+        await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL);
+        await faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL);
+        
+        modelsLoaded = true;
+        loading.style.display = 'none';
+        showStatus('✓ Models loaded successfully! Ready to process photos.', 'success');
+        console.log('Face detection models loaded successfully');
+      } catch (error) {
+        loading.style.display = 'none';
+        showStatus('✗ Failed to load models: ' + error.message, 'error');
+        console.error('Failed to load models:', error);
+      }
+    }
+
+    // Upload area click
+    uploadArea.addEventListener('click', () => {
+      fileInput.click();
+    });
+
+    // File input change
+    fileInput.addEventListener('change', (e) => {
+      handleFile(e.target.files[0]);
+    });
+
+    // Drag and drop
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('dragover');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.classList.remove('dragover');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('dragover');
+      handleFile(e.dataTransfer.files[0]);
+    });
+
+    function handleFile(file) {
+      if (!file || !file.type.startsWith('image/')) {
+        showStatus('✗ Please select a valid image file', 'error');
+        return;
+      }
+
+      selectedFile = file;
+      const reader = new FileReader();
+      
+      reader.onload = (e) => {
+        previewImage.src = e.target.result;
+        previewContainer.style.display = 'block';
+        extractBtn.disabled = false;
+        showStatus('✓ Photo loaded. Click "Extract Face Descriptor" to process.', 'info');
+      };
+      
+      reader.readAsDataURL(file);
+    }
+
+    // Extract descriptor
+    extractBtn.addEventListener('click', async () => {
+      if (!modelsLoaded) {
+        showStatus('✗ Models not loaded yet. Please wait...', 'error');
+        return;
+      }
+
+      if (!selectedFile) {
+        showStatus('✗ No photo selected', 'error');
+        return;
+      }
+
+      try {
+        extractBtn.disabled = true;
+        showStatus('🔍 Detecting face in photo...', 'info');
+
+        // Detect face from image
+        const detection = await faceapi
+          .detectSingleFace(previewImage, new faceapi.TinyFaceDetectorOptions())
+          .withFaceLandmarks()
+          .withFaceDescriptor();
+
+        if (!detection) {
+          showStatus('✗ No face detected in photo. Please use a clear frontal face photo.', 'error');
+          extractBtn.disabled = false;
+          return;
+        }
+
+        currentDescriptor = Array.from(detection.descriptor);
+        
+        // Display descriptor
+        descriptorOutput.textContent = JSON.stringify(currentDescriptor);
+        descriptorOutput.style.display = 'block';
+        copyBtn.style.display = 'block';
+
+        showStatus('✓ Face descriptor extracted successfully! (' + currentDescriptor.length + ' values)', 'success');
+        
+        console.log('Descriptor extracted:', currentDescriptor);
+        console.log('To use in browser, run: window.faceVerification.setReference(' + JSON.stringify(currentDescriptor) + ')');
+        
+        extractBtn.disabled = false;
+      } catch (error) {
+        showStatus('✗ Error: ' + error.message, 'error');
+        console.error('Extraction error:', error);
+        extractBtn.disabled = false;
+      }
+    });
+
+    // Copy to clipboard
+    copyBtn.addEventListener('click', () => {
+      if (!currentDescriptor) return;
+
+      const textToCopy = JSON.stringify(currentDescriptor);
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        showStatus('✓ Descriptor copied to clipboard!', 'success');
+        
+        // Show instruction
+        setTimeout(() => {
+          showStatus('💡 To use: Open browser console and run:\nwindow.faceVerification.setReference(' + textToCopy + ')', 'info');
+        }, 2000);
+      }).catch(err => {
+        showStatus('✗ Failed to copy: ' + err.message, 'error');
+      });
+    });
+
+    function showStatus(message, type) {
+      status.textContent = message;
+      status.className = 'status ' + type;
+    }
+
+    // Load models on page load
+    loadModels();
+  </script>
+</body>
+</html>

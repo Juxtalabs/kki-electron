@@ -16,6 +16,7 @@ function getPaths() {
       : path.resolve(SHELL_ROOT_DIR, 'browser', 'ui'),
     PRELOAD: path.join(__dirname, '../../renderer/browser/preload.js'),
     WEBUI_PRELOAD: path.join(SHELL_ROOT_DIR, 'browser', 'preload', 'webui-preload.js'),
+    FACE_VERIFICATION_PRELOAD: path.join(SHELL_ROOT_DIR, 'browser', 'preload', 'face-verification-preload.js'),
     LOCAL_EXTENSIONS: path.join(ROOT_DIR, 'extensions'),
     WELCOME_HTML: path.join(ROOT_DIR, 'src/renderer/index.html'),
     WELCOME_PRELOAD: path.join(ROOT_DIR, 'dist/preload/preload.js'),
