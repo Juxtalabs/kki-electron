@@ -20,6 +20,9 @@ class FaceVerificationUI {
     // Load face-api.js models
     await this.loadModels()
     
+    // Check if reference descriptors exist, if not extract from pics folder
+    await this.checkAndExtractReferences()
+    
     // Event listeners
     this.captureBtn.addEventListener('click', () => this.captureAndVerify())
     this.setReferenceBtn.addEventListener('click', () => this.setReferencePhoto())
@@ -34,6 +37,110 @@ class FaceVerificationUI {
         })
       })
     }
+  }
+  
+  async checkAndExtractReferences() {
+    try {
+      if (!window.faceVerification) {
+        console.log('FaceVerificationUI: faceVerification API not available')
+        return
+      }
+      
+      // Check if references already exist
+      const hasRefResult = await window.faceVerification.hasReferencePhotos()
+      
+      if (hasRefResult.hasReference && hasRefResult.count > 0) {
+        console.log(`FaceVerificationUI: ${hasRefResult.count} reference descriptors already loaded`)
+        this.showStatus(`${hasRefResult.count} reference photos loaded`, 'success')
+        setTimeout(() => this.hideStatus(), 2000)
+        return
+      }
+      
+      // No references, extract from pics folder
+      console.log('FaceVerificationUI: No references found, extracting from pics folder...')
+      this.showStatus('Extracting face descriptors from photos...', 'info')
+      
+      const photosResult = await window.faceVerification.getPhotosForExtraction()
+      
+      if (!photosResult.success || photosResult.photos.length === 0) {
+        console.log('FaceVerificationUI: No photos found in pics folder')
+        this.showStatus('No photos found in pics folder', 'warning')
+        setTimeout(() => this.hideStatus(), 3000)
+        return
+      }
+      
+      console.log(`FaceVerificationUI: Found ${photosResult.photos.length} photos, extracting descriptors...`)
+      
+      // Extract descriptors from all photos
+      const descriptors = await this.extractDescriptorsFromPhotos(photosResult.photos)
+      
+      if (descriptors.length === 0) {
+        console.log('FaceVerificationUI: No faces detected in photos')
+        this.showStatus('No faces detected in photos', 'error')
+        setTimeout(() => this.hideStatus(), 3000)
+        return
+      }
+      
+      // Save descriptors
+      console.log(`FaceVerificationUI: Extracted ${descriptors.length} descriptors, saving...`)
+      const saveResult = await window.faceVerification.setReferenceDescriptors(descriptors)
+      
+      if (saveResult.success) {
+        console.log('FaceVerificationUI: Reference descriptors saved successfully')
+        this.showStatus(`✓ Loaded ${descriptors.length} reference photos`, 'success')
+        setTimeout(() => this.hideStatus(), 3000)
+      } else {
+        console.error('FaceVerificationUI: Failed to save descriptors:', saveResult.error)
+        this.showStatus('Failed to save reference descriptors', 'error')
+      }
+    } catch (error) {
+      console.error('FaceVerificationUI: Error in checkAndExtractReferences:', error)
+      this.showStatus(`Error: ${error.message}`, 'error')
+    }
+  }
+  
+  async extractDescriptorsFromPhotos(photos) {
+    const descriptors = []
+    
+    for (let i = 0; i < photos.length; i++) {
+      const photo = photos[i]
+      
+      try {
+        this.showStatus(`Processing ${i + 1}/${photos.length}: ${photo.fileName}`, 'info')
+        console.log(`FaceVerificationUI: Processing ${photo.fileName}...`)
+        
+        // Create image element
+        const img = document.createElement('img')
+        img.src = photo.data
+        
+        // Wait for image to load
+        await new Promise((resolve, reject) => {
+          img.onload = resolve
+          img.onerror = reject
+          setTimeout(() => reject(new Error('Image load timeout')), 10000)
+        })
+        
+        // Detect face and extract descriptor
+        const detection = await faceapi
+          .detectSingleFace(img, new faceapi.TinyFaceDetectorOptions())
+          .withFaceLandmarks()
+          .withFaceDescriptor()
+        
+        if (detection) {
+          descriptors.push({
+            fileName: photo.fileName,
+            descriptor: Array.from(detection.descriptor)
+          })
+          console.log(`FaceVerificationUI: ✓ Extracted descriptor from ${photo.fileName}`)
+        } else {
+          console.warn(`FaceVerificationUI: ✗ No face detected in ${photo.fileName}`)
+        }
+      } catch (error) {
+        console.error(`FaceVerificationUI: Error processing ${photo.fileName}:`, error)
+      }
+    }
+    
+    return descriptors
   }
 
   async loadModels() {
@@ -134,7 +241,7 @@ class FaceVerificationUI {
       this.showStatus('Verifying face...', 'info')
       
       if (window.faceVerification) {
-        const result = await window.faceVerification.verify(descriptor)
+        const result = await window.faceVerification.verifyDescriptor(descriptor)
         
         if (result.success) {
           if (result.verified) {

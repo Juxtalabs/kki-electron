@@ -5,20 +5,29 @@ contextBridge.exposeInMainWorld('faceVerification', {
   // Initialize service
   initialize: () => ipcRenderer.invoke('face-verification:initialize'),
   
-  // Set reference descriptor
-  setReference: (descriptorArray) => ipcRenderer.invoke('face-verification:set-reference', descriptorArray),
+  // Set reference descriptors
+  setReferenceDescriptors: (descriptorsArray) => 
+    ipcRenderer.invoke('face-verification:set-references', descriptorsArray),
+  
+  // Get photos for extraction
+  getPhotosForExtraction: () =>
+    ipcRenderer.invoke('face-verification:get-photos'),
   
   // Verify descriptor
-  verify: (descriptorArray) => ipcRenderer.invoke('face-verification:verify', descriptorArray),
+  verifyDescriptor: (descriptorArray) => 
+    ipcRenderer.invoke('face-verification:verify', descriptorArray),
   
-  // Check if has reference
-  hasReference: () => ipcRenderer.invoke('face-verification:has-reference'),
+  // Check if has reference photos
+  hasReferencePhotos: () => 
+    ipcRenderer.invoke('face-verification:has-reference'),
   
   // Start periodic verification
-  startPeriodic: () => ipcRenderer.invoke('face-verification:start-periodic'),
+  startPeriodicVerification: () => 
+    ipcRenderer.invoke('face-verification:start-periodic'),
   
   // Stop periodic verification
-  stopPeriodic: () => ipcRenderer.invoke('face-verification:stop-periodic'),
+  stopPeriodicVerification: () => 
+    ipcRenderer.invoke('face-verification:stop-periodic'),
   
   // Listen for capture trigger from main process
   onTriggerCapture: (callback) => {
@@ -28,11 +37,6 @@ contextBridge.exposeInMainWorld('faceVerification', {
   // Send capture result back to main process
   sendCaptureResult: (result) => {
     ipcRenderer.send('face-verification:capture-result', result)
-  },
-  
-  // Remove listener
-  removeListener: (channel) => {
-    ipcRenderer.removeAllListeners(channel)
   }
 })
 

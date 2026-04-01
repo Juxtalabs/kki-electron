@@ -1,11 +1,12 @@
 const { app, Notification } = require('electron')
 const path = require('path')
 const fs = require('fs').promises
+const { readPhotosFromDirectory } = require('../utils/extract-descriptors-from-photos')
 
 class FaceVerificationService {
   constructor() {
     this.isInitialized = false
-    this.referenceDescriptor = null
+    this.referenceDescriptors = [] // Array of {fileName, descriptor}
     this.verificationTimer = null
     this.initialVerificationTimer = null
     this.SIMILARITY_THRESHOLD = 0.6 // Threshold untuk matching (0-1, semakin rendah semakin strict)
@@ -14,7 +15,11 @@ class FaceVerificationService {
     
     // Path untuk menyimpan data
     this.userDataPath = app.getPath('userData')
-    this.referenceDescriptorPath = path.join(this.userDataPath, 'reference-descriptor.json')
+    this.referenceDescriptorsPath = path.join(this.userDataPath, 'reference-descriptors.json')
+    // __dirname is packages/shell/browser/services
+    // Go up 4 levels to reach project root: services -> browser -> shell -> packages -> root
+    this.picsDirectory = path.join(path.dirname(path.dirname(path.dirname(path.dirname(__dirname)))), 'pics')
+    console.log('FaceVerificationService: pics directory:', this.picsDirectory)
   }
 
   async initialize() {
@@ -23,8 +28,13 @@ class FaceVerificationService {
     console.log('FaceVerificationService: Initializing...')
     
     try {
-      // Load reference photo descriptor jika sudah ada
-      await this.loadReferenceDescriptor()
+      // Load reference descriptors jika sudah ada
+      await this.loadReferenceDescriptors()
+      
+      // If no descriptors loaded, try to read from pics directory
+      if (this.referenceDescriptors.length === 0) {
+        console.log('FaceVerificationService: No saved descriptors found, will extract from pics folder on first verification')
+      }
       
       this.isInitialized = true
       console.log('FaceVerificationService: Initialized successfully')
@@ -35,45 +45,72 @@ class FaceVerificationService {
   }
 
 
-  async setReferenceDescriptor(descriptorArray) {
+  async setReferenceDescriptors(descriptorsArray) {
     try {
-      console.log('FaceVerificationService: Setting reference descriptor...')
+      console.log(`FaceVerificationService: Setting ${descriptorsArray.length} reference descriptors...`)
       
-      // Simpan descriptor
-      this.referenceDescriptor = new Float32Array(descriptorArray)
+      // Store descriptors
+      this.referenceDescriptors = descriptorsArray.map(item => ({
+        fileName: item.fileName,
+        descriptor: new Float32Array(item.descriptor)
+      }))
+      
+      // Save to file
+      const dataToSave = descriptorsArray.map(item => ({
+        fileName: item.fileName,
+        descriptor: Array.from(item.descriptor)
+      }))
+      
       await fs.writeFile(
-        this.referenceDescriptorPath,
-        JSON.stringify(descriptorArray)
+        this.referenceDescriptorsPath,
+        JSON.stringify(dataToSave, null, 2)
       )
       
-      console.log('FaceVerificationService: Reference descriptor set successfully')
-      return { success: true, message: 'Reference descriptor saved' }
+      console.log('FaceVerificationService: Reference descriptors saved successfully')
+      return { success: true, message: `Saved ${descriptorsArray.length} reference descriptors` }
     } catch (error) {
-      console.error('FaceVerificationService: Failed to set reference descriptor:', error)
+      console.error('FaceVerificationService: Failed to set reference descriptors:', error)
       throw error
     }
   }
 
-  async loadReferenceDescriptor() {
+  async loadReferenceDescriptors() {
     try {
-      const descriptorData = await fs.readFile(this.referenceDescriptorPath, 'utf-8')
-      const descriptorArray = JSON.parse(descriptorData)
-      this.referenceDescriptor = new Float32Array(descriptorArray)
-      console.log('FaceVerificationService: Reference descriptor loaded')
+      const descriptorData = await fs.readFile(this.referenceDescriptorsPath, 'utf-8')
+      const descriptorsArray = JSON.parse(descriptorData)
+      
+      this.referenceDescriptors = descriptorsArray.map(item => ({
+        fileName: item.fileName,
+        descriptor: new Float32Array(item.descriptor)
+      }))
+      
+      console.log(`FaceVerificationService: Loaded ${this.referenceDescriptors.length} reference descriptors`)
     } catch (error) {
-      console.log('FaceVerificationService: No reference descriptor found, will need to set one')
-      this.referenceDescriptor = null
+      console.log('FaceVerificationService: No saved reference descriptors found')
+      this.referenceDescriptors = []
+    }
+  }
+  
+  async getPhotosForExtraction() {
+    try {
+      console.log(`FaceVerificationService: Reading photos from ${this.picsDirectory}`)
+      const photos = await readPhotosFromDirectory(this.picsDirectory)
+      return photos
+    } catch (error) {
+      console.error('FaceVerificationService: Failed to read photos:', error)
+      return []
     }
   }
 
   verifyDescriptor(capturedDescriptorArray) {
     try {
-      if (!this.referenceDescriptor) {
+      if (!this.referenceDescriptors || this.referenceDescriptors.length === 0) {
         return {
           success: false,
           verified: false,
-          message: 'No reference descriptor set. Please set a reference photo first.',
-          distance: null
+          message: 'No reference descriptors set. Please extract descriptors from photos first.',
+          distance: null,
+          matchedFile: null
         }
       }
 
@@ -82,33 +119,46 @@ class FaceVerificationService {
           success: true,
           verified: false,
           message: 'No face detected in captured photo',
-          distance: null
+          distance: null,
+          matchedFile: null
         }
       }
 
-      console.log('FaceVerificationService: Verifying captured face...')
+      console.log(`FaceVerificationService: Verifying captured face against ${this.referenceDescriptors.length} references...`)
       
       // Convert to Float32Array for comparison
       const capturedDescriptor = new Float32Array(capturedDescriptorArray)
       
-      // Calculate Euclidean distance
-      let sum = 0
-      for (let i = 0; i < this.referenceDescriptor.length; i++) {
-        const diff = this.referenceDescriptor[i] - capturedDescriptor[i]
-        sum += diff * diff
+      // Find best match among all reference descriptors
+      let bestMatch = null
+      let minDistance = Infinity
+      
+      for (const ref of this.referenceDescriptors) {
+        // Calculate Euclidean distance
+        let sum = 0
+        for (let i = 0; i < ref.descriptor.length; i++) {
+          const diff = ref.descriptor[i] - capturedDescriptor[i]
+          sum += diff * diff
+        }
+        const distance = Math.sqrt(sum)
+        
+        if (distance < minDistance) {
+          minDistance = distance
+          bestMatch = ref.fileName
+        }
       }
-      const distance = Math.sqrt(sum)
       
-      const verified = distance < this.SIMILARITY_THRESHOLD
+      const verified = minDistance < this.SIMILARITY_THRESHOLD
       
-      console.log(`FaceVerificationService: Face comparison - Distance: ${distance.toFixed(4)}, Verified: ${verified}`)
+      console.log(`FaceVerificationService: Best match - File: ${bestMatch}, Distance: ${minDistance.toFixed(4)}, Verified: ${verified}`)
       
       return {
         success: true,
         verified: verified,
-        message: verified ? 'Face verified successfully' : 'Face verification failed',
-        distance: distance,
-        threshold: this.SIMILARITY_THRESHOLD
+        message: verified ? `Face verified (matched: ${bestMatch})` : 'Face verification failed - no match found',
+        distance: minDistance,
+        threshold: this.SIMILARITY_THRESHOLD,
+        matchedFile: verified ? bestMatch : null
       }
     } catch (error) {
       console.error('FaceVerificationService: Verification error:', error)
@@ -116,7 +166,8 @@ class FaceVerificationService {
         success: false,
         verified: false,
         message: `Verification error: ${error.message}`,
-        distance: null
+        distance: null,
+        matchedFile: null
       }
     }
   }
@@ -188,8 +239,12 @@ class FaceVerificationService {
     }
   }
 
-  hasReferencePhoto() {
-    return this.referenceDescriptor !== null
+  hasReferencePhotos() {
+    return this.referenceDescriptors.length > 0
+  }
+  
+  getReferenceCount() {
+    return this.referenceDescriptors.length
   }
 
   destroy() {

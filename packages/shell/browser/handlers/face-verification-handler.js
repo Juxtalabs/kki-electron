@@ -16,14 +16,25 @@ function setupFaceVerificationHandlers(service) {
     }
   })
 
-  // Set reference descriptor
-  ipcMain.handle('face-verification:set-reference', async (event, descriptorArray) => {
+  // Set multiple reference descriptors
+  ipcMain.handle('face-verification:set-references', async (event, descriptorsArray) => {
     try {
-      const result = await faceVerificationService.setReferenceDescriptor(descriptorArray)
+      const result = await faceVerificationService.setReferenceDescriptors(descriptorsArray)
       return { success: true, ...result }
     } catch (error) {
-      console.error('IPC: face-verification:set-reference error:', error)
+      console.error('IPC: face-verification:set-references error:', error)
       return { success: false, error: error.message }
+    }
+  })
+
+  // Get photos from pics directory for extraction
+  ipcMain.handle('face-verification:get-photos', async () => {
+    try {
+      const photos = await faceVerificationService.getPhotosForExtraction()
+      return { success: true, photos }
+    } catch (error) {
+      console.error('IPC: face-verification:get-photos error:', error)
+      return { success: false, photos: [], error: error.message }
     }
   })
 
@@ -38,14 +49,15 @@ function setupFaceVerificationHandlers(service) {
     }
   })
 
-  // Check if reference photo exists
+  // Check if reference photos exist
   ipcMain.handle('face-verification:has-reference', async () => {
     try {
-      const hasReference = faceVerificationService.hasReferencePhoto()
-      return { success: true, hasReference }
+      const hasReference = faceVerificationService.hasReferencePhotos()
+      const count = faceVerificationService.getReferenceCount()
+      return { success: true, hasReference, count }
     } catch (error) {
       console.error('IPC: face-verification:has-reference error:', error)
-      return { success: false, hasReference: false, error: error.message }
+      return { success: false, hasReference: false, count: 0, error: error.message }
     }
   })
 
