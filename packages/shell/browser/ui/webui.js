@@ -17,6 +17,7 @@ class WebUI {
       browserActions: $('#actions'),
 
       exitButton: $('#exit'),
+      networkStatus: $('#network-status'),
 
       minimizeButton: $('#minimize'),
       maximizeButton: $('#maximize'),
@@ -61,6 +62,7 @@ class WebUI {
     document.body.classList.add(platformClass)
 
     this.initTabs()
+    this.setupNetworkMonitoring()
   }
 
   async initTabs() {
@@ -216,6 +218,90 @@ class WebUI {
     }
 
     chrome.tabs.update(this.activeTabId, { url })
+  }
+
+  setupNetworkMonitoring() {
+    // Update network status immediately
+    this.updateNetworkStatus()
+
+    // Listen for online/offline events
+    window.addEventListener('online', () => {
+      this.updateNetworkStatus()
+      this.showNetworkNotification('online')
+    })
+
+    window.addEventListener('offline', () => {
+      this.updateNetworkStatus()
+      this.showNetworkNotification('offline')
+    })
+
+    // Check network status periodically (every 10 seconds)
+    setInterval(() => {
+      this.updateNetworkStatus()
+    }, 10000)
+  }
+
+  updateNetworkStatus() {
+    const isOnline = navigator.onLine
+    
+    if (this.$.networkStatus) {
+      if (isOnline) {
+        this.$.networkStatus.classList.remove('offline')
+        this.$.networkStatus.classList.add('online')
+        this.$.networkStatus.title = 'Internet Connected'
+      } else {
+        this.$.networkStatus.classList.remove('online')
+        this.$.networkStatus.classList.add('offline')
+        this.$.networkStatus.title = 'No Internet Connection'
+      }
+    }
+  }
+
+  showNetworkNotification(status) {
+    const isOnline = status === 'online'
+    const message = isOnline 
+      ? 'Internet connection restored' 
+      : 'Internet connection lost'
+    const icon = isOnline ? '✓' : '⚠'
+    const bgColor = isOnline ? '#52c41a' : '#ff4d4f'
+
+    // Get notification container
+    const container = document.getElementById('notification-container')
+    if (!container) return
+
+    // Create notification element
+    const notification = document.createElement('div')
+    notification.style.cssText = `
+      background: ${bgColor};
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      font-size: 14px;
+      animation: slideIn 0.3s ease-out;
+      margin-bottom: 10px;
+    `
+    
+    notification.innerHTML = `
+      <span style="font-size: 18px;">${icon}</span>
+      <span>${message}</span>
+    `
+
+    container.appendChild(notification)
+
+    // Remove notification after 5 seconds
+    setTimeout(() => {
+      notification.style.animation = 'slideOut 0.3s ease-out'
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.parentNode.removeChild(notification)
+        }
+      }, 300)
+    }, 5000)
   }
 
   handleExitClick() {

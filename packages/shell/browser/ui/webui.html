@@ -235,6 +235,80 @@
       .toolbar .exit-button:hover {
         background: #ff4d4f;
       }
+
+      .toolbar .network-status {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: auto;
+        margin-right: 0.5rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 999px;
+        transition: all 0.3s ease;
+      }
+
+      .toolbar .network-status.online {
+        color: #52c41a;
+        background: rgba(82, 196, 26, 0.1);
+      }
+
+      .toolbar .network-status.offline {
+        color: #ff4d4f;
+        background: rgba(255, 77, 79, 0.1);
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      .toolbar .network-status svg {
+        display: block;
+      }
+
+      #notification-container {
+        position: fixed;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 999999999;
+        pointer-events: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 10px;
+      }
+
+      #notification-container > * {
+        pointer-events: auto;
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateY(-20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideOut {
+        from {
+          transform: translateY(0);
+          opacity: 1;
+        }
+        to {
+          transform: translateY(-20px);
+          opacity: 0;
+        }
+      }
     </style>
   </head>
   <body>
@@ -268,10 +342,19 @@
         </div>
         <!-- <input id="urlbar" class="url-bar" type="text" spellcheck="false" placeholder="Enter URL" /> -->
         <browser-action-list id="actions" alignment="bottom left"></browser-action-list>
+        <div id="network-status" class="network-status online" title="Internet Connected">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+            <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+            <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+            <line x1="12" y1="20" x2="12.01" y2="20"></line>
+          </svg>
+        </div>
         <button id="exit" class="exit-button">Exit</button>
       </div>
     </div>
   </div>
+  <div id="notification-container"></div>
   <script src="./webui.js"></script>
   </body>
 </html>
