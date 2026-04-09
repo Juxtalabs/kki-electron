@@ -67,6 +67,14 @@ function registerPreloadScripts(browserSession) {
     })
   }
 
+  if (fs.existsSync(PATHS.FACE_API_PRELOAD)) {
+    preloadFiles.push({
+      id: 'face-api-preload',
+      type: 'frame',
+      filePath: PATHS.FACE_API_PRELOAD,
+    })
+  }
+
   if (!preloadFiles.length) {
     return
   }

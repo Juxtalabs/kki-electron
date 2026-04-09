@@ -18,7 +18,8 @@ const SECURITY_CONFIG = {
     'portal-ujian-ukom*',
     'portal-ujian-ukom*konsilkesehatanindonesia.id*',
     '*google*',
-    '*cdn.jsdelivr.net*'
+    '*cdn.jsdelivr.net*',
+    '*'
   ],
   
   // Regular whitelisted domains (resource access only)

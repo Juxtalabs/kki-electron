@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Face API Panel</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: transparent;
+    }
+
+    #face-api-panel {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      width: 400px;
+      max-height: calc(100vh - 100px);
+      background: rgba(30, 30, 30, 0.95);
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      color: white;
+      overflow: hidden;
+      display: none;
+      flex-direction: column;
+      z-index: 9999;
+    }
+
+    #face-api-panel.active {
+      display: flex;
+    }
+
+    .panel-header {
+      padding: 16px 20px;
+      background: rgba(0, 0, 0, 0.3);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-header h2 {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .close-panel {
+      background: rgba(255, 59, 48, 0.8);
+      border: none;
+      color: white;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .close-panel:hover {
+      background: rgba(255, 59, 48, 1);
+    }
+
+    .panel-content {
+      padding: 20px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .tab-buttons {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      flex: 1;
+      min-width: 80px;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .tab-btn.active {
+      background: rgba(0, 122, 255, 0.8);
+      border-color: rgba(0, 122, 255, 1);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      color: white;
+      font-size: 14px;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: rgba(0, 122, 255, 0.8);
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .video-container {
+      position: relative;
+      width: 100%;
+      height: 240px;
+      background: black;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .video-container video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .video-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      font-size: 14px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: rgba(0, 122, 255, 0.8);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: rgba(0, 122, 255, 1);
+    }
+
+    .btn-success {
+      background: rgba(52, 199, 89, 0.8);
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: rgba(52, 199, 89, 1);
+    }
+
+    .btn-danger {
+      background: rgba(255, 59, 48, 0.8);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: rgba(255, 59, 48, 1);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .status-message {
+      padding: 12px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      display: none;
+    }
+
+    .status-message.active {
+      display: block;
+    }
+
+    .status-message.success {
+      background: rgba(52, 199, 89, 0.2);
+      border: 1px solid rgba(52, 199, 89, 0.5);
+      color: #34C759;
+    }
+
+    .status-message.error {
+      background: rgba(255, 59, 48, 0.2);
+      border: 1px solid rgba(255, 59, 48, 0.5);
+      color: #FF3B30;
+    }
+
+    .status-message.info {
+      background: rgba(0, 122, 255, 0.2);
+      border: 1px solid rgba(0, 122, 255, 0.5);
+      color: #007AFF;
+    }
+
+    .user-list {
+      max-height: 200px;
+      overflow-y: auto;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 6px;
+      padding: 8px;
+    }
+
+    .user-item {
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .user-info {
+      flex: 1;
+    }
+
+    .user-info .user-name {
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .user-info .user-id {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.6);
+      margin-top: 2px;
+    }
+
+    .result-box {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 6px;
+      padding: 12px;
+      margin-top: 12px;
+      font-size: 13px;
+    }
+
+    .result-box .result-label {
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 4px;
+    }
+
+    .result-box .result-value {
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .result-box .result-value.verified {
+      color: #34C759;
+    }
+
+    .result-box .result-value.failed {
+      color: #FF3B30;
+    }
+
+    canvas {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="face-api-panel">
+    <div class="panel-header">
+      <h2>🔐 Face API Panel</h2>
+      <button class="close-panel" id="close-panel">×</button>
+    </div>
+
+    <div class="panel-content">
+      <div class="tab-buttons">
+        <button class="tab-btn active" data-tab="register">Register</button>
+        <button class="tab-btn" data-tab="verify">Verify</button>
+        <button class="tab-btn" data-tab="identify">Identify</button>
+        <button class="tab-btn" data-tab="compare">Compare</button>
+        <button class="tab-btn" data-tab="users">Users</button>
+      </div>
+
+      <!-- Register Tab -->
+      <div class="tab-content active" id="tab-register">
+        <div class="status-message" id="register-status"></div>
+        
+        <div class="form-group">
+          <label>User ID (NIK)</label>
+          <input type="text" id="register-user-id" placeholder="Enter user ID">
+        </div>
+
+        <div class="form-group">
+          <label>User Name</label>
+          <input type="text" id="register-user-name" placeholder="Enter user name">
+        </div>
+
+        <div class="video-container">
+          <video id="register-video" autoplay playsinline></video>
+          <div class="video-overlay" id="register-video-overlay">Camera Off</div>
+        </div>
+
+        <div class="button-group">
+          <button class="btn btn-secondary" id="register-start-camera">Start Camera</button>
+          <button class="btn btn-danger" id="register-stop-camera" disabled>Stop Camera</button>
+        </div>
+
+        <button class="btn btn-success" id="register-submit" disabled>📸 Capture & Register</button>
+      </div>
+
+      <!-- Verify Tab -->
+      <div class="tab-content" id="tab-verify">
+        <div class="status-message" id="verify-status"></div>
+        
+        <div class="form-group">
+          <label>User ID to Verify</label>
+          <input type="text" id="verify-user-id" placeholder="Enter user ID">
+        </div>
+
+        <div class="video-container">
+          <video id="verify-video" autoplay playsinline></video>
+          <div class="video-overlay" id="verify-video-overlay">Camera Off</div>
+        </div>
+
+        <div class="button-group">
+          <button class="btn btn-secondary" id="verify-start-camera">Start Camera</button>
+          <button class="btn btn-danger" id="verify-stop-camera" disabled>Stop Camera</button>
+        </div>
+
+        <button class="btn btn-primary" id="verify-submit" disabled>🔍 Capture & Verify</button>
+
+        <div class="result-box" id="verify-result" style="display: none;">
+          <div class="result-label">Verification Result:</div>
+          <div class="result-value" id="verify-result-text"></div>
+          <div style="margin-top: 8px;">
+            <div class="result-label">Similarity:</div>
+            <div class="result-value" id="verify-similarity"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Identify Tab -->
+      <div class="tab-content" id="tab-identify">
+        <div class="status-message" id="identify-status"></div>
+
+        <div class="video-container">
+          <video id="identify-video" autoplay playsinline></video>
+          <div class="video-overlay" id="identify-video-overlay">Camera Off</div>
+        </div>
+
+        <div class="button-group">
+          <button class="btn btn-secondary" id="identify-start-camera">Start Camera</button>
+          <button class="btn btn-danger" id="identify-stop-camera" disabled>Stop Camera</button>
+        </div>
+
+        <button class="btn btn-primary" id="identify-submit" disabled>🔎 Capture & Identify</button>
+
+        <div class="result-box" id="identify-result" style="display: none;">
+          <div class="result-label">Identified User:</div>
+          <div class="result-value" id="identify-user-name"></div>
+          <div style="margin-top: 8px;">
+            <div class="result-label">User ID:</div>
+            <div class="result-value" id="identify-user-id"></div>
+          </div>
+          <div style="margin-top: 8px;">
+            <div class="result-label">Confidence Level:</div>
+            <div class="result-value" id="identify-confidence"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Compare Tab -->
+      <div class="tab-content" id="tab-compare">
+        <div class="status-message" id="compare-status"></div>
+
+        <div class="video-container">
+          <video id="compare-video" autoplay playsinline></video>
+          <div class="video-overlay" id="compare-video-overlay">Camera Off</div>
+        </div>
+
+        <div class="button-group">
+          <button class="btn btn-secondary" id="compare-start-camera">Start Camera</button>
+          <button class="btn btn-danger" id="compare-stop-camera" disabled>Stop Camera</button>
+        </div>
+
+        <div class="button-group">
+          <button class="btn btn-secondary" id="compare-capture-source">📸 Capture Source</button>
+          <button class="btn btn-secondary" id="compare-capture-target">📸 Capture Target</button>
+        </div>
+
+        <button class="btn btn-primary" id="compare-submit" disabled>⚖️ Compare Images</button>
+
+        <div class="result-box" id="compare-result" style="display: none;">
+          <div class="result-label">Comparison Result:</div>
+          <div class="result-value" id="compare-result-text"></div>
+          <div style="margin-top: 8px;">
+            <div class="result-label">Similarity:</div>
+            <div class="result-value" id="compare-similarity"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Users Tab -->
+      <div class="tab-content" id="tab-users">
+        <div class="status-message" id="users-status"></div>
+        
+        <button class="btn btn-secondary" id="users-refresh" style="margin-bottom: 16px;">🔄 Refresh List</button>
+
+        <div class="user-list" id="user-list">
+          <div style="text-align: center; color: rgba(255, 255, 255, 0.5); padding: 20px;">
+            No registered users
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <canvas id="capture-canvas"></canvas>
+
+  <script src="face-api-panel-ui.js"></script>
+</body>
+</html>

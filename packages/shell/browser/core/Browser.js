@@ -16,6 +16,8 @@ const path = require('path')
 const fs = require('fs')
 const { FaceVerificationService } = require('../services/face-verification-service')
 const { setupFaceVerificationHandlers } = require('../handlers/face-verification-handler')
+const { FaceAPIService } = require('../services/face-api-service')
+const { setupFaceAPIHandlers } = require('../handlers/face-api-handler')
 
 // Separate native hook and JS blocker so we can reliably fallback
 let nativeKeyboardHook = null
@@ -34,6 +36,7 @@ class Browser {
   isQuitting = false
   processKillerInterval = null
   faceVerificationService = null
+  faceAPIService = null
 
   urls = {
     newtab: 'https://portal-ujian-ukom.kki.go.id/login-ujian',
@@ -68,6 +71,17 @@ class Browser {
       } catch (error) {
         console.warn('Browser: Failed to register face verification shortcut:', error.message)
       }
+      
+      try {
+        const faceAPIAccelerator = process.platform === 'darwin' ? 'Command+Shift+A' : 'Ctrl+Shift+A'
+        globalShortcut.register(faceAPIAccelerator, () => {
+          const { FaceAPIPanelHelper } = require('../utils/face-api-panel-helper')
+          FaceAPIPanelHelper.openPanel()
+        })
+        console.log('Browser: Face API Panel shortcut registered (Ctrl+Shift+A)')
+      } catch (error) {
+        console.warn('Browser: Failed to register Face API Panel shortcut:', error.message)
+      }
 
       this.init()
     })
@@ -87,9 +101,13 @@ class Browser {
     // Setup IPC handlers with browser instance
     setupIpcHandlers(this)
     
-    // Initialize face verification service
+    // Initialize face verification service (client-side)
     this.faceVerificationService = new FaceVerificationService()
     setupFaceVerificationHandlers(this.faceVerificationService)
+    
+    // Initialize Face API service (server-side REST API)
+    this.faceAPIService = new FaceAPIService()
+    setupFaceAPIHandlers(this.faceAPIService)
   }
 
   checkAndKillBlockedProcesses() {

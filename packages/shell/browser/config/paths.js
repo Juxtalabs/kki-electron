@@ -5,6 +5,7 @@ const path = require('path')
 // ROOT_DIR should be: root of project
 const SHELL_ROOT_DIR = path.join(__dirname, '../../')
 const ROOT_DIR = path.join(__dirname, '../../../../')
+const BROWSER_DIR = path.join(SHELL_ROOT_DIR, 'browser')
 
 function getPaths() {
   const { app } = require('electron')
@@ -16,7 +17,8 @@ function getPaths() {
       : path.resolve(SHELL_ROOT_DIR, 'browser', 'ui'),
     PRELOAD: path.join(__dirname, '../../renderer/browser/preload.js'),
     WEBUI_PRELOAD: path.join(SHELL_ROOT_DIR, 'browser', 'preload', 'webui-preload.js'),
-    FACE_VERIFICATION_PRELOAD: path.join(SHELL_ROOT_DIR, 'browser', 'preload', 'face-verification-preload.js'),
+    FACE_VERIFICATION_PRELOAD: path.join(BROWSER_DIR, 'preload', 'face-verification-preload.js'),
+    FACE_API_PRELOAD: path.join(BROWSER_DIR, 'preload', 'face-api-preload.js'),
     LOCAL_EXTENSIONS: path.join(ROOT_DIR, 'extensions'),
     WELCOME_HTML: path.join(ROOT_DIR, 'src/renderer/index.html'),
     WELCOME_PRELOAD: path.join(ROOT_DIR, 'dist/preload/preload.js'),
