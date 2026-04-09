@@ -10,9 +10,10 @@ const { FaceAPIClient } = require('./face-api-client')
 class FaceAPIService {
   constructor(config = {}) {
     this.client = new FaceAPIClient({
-      // Base URL Face API server online (Riset AI)
-      // NOTE: Jangan tambahkan /face di akhir, karena endpoint sudah lengkap
-      baseURL: config.baseURL || process.env.FACE_API_URL || 'https://api.riset.ai',
+      // Base URL Face API server
+      // Default: localhost mock server (untuk testing)
+      // Production: set FACE_API_URL environment variable
+      baseURL: config.baseURL || process.env.FACE_API_URL || 'http://localhost:8001',
       // X-Clientid header value
       clientId: config.clientId || process.env.FACE_API_CLIENT_ID || 'bima',
       facegalleryId: config.facegalleryId || 'kki_exam_browser',
