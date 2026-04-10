@@ -107,7 +107,7 @@ class FaceAPIClient {
         trx_id: trxId || `reg_${Date.now()}_${userId}`
       }
 
-      const result = await this.makeRequest('POST', '/facegallery/register-face', body)
+      const result = await this.makeRequest('POST', '/facegallery/enroll-face', body)
       
       if (result.success) {
         console.log(`FaceAPIClient: User ${userId} registered successfully`)
@@ -211,10 +211,21 @@ class FaceAPIClient {
       const result = await this.makeRequest('POST', '/facegallery/identify-face', body)
       
       if (result.success) {
-        const confidenceLevel = result.data.confidence_level || 0
-        const hasMask = result.data.mask || false
-        const userId = result.data.user_id
-        const userName = result.data.user_name
+        // API returns array in "return" field
+        const returnData = result.data.return && result.data.return[0]
+        if (!returnData) {
+          return {
+            success: false,
+            identified: false,
+            error: 'No face identified',
+            data: result.data
+          }
+        }
+        
+        const confidenceLevel = parseFloat(returnData.confidence_level) || 0
+        const hasMask = returnData.mask === 'true' || returnData.mask === true
+        const userId = returnData.user_id
+        const userName = returnData.user_name
         
         console.log(`FaceAPIClient: Identified - User: ${userName} (${userId}), Confidence: ${confidenceLevel}, Mask: ${hasMask}`)
         

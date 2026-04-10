@@ -11,9 +11,10 @@ class FaceAPIService {
   constructor(config = {}) {
     this.client = new FaceAPIClient({
       // Base URL Face API server
-      // Default: localhost mock server (untuk testing)
-      // Production: set FACE_API_URL environment variable
-      baseURL: config.baseURL || process.env.FACE_API_URL || 'http://localhost:8001',
+      // Options:
+      // - 'https://api.riset.ai/face' (production - jika endpoint sudah tersedia)
+      // - 'http://localhost:8001' (mock server untuk testing)
+      baseURL: config.baseURL || process.env.FACE_API_URL || 'https://api.riset.ai/face',
       // X-Clientid header value
       clientId: config.clientId || process.env.FACE_API_CLIENT_ID || 'bima',
       facegalleryId: config.facegalleryId || 'kki_exam_browser',

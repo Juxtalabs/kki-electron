@@ -90,7 +90,7 @@ async def root():
         "message": "Face API Mock Server",
         "version": "1.0.0",
         "endpoints": [
-            "/facegallery/register-face",
+            "/facegallery/enroll-face",
             "/facegallery/verify-face",
             "/facegallery/identify-face",
             "/facegallery/delete-face",
@@ -98,8 +98,8 @@ async def root():
         ]
     }
 
-@app.post("/facegallery/register-face")
-async def register_face(
+@app.post("/facegallery/enroll-face")
+async def enroll_face(
     request: RegisterFaceRequest,
     x_clientid: Optional[str] = Header(None)
 ):
@@ -246,10 +246,15 @@ async def identify_face(
         return {
             "status": "200",
             "status_message": "Success",
-            "user_id": best_match["user_id"],
-            "user_name": best_match["user_name"],
-            "confidence_level": best_confidence,
-            "mask": False
+            "status_description": "Face Recognition Success",
+            "return": [
+                {
+                    "confidence_level": str(best_confidence),
+                    "mask": "false",
+                    "user_id": best_match["user_id"],
+                    "user_name": best_match["user_name"]
+                }
+            ]
         }
     else:
         print(f"❌ No match found - Best confidence: {best_confidence}")
