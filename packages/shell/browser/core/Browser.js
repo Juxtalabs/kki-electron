@@ -47,6 +47,9 @@ class Browser {
       this.resolveReady = resolve
     })
 
+    // Store browser instance globally for Face API panel injection
+    global.__browserInstance = this
+
     // Set custom User-Agent globally BEFORE the app is ready
     // This ensures every window and network request uses this identifier
     // to restrict access to frontend and API
@@ -924,6 +927,13 @@ class Browser {
     // const welcomeUrl = 'https://portal-ujian-ukom.kki.go.id/login-ujian'
     const welcomeUrl = 'https://google.com'
     this.createWindow({ initialUrl: welcomeUrl })
+
+    // Auto-open Face API Panel after window is created
+    setTimeout(() => {
+      const { FaceAPIPanelHelper } = require('../utils/face-api-panel-helper')
+      FaceAPIPanelHelper.openPanel()
+      console.log('Browser: Face API Panel auto-opened on startup')
+    }, 2000) // Wait 2 seconds for page to load
 
     // Test domain whitelist system in debug mode
     if (process.env.SHELL_DEBUG) {

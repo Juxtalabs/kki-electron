@@ -48,8 +48,8 @@ Setelah server running, buka:
 
 ## 🔌 Available Endpoints
 
-### 1. Register Face
-**POST** `/facegallery/register-face`
+### 1. Enroll Face (Register)
+**POST** `/facegallery/enroll-face`
 
 Register user baru dengan foto.
 
@@ -203,7 +203,7 @@ $body = @{
     trx_id = "test_123"
 } | ConvertTo-Json
 
-Invoke-WebRequest -Uri "http://localhost:8001/facegallery/register-face" `
+Invoke-WebRequest -Uri "http://localhost:8001/facegallery/enroll-face" `
   -Method POST `
   -Headers @{"X-Clientid"="bima"; "Content-Type"="application/json"} `
   -Body $body

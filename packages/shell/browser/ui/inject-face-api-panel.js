@@ -11,6 +11,158 @@ async function injectFaceAPIPanel(webContents) {
 
     console.log('injectFaceAPIPanel: Starting injection...')
 
+    // Get reference to Face API service from Browser instance
+    const Browser = require('../core/Browser')
+    const browserInstance = global.__browserInstance
+    
+    if (!browserInstance || !browserInstance.faceAPIService) {
+      console.error('injectFaceAPIPanel: Browser instance or Face API service not found')
+      return
+    }
+    
+    const faceAPIService = browserInstance.faceAPIService
+    
+    // Inject Face API bridge that calls service methods directly
+    await webContents.executeJavaScript(`
+      (function() {
+        if (window.faceAPI) {
+          console.log('Face API bridge already injected');
+          return;
+        }
+        
+        // Create faceAPI object with direct service calls via executeJavaScript
+        window.faceAPI = {
+          _callId: 0,
+          _pendingCalls: new Map(),
+          
+          _call: function(method, ...args) {
+            const callId = ++this._callId;
+            return new Promise((resolve, reject) => {
+              this._pendingCalls.set(callId, { resolve, reject });
+              
+              // Store call data in window for main process to read
+              window.__faceAPICall = {
+                id: callId,
+                method: method,
+                args: args
+              };
+              
+              // Signal main process
+              console.log('Face API call:', method, args);
+              
+              // Timeout after 30 seconds
+              setTimeout(() => {
+                if (this._pendingCalls.has(callId)) {
+                  this._pendingCalls.delete(callId);
+                  reject(new Error('Face API call timeout'));
+                }
+              }, 30000);
+            });
+          },
+          
+          _handleResponse: function(callId, error, result) {
+            const pending = this._pendingCalls.get(callId);
+            if (pending) {
+              this._pendingCalls.delete(callId);
+              if (error) {
+                pending.reject(new Error(error));
+              } else {
+                pending.resolve(result);
+              }
+            }
+          },
+          
+          initialize: function() { return this._call('initialize'); },
+          registerUser: function(userId, userName, imageBase64) { 
+            return this._call('registerUser', userId, userName, imageBase64); 
+          },
+          verifyUser: function(userId, imageBase64) { 
+            return this._call('verifyUser', userId, imageBase64); 
+          },
+          identifyUser: function(imageBase64) { 
+            return this._call('identifyUser', imageBase64); 
+          },
+          compareImages: function(sourceImageBase64, targetImageBase64) { 
+            return this._call('compareImages', sourceImageBase64, targetImageBase64); 
+          },
+          deleteUser: function(userId) { 
+            return this._call('deleteUser', userId); 
+          },
+          getRegisteredUsers: function() { 
+            return this._call('getRegisteredUsers'); 
+          },
+          isUserRegistered: function(userId) { 
+            return this._call('isUserRegistered', userId); 
+          }
+        };
+        
+        console.log('Face API bridge injected successfully');
+      })();
+    `)
+    
+    // Setup polling to check for Face API calls and execute them
+    const pollInterval = setInterval(async () => {
+      if (webContents.isDestroyed()) {
+        clearInterval(pollInterval)
+        return
+      }
+      
+      try {
+        const callData = await webContents.executeJavaScript('window.__faceAPICall')
+        if (callData && callData.id) {
+          // Clear the call data
+          await webContents.executeJavaScript('window.__faceAPICall = null')
+          
+          const { id, method, args } = callData
+          
+          try {
+            // Call the actual service method
+            let result
+            switch (method) {
+              case 'initialize':
+                result = await faceAPIService.initialize()
+                break
+              case 'registerUser':
+                result = await faceAPIService.registerUser(...args)
+                break
+              case 'verifyUser':
+                result = await faceAPIService.verifyUser(...args)
+                break
+              case 'identifyUser':
+                result = await faceAPIService.identifyUser(...args)
+                break
+              case 'compareImages':
+                result = await faceAPIService.compareImages(...args)
+                break
+              case 'deleteUser':
+                result = await faceAPIService.deleteUser(...args)
+                break
+              case 'getRegisteredUsers':
+                result = await faceAPIService.getRegisteredUsers()
+                break
+              case 'isUserRegistered':
+                result = await faceAPIService.isUserRegistered(...args)
+                break
+              default:
+                throw new Error(`Unknown method: ${method}`)
+            }
+            
+            // Send result back
+            await webContents.executeJavaScript(`
+              window.faceAPI._handleResponse(${id}, null, ${JSON.stringify(result)})
+            `)
+          } catch (error) {
+            // Send error back
+            await webContents.executeJavaScript(`
+              window.faceAPI._handleResponse(${id}, ${JSON.stringify(error.message)}, null)
+            `)
+          }
+        }
+      } catch (error) {
+        // Ignore errors from destroyed webContents
+      }
+    }, 100) // Poll every 100ms
+
     // Read HTML and JS files
     // NOTE: __dirname akan berubah jadi .webpack/main setelah dibundle,
     // jadi gunakan PATHS.WEBUI yang selalu menunjuk ke folder UI asli.

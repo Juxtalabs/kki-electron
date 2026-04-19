@@ -11,8 +11,8 @@ Project ini sekarang mendukung **2 metode face recognition**:
 
 Berdasarkan dokumentasi Face API, tersedia 5 endpoint utama:
 
-### 1. Register Face
-**POST** `/facegallery/register-face`
+### 1. Enroll Face (Register)
+**POST** `/facegallery/enroll-face`
 
 Register wajah user baru ke database.
 
@@ -81,10 +81,15 @@ Identifikasi user dari semua registered users.
 {
   "status": "200",
   "status_message": "Success",
-  "user_id": "NIK123456",
-  "user_name": "John Doe",
-  "confidence_level": 0.92,
-  "mask": false
+  "status_description": "Face Recognition Success",
+  "return": [
+    {
+      "confidence_level": "0.92",
+      "mask": "false",
+      "user_id": "NIK123456",
+      "user_name": "John Doe"
+    }
+  ]
 }
 ```
 

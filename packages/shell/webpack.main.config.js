@@ -30,6 +30,36 @@ module.exports = {
           to: 'native/build/Release/keyhook.node',
           noErrorOnMissing: true,
         },
+        // Copy Face Recognition UI files
+        {
+          from: path.resolve(__dirname, 'browser/ui'),
+          to: 'browser/ui',
+          noErrorOnMissing: false,
+        },
+        // Copy Face API services
+        {
+          from: path.resolve(__dirname, 'browser/services'),
+          to: 'browser/services',
+          noErrorOnMissing: false,
+        },
+        // Copy Face API handlers
+        {
+          from: path.resolve(__dirname, 'browser/handlers'),
+          to: 'browser/handlers',
+          noErrorOnMissing: false,
+        },
+        // Copy Face API preload scripts
+        {
+          from: path.resolve(__dirname, 'browser/preload'),
+          to: 'browser/preload',
+          noErrorOnMissing: false,
+        },
+        // Copy Face API utils
+        {
+          from: path.resolve(__dirname, 'browser/utils'),
+          to: 'browser/utils',
+          noErrorOnMissing: false,
+        },
       ],
     }),
   ],
