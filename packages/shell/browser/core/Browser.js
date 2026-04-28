@@ -37,6 +37,7 @@ class Browser {
   processKillerInterval = null
   faceVerificationService = null
   faceAPIService = null
+  loginWindow = null
 
   urls = {
     newtab: 'https://portal-ujian-ukom.kki.go.id/login-ujian',
@@ -607,6 +608,11 @@ class Browser {
     if (this.isQuitting) return
     this.isQuitting = true
     console.log('Browser: Cleaning up before exit...')
+
+    if (this.loginWindow && !this.loginWindow.isDestroyed()) {
+      this.loginWindow.destroy()
+      this.loginWindow = null
+    }
     
     // Stop process killer interval
     if (this.processKillerInterval) {
@@ -668,7 +674,19 @@ class Browser {
   }
 
   getFocusedWindow() {
-    return this.windows.find((w) => w.window.isFocused()) || this.windows[0]
+    const browserWin = this.windows.find((w) => w.window.isFocused()) || this.windows[0]
+    if (browserWin) return browserWin
+
+    // Fallback: wrap login window so promptExitPassword works during login screen
+    if (this.loginWindow && !this.loginWindow.isDestroyed()) {
+      const lw = this.loginWindow
+      return {
+        window: lw,
+        getFocusedTab: () => ({ webContents: lw.webContents }),
+      }
+    }
+
+    return null
   }
 
   getWindowFromBrowserWindow(window) {
@@ -750,11 +768,11 @@ class Browser {
       }, 5000)
     }
 
-    this.createInitialWindow()
-    
+    this.showLoginWindow()
+
     // Initialize face verification service
     this.initFaceVerification()
-    
+
     this.resolveReady()
   }
 
@@ -922,24 +940,52 @@ class Browser {
     return win
   }
 
+  showLoginWindow() {
+    const { PATHS } = require('../config/paths')
+    const { ipcMain } = require('electron')
+
+    this.loginWindow = new BrowserWindow({
+      fullscreen: true,
+      frame: false,
+      kiosk: true,
+      icon: PATHS.APP_ICON,
+      webPreferences: {
+        preload: PATHS.FACE_LOGIN_PRELOAD,
+        contextIsolation: true,
+        nodeIntegration: false,
+        sandbox: false,
+      },
+    })
+
+    this.loginWindow.loadFile(PATHS.FACE_LOGIN_HTML)
+
+    this.loginWindow.on('close', (event) => {
+      if (!this.isQuitting) event.preventDefault()
+    })
+
+    ipcMain.once('face-login:success', () => {
+      // Create browser window BEFORE destroying login window to avoid
+      // triggering window-all-closed which would call destroy().
+      this.createInitialWindow()
+
+      if (this.loginWindow && !this.loginWindow.isDestroyed()) {
+        this.loginWindow.destroy()
+        this.loginWindow = null
+      }
+    })
+
+    console.log('Browser: Login window shown')
+  }
+
   createInitialWindow() {
-    // Create browser window with external welcome page as initial URL
     // const welcomeUrl = 'https://portal-ujian-ukom.kki.go.id/login-ujian'
     const welcomeUrl = 'https://google.com'
     this.createWindow({ initialUrl: welcomeUrl })
 
-    // Auto-open Face API Panel after window is created
-    setTimeout(() => {
-      const { FaceAPIPanelHelper } = require('../utils/face-api-panel-helper')
-      FaceAPIPanelHelper.openPanel()
-      console.log('Browser: Face API Panel auto-opened on startup')
-    }, 2000) // Wait 2 seconds for page to load
-
-    // Test domain whitelist system in debug mode
     if (process.env.SHELL_DEBUG) {
       setTimeout(() => {
         this.testDomainWhitelist()
-      }, 2000) // Wait 2 seconds after window creation
+      }, 2000)
     }
   }
 

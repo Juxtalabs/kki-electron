@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 100vw;
+      height: 100vh;
+      background: #0d1117;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: white;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .logo {
+      margin-bottom: 12px;
+    }
+
+    .logo img {
+      height: 56px;
+      object-fit: contain;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 6px;
+      letter-spacing: 0.3px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.4);
+      margin-bottom: 36px;
+    }
+
+    .camera-wrapper {
+      position: relative;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: #1a1f2e;
+      border: 3px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.04), 0 20px 60px rgba(0,0,0,0.5);
+      margin-bottom: 32px;
+      transition: border-color 0.4s ease;
+    }
+
+    .camera-wrapper.scanning {
+      border-color: rgba(0, 122, 255, 0.6);
+      box-shadow: 0 0 0 1px rgba(0,122,255,0.2), 0 0 40px rgba(0,122,255,0.15), 0 20px 60px rgba(0,0,0,0.5);
+    }
+
+    .camera-wrapper.success {
+      border-color: rgba(52, 199, 89, 0.8);
+      box-shadow: 0 0 0 1px rgba(52,199,89,0.3), 0 0 40px rgba(52,199,89,0.2), 0 20px 60px rgba(0,0,0,0.5);
+    }
+
+    .camera-wrapper.failed {
+      border-color: rgba(255, 59, 48, 0.7);
+      box-shadow: 0 0 0 1px rgba(255,59,48,0.2), 0 0 30px rgba(255,59,48,0.1), 0 20px 60px rgba(0,0,0,0.5);
+    }
+
+    #login-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scaleX(-1);
+    }
+
+    .camera-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.6);
+      font-size: 14px;
+      color: rgba(255,255,255,0.6);
+    }
+
+    /* Scan line animation */
+    .scan-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(0,122,255,0.8), transparent);
+      animation: scan 2.5s ease-in-out infinite;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .camera-wrapper.scanning .scan-line {
+      opacity: 1;
+    }
+
+    @keyframes scan {
+      0% { top: 0; }
+      50% { top: calc(100% - 2px); }
+      100% { top: 0; }
+    }
+
+    .status-area {
+      text-align: center;
+      min-height: 56px;
+    }
+
+    #status-text {
+      font-size: 16px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 8px;
+      transition: color 0.3s;
+    }
+
+    #status-text.info  { color: rgba(0, 122, 255, 0.9); }
+    #status-text.success { color: #34C759; font-size: 18px; }
+    #status-text.error { color: rgba(255, 100, 80, 0.9); }
+
+    #countdown-text {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    canvas { display: none; }
+  </style>
+</head>
+<body>
+  <div class="logo">
+    <img src="../../../assets/kki-icon.ico" alt="KKI" onerror="this.style.display='none'">
+  </div>
+
+  <h1>Browser Ujian KKI</h1>
+  <p class="subtitle">Hadapkan wajah Anda ke kamera untuk masuk</p>
+
+  <div class="camera-wrapper" id="camera-wrapper">
+    <video id="login-video" autoplay playsinline></video>
+    <div class="camera-overlay" id="camera-overlay">Memulai kamera...</div>
+    <div class="scan-line"></div>
+  </div>
+
+  <div class="status-area">
+    <div id="status-text">Menginisialisasi...</div>
+    <div id="countdown-text"></div>
+  </div>
+
+  <canvas id="capture-canvas"></canvas>
+  <script src="face-login-ui.js"></script>
+</body>
+</html>

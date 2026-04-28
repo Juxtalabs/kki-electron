@@ -19,6 +19,10 @@ function getPaths() {
     WEBUI_PRELOAD: path.join(SHELL_ROOT_DIR, 'browser', 'preload', 'webui-preload.js'),
     FACE_VERIFICATION_PRELOAD: path.join(BROWSER_DIR, 'preload', 'face-verification-preload.js'),
     FACE_API_PRELOAD: path.join(BROWSER_DIR, 'preload', 'face-api-preload.js'),
+    FACE_LOGIN_HTML: isPackaged
+      ? path.resolve(process.resourcesPath, 'ui', 'face-login.html')
+      : path.resolve(SHELL_ROOT_DIR, 'browser', 'ui', 'face-login.html'),
+    FACE_LOGIN_PRELOAD: path.join(BROWSER_DIR, 'preload', 'face-login-preload.js'),
     LOCAL_EXTENSIONS: path.join(ROOT_DIR, 'extensions'),
     WELCOME_HTML: path.join(ROOT_DIR, 'src/renderer/index.html'),
     WELCOME_PRELOAD: path.join(ROOT_DIR, 'dist/preload/preload.js'),
