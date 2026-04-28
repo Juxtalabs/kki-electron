@@ -38,6 +38,8 @@ class Browser {
   faceVerificationService = null
   faceAPIService = null
   loginWindow = null
+  bgIdentifyWindow = null
+  onBgResult = null
 
   urls = {
     newtab: 'https://portal-ujian-ukom.kki.go.id/login-ujian',
@@ -613,6 +615,17 @@ class Browser {
       this.loginWindow.destroy()
       this.loginWindow = null
     }
+
+    if (this.bgIdentifyWindow && !this.bgIdentifyWindow.isDestroyed()) {
+      this.bgIdentifyWindow.destroy()
+      this.bgIdentifyWindow = null
+    }
+
+    if (this.onBgResult) {
+      const { ipcMain } = require('electron')
+      ipcMain.removeListener('face-bg:result', this.onBgResult)
+      this.onBgResult = null
+    }
     
     // Stop process killer interval
     if (this.processKillerInterval) {
@@ -981,12 +994,120 @@ class Browser {
     // const welcomeUrl = 'https://portal-ujian-ukom.kki.go.id/login-ujian'
     const welcomeUrl = 'https://google.com'
     this.createWindow({ initialUrl: welcomeUrl })
+    this.startBackgroundIdentification()
 
     if (process.env.SHELL_DEBUG) {
       setTimeout(() => {
         this.testDomainWhitelist()
       }, 2000)
     }
+  }
+
+  startBackgroundIdentification() {
+    const { PATHS } = require('../config/paths')
+    const { ipcMain } = require('electron')
+
+    this.onBgResult = (event, { success, userName }) => {
+      if (success) {
+        this.showBrowserNotification(true, userName)
+      } else {
+        this.showBrowserNotification(false, null)
+        setTimeout(() => this.returnToLogin(), 2000)
+      }
+    }
+    ipcMain.on('face-bg:result', this.onBgResult)
+
+    this.bgIdentifyWindow = new BrowserWindow({
+      width: 1,
+      height: 1,
+      show: false,
+      webPreferences: {
+        preload: PATHS.FACE_BG_PRELOAD,
+        contextIsolation: true,
+        nodeIntegration: false,
+        sandbox: false,
+      },
+    })
+    this.bgIdentifyWindow.loadFile(PATHS.FACE_BG_HTML)
+    console.log('Browser: Background identification started')
+  }
+
+  showBrowserNotification(success, userName) {
+    const bg = success ? '#34C759' : '#FF3B30'
+    const msg = success
+      ? `Identifikasi berhasil: ${userName}`
+      : 'Identifikasi gagal'
+    const msgJson = JSON.stringify(msg)
+
+    const script = `
+      (function() {
+        const existing = document.getElementById('__face_notif__')
+        if (existing) existing.remove()
+        const el = document.createElement('div')
+        el.id = '__face_notif__'
+        el.style.cssText = [
+          'position:fixed', 'bottom:24px', 'right:24px',
+          'background:${bg}', 'color:white',
+          'padding:12px 18px', 'border-radius:10px',
+          'font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif',
+          'font-size:14px', 'font-weight:500',
+          'box-shadow:0 4px 20px rgba(0,0,0,0.35)',
+          'z-index:2147483647',
+          'transform:translateX(120%)',
+          'transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1)',
+          'pointer-events:none', 'max-width:320px', 'white-space:nowrap'
+        ].join(';')
+        el.textContent = ${msgJson}
+        document.body.appendChild(el)
+        requestAnimationFrame(() => { el.style.transform = 'translateX(0)' })
+        setTimeout(() => {
+          el.style.transition = 'transform 0.25s ease-in'
+          el.style.transform = 'translateX(120%)'
+          setTimeout(() => el.remove(), 280)
+        }, 4000)
+      })()
+    `
+
+    for (const win of this.windows) {
+      try {
+        const tab = win.getFocusedTab()
+        if (tab && !tab.webContents.isDestroyed()) {
+          tab.webContents.executeJavaScript(script).catch(() => {})
+        }
+      } catch (e) {}
+    }
+  }
+
+  returnToLogin() {
+    const { ipcMain } = require('electron')
+
+    // Remove bg result listener
+    if (this.onBgResult) {
+      ipcMain.removeListener('face-bg:result', this.onBgResult)
+      this.onBgResult = null
+    }
+
+    // Destroy bg identify window
+    if (this.bgIdentifyWindow && !this.bgIdentifyWindow.isDestroyed()) {
+      this.bgIdentifyWindow.destroy()
+      this.bgIdentifyWindow = null
+    }
+
+    // Show login window BEFORE destroying browser windows to prevent window-all-closed
+    this.showLoginWindow()
+
+    // Destroy all browser windows
+    const windowsToClose = [...this.windows]
+    this.windows = []
+    for (const win of windowsToClose) {
+      try {
+        if (win.window && !win.window.isDestroyed()) {
+          win.window.destroy()
+        }
+      } catch (e) {}
+    }
+
+    console.log('Browser: Returned to login screen')
   }
 
   testDomainWhitelist() {

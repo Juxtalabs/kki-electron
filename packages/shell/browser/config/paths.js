@@ -23,6 +23,10 @@ function getPaths() {
       ? path.resolve(process.resourcesPath, 'ui', 'face-login.html')
       : path.resolve(SHELL_ROOT_DIR, 'browser', 'ui', 'face-login.html'),
     FACE_LOGIN_PRELOAD: path.join(BROWSER_DIR, 'preload', 'face-login-preload.js'),
+    FACE_BG_HTML: isPackaged
+      ? path.resolve(process.resourcesPath, 'ui', 'face-bg-identify.html')
+      : path.resolve(SHELL_ROOT_DIR, 'browser', 'ui', 'face-bg-identify.html'),
+    FACE_BG_PRELOAD: path.join(BROWSER_DIR, 'preload', 'face-bg-preload.js'),
     LOCAL_EXTENSIONS: path.join(ROOT_DIR, 'extensions'),
     WELCOME_HTML: path.join(ROOT_DIR, 'src/renderer/index.html'),
     WELCOME_PRELOAD: path.join(ROOT_DIR, 'dist/preload/preload.js'),

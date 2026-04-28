@@ -1,4 +1,4 @@
-const AUTO_IDENTIFY_INTERVAL = 30
+const AUTO_IDENTIFY_INTERVAL = 1
 
 class FaceLoginUI {
   constructor() {
