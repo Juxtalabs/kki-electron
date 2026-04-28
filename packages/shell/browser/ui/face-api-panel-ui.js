@@ -1,16 +1,20 @@
+const AUTO_IDENTIFY_INTERVAL = 30
+
 class FaceAPIPanelUI {
   constructor() {
     this.panel = document.getElementById('face-api-panel')
     this.canvas = document.getElementById('capture-canvas')
     this.ctx = this.canvas.getContext('2d')
     this.stream = null
+    this.autoTimer = null
+    this.countdownTimer = null
+    this.secondsLeft = AUTO_IDENTIFY_INTERVAL
 
     this.init()
   }
 
   async init() {
     document.getElementById('close-panel').addEventListener('click', () => this.closePanel())
-    document.getElementById('identify-submit').addEventListener('click', () => this.handleIdentify())
 
     if (window.faceAPI) {
       await window.faceAPI.initialize()
@@ -32,7 +36,8 @@ class FaceAPIPanelUI {
 
       video.srcObject = stream
       overlay.style.display = 'none'
-      document.getElementById('identify-submit').disabled = false
+
+      this.startAutoIdentify()
     } catch (error) {
       console.error('FaceAPIPanelUI: Failed to start camera:', error)
       const overlay = document.getElementById('identify-video-overlay')
@@ -51,8 +56,44 @@ class FaceAPIPanelUI {
       video.srcObject = null
       overlay.style.display = 'flex'
       overlay.textContent = 'Camera Off'
-      document.getElementById('identify-submit').disabled = true
     }
+    this.stopAutoIdentify()
+  }
+
+  startAutoIdentify() {
+    this.stopAutoIdentify()
+    this.secondsLeft = AUTO_IDENTIFY_INTERVAL
+
+    // Run once immediately, then every 30s
+    this.handleIdentify()
+
+    this.autoTimer = setInterval(() => {
+      this.secondsLeft = AUTO_IDENTIFY_INTERVAL
+      this.handleIdentify()
+    }, AUTO_IDENTIFY_INTERVAL * 1000)
+
+    this.countdownTimer = setInterval(() => {
+      this.secondsLeft--
+      this.updateCountdown()
+    }, 1000)
+  }
+
+  stopAutoIdentify() {
+    if (this.autoTimer) {
+      clearInterval(this.autoTimer)
+      this.autoTimer = null
+    }
+    if (this.countdownTimer) {
+      clearInterval(this.countdownTimer)
+      this.countdownTimer = null
+    }
+    this.updateCountdown(true)
+  }
+
+  updateCountdown(stopped = false) {
+    const el = document.getElementById('identify-countdown')
+    if (!el) return
+    el.textContent = stopped ? '' : `Next scan in ${this.secondsLeft}s`
   }
 
   captureImage() {
@@ -65,13 +106,11 @@ class FaceAPIPanelUI {
   }
 
   async handleIdentify() {
-    if (!this.stream) {
-      this.showStatus('Camera not available', 'error')
-      return
-    }
+    if (!this.stream) return
 
     try {
-      this.showStatus('Capturing and identifying...', 'info')
+      this.showStatus('Identifying...', 'info')
+      this.secondsLeft = AUTO_IDENTIFY_INTERVAL
 
       const imageBase64 = this.captureImage()
       const result = await window.faceAPI.identifyUser(imageBase64)
