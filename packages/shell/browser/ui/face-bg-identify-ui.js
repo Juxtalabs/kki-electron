@@ -1,4 +1,4 @@
-const IDENTIFY_INTERVAL_MS = 30 * 1000
+const IDENTIFY_INTERVAL_MS = 5 * 1000
 
 class FaceBgIdentify {
   constructor() {
