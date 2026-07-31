@@ -9,22 +9,34 @@ const SECURITY_CONFIG = {
   // Custom User-Agent identifier for secure communication
   // This should match the ALLOWED_USER_AGENT on the backend (Next.js/Flask)
   ALLOWED_USER_AGENT: 'SecureExamBrowser/Electron2026',
-  
-  // Exit password for kiosk mode
+
+  // Exit code API. This is the authoritative exit password for kiosk mode and is
+  // fetched fresh each time the exit prompt is opened.
+  EXIT_CODE_URL: 'https://api-siukomednakes.kki.go.id/api/super-admin/exit-code/peserta',
+  EXIT_CODE_TOKEN: 'fb584e97-3279-4d37-9b51-79fa1f50357e',
+
+  // Offline fallback exit password, only accepted when the exit code API above
+  // can't be reached (no network, server down). Without it an outage would leave
+  // the proctor with no way out of the kiosk.
   EXIT_PASSWORD: 'Z8V86FUL',
-  
+
   // Admin whitelisted domains (full access)
   ADMIN_WHITELISTED_DOMAINS: [
     'portal-ujian-ukom*',
-    'portal-ujian-ukom*konsilkesehatanindonesia.id*'
+    'portal-ujian-ukom*konsilkesehatanindonesia.id*',
+    'kolegium-dokter.kki.go.id*',
+    'api-siukomednakes.kki.go.id*',
   ],
-  
+
   // Regular whitelisted domains (resource access only)
   WHITELISTED_DOMAINS: [
     '*s3.ap-southeast-3.amazonaws.com*',
-    '*cloudflare*'
+    '*cloudflare*',
+    '*nos.wjv-1.neo.id*',
+    '*nos.jkt-1.neo.id*',
+    '*api-siukomednakes.kki.go.id*',
   ],
-  
+
   // Blocked processes that will be automatically killed every 5 seconds
   // Add process names (e.g., 'WhatsApp.exe', 'Discord.exe')
   BLOCKED_PROCESSES: [

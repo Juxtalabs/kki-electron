@@ -2,6 +2,7 @@ const { app, session, BrowserWindow, globalShortcut } = require('electron')
 const { setupMenu } = require('../menu')
 const { PATHS } = require('../config/paths')
 const { SECURITY_CONFIG } = require('../config/security')
+const { getExitPassword } = require('../security/exit-code')
 const { getParentWindowOfTab } = require('../utils/helpers')
 const { setupIpcHandlers } = require('../handlers/ipc-handlers')
 const { initSession, registerPreloadScripts, getDomainInterceptor } = require('../session/session-manager')
@@ -32,8 +33,11 @@ class Browser {
   isQuitting = false
   processKillerInterval = null
 
+  // urls = {
+  //   newtab: 'https://portal-ujian-ukom.kki.go.id/login-ujian',
+  // }
   urls = {
-    newtab: 'https://portal-ujian-ukom.kki.go.id/login-ujian',
+    newtab: 'https://kolegium-dokter.kki.go.id/penguji',
   }
 
   constructor() {
@@ -90,7 +94,7 @@ class Browser {
           // More flexible regex: match process name anywhere in the line
           const escapedName = processName.replace(/\./g, '\\.')
           const regex = new RegExp(`\\b${escapedName}\\b`, 'i')
-          
+
           if (regex.test(stdout)) {
             console.log(`Browser: Detected blocked process "${processName}", killing...`)
             exec(`taskkill /F /IM "${processName}" /T`, (killErr, killStdout, killStderr) => {
@@ -118,7 +122,7 @@ class Browser {
           const macProcessName = processName.replace(/\.exe$/i, '')
           // Match process name in ps aux output (more flexible pattern)
           const regex = new RegExp(`/${macProcessName}(\\.app)?(/|\\s|$)`, 'i')
-          
+
           if (regex.test(stdout)) {
             console.log(`Browser: Detected blocked process "${macProcessName}", killing...`)
             exec(`killall -9 "${macProcessName}"`, (killErr) => {
@@ -136,11 +140,12 @@ class Browser {
 
   async promptExitPassword() {
     const { dialog, ipcMain } = require('electron')
-    
+
     try {
-      // Use hardcoded password from security config
-      const correctPassword = SECURITY_CONFIG.EXIT_PASSWORD
-      
+      // Fetch the exit code from the API up front so the network round trip
+      // overlaps with the proctor typing instead of delaying the prompt.
+      const correctPasswordPromise = getExitPassword()
+
       const focusedWindow = this.getFocusedWindow()
       if (!focusedWindow || !focusedWindow.window) {
         console.warn('No focused window found for password prompt')
@@ -150,15 +155,17 @@ class Browser {
       // Loop untuk retry password tanpa recursive call
       let attempts = 0
       const maxAttempts = 10
-      
+
       while (attempts < maxAttempts) {
         const password = await this.promptPasswordInput(focusedWindow)
-        
+
         if (password === null) {
           // User cancelled
           return
         }
-        
+
+        const correctPassword = await correctPasswordPromise
+
         if (password === correctPassword) {
           // Password correct, exit app
           this.destroy()
@@ -170,7 +177,7 @@ class Browser {
           // Loop will continue to prompt again
         }
       }
-      
+
       console.warn('Max password attempts reached')
     } catch (error) {
       console.error('Error prompting exit password:', error)
@@ -185,12 +192,12 @@ class Browser {
         return
       }
       const webContents = focusedTab.webContents
-      
+
       if (!webContents || webContents.isDestroyed()) {
         resolve()
         return
       }
-      
+
       const script = `
         (function() {
           const existing = document.getElementById('exit-password-overlay');
@@ -230,20 +237,20 @@ class Browser {
           };
         })();
       `
-      
+
       webContents.executeJavaScript(script).then(() => {
         let pollCount = 0
         const maxPolls = 600 // 1 minute
         const checkDismiss = setInterval(async () => {
           pollCount++
-          
+
           // Check if webContents is still valid
           if (!webContents || webContents.isDestroyed()) {
             clearInterval(checkDismiss)
             resolve()
             return
           }
-          
+
           // Timeout
           if (pollCount >= maxPolls) {
             clearInterval(checkDismiss)
@@ -253,18 +260,18 @@ class Browser {
                 if (overlay) overlay.remove();
                 delete window.__errorDismissed;
               `)
-            } catch (e) {}
+            } catch (e) { }
             resolve()
             return
           }
-          
+
           try {
             const dismissed = await webContents.executeJavaScript('window.__errorDismissed')
             if (dismissed) {
               clearInterval(checkDismiss)
               try {
                 await webContents.executeJavaScript('delete window.__errorDismissed')
-              } catch (e) {}
+              } catch (e) { }
               resolve()
             }
           } catch (error) {
@@ -278,7 +285,7 @@ class Browser {
 
   async promptPasswordInput(parentWindow) {
     const { ipcMain } = require('electron')
-    
+
     return new Promise((resolve) => {
       // Get the active tab's webContents, not the window's webContents
       const focusedTab = parentWindow.getFocusedTab()
@@ -288,14 +295,14 @@ class Browser {
         return
       }
       const webContents = focusedTab.webContents
-      
+
       // Check if webContents is valid and not destroyed
       if (!webContents || webContents.isDestroyed()) {
         console.error('WebContents is destroyed or invalid')
         resolve(null)
         return
       }
-      
+
       // Inject password overlay directly into the main window
       const overlayHTML = `
         <div id="exit-password-overlay" style="
@@ -502,14 +509,14 @@ class Browser {
         const maxPolls = 3000 // 5 minutes (100ms * 3000)
         const checkResult = setInterval(async () => {
           pollCount++
-          
+
           // Check if webContents is still valid
           if (!webContents || webContents.isDestroyed()) {
             clearInterval(checkResult)
             resolve(null)
             return
           }
-          
+
           // Timeout after max polls
           if (pollCount >= maxPolls) {
             clearInterval(checkResult)
@@ -519,18 +526,18 @@ class Browser {
                 if (overlay) overlay.remove();
                 delete window.__exitPasswordResult;
               `)
-            } catch (e) {}
+            } catch (e) { }
             resolve(null)
             return
           }
-          
+
           try {
             const result = await webContents.executeJavaScript('window.__exitPasswordResult')
             if (result !== undefined) {
               clearInterval(checkResult)
               try {
                 await webContents.executeJavaScript('delete window.__exitPasswordResult')
-              } catch (e) {}
+              } catch (e) { }
               resolve(result)
             }
           } catch (error) {
@@ -549,17 +556,17 @@ class Browser {
     if (this.isQuitting) return
     this.isQuitting = true
     console.log('Browser: Cleaning up before exit...')
-    
+
     // Stop process killer interval
     if (this.processKillerInterval) {
       clearInterval(this.processKillerInterval)
       this.processKillerInterval = null
       console.log('Browser: Process killer stopped')
     }
-    
+
     // Stop native keyboard helper
     this.stopNativeKeyboardHelper()
-    
+
     // Uninstall keyboard hooks
     try {
       if (nativeKeyboardHook && nativeKeyboardHook.isInstalled && nativeKeyboardHook.isInstalled()) {
@@ -578,14 +585,14 @@ class Browser {
     } catch (error) {
       console.warn('Browser: Failed to uninstall keyboard blocker:', error.message)
     }
-    
+
     // Re-enable system shortcuts via Registry
     try {
       enableAllSystemShortcuts()
     } catch (error) {
       console.warn('Browser: Failed to re-enable system shortcuts:', error.message)
     }
-    
+
     console.log('Browser: Cleanup completed, quitting app...')
 
     // Force-destroy windows because we intentionally prevent user-driven closes.
@@ -627,12 +634,12 @@ class Browser {
     console.log('Browser: init() called')
     console.log('Browser: BLOCKED_PROCESSES config:', SECURITY_CONFIG.BLOCKED_PROCESSES)
     console.log('Browser: Platform:', process.platform)
-    
+
     // Check for multiple monitors and block if detected
     if (checkAndBlockIfMultipleMonitors()) {
       return // Exit if blocked
     }
-    
+
     this.initSession()
     setupMenu(this)
 
@@ -662,21 +669,21 @@ class Browser {
       console.log('Browser: Windows key blocking DISABLED for development (DISABLE_WIN_KEY_BLOCK=true)')
     } else {
       console.log('Browser: Installing keyboard blocking system...')
-      
+
       // Primary: Start native helper (handles Windows key effectively)
       this.startNativeKeyboardHelper()
-      
+
       // Backup: Install Electron addon (handles key combinations)
       this.installElectronKeyboardHook()
-      
+
       // Additional: Disable system shortcuts via Registry (Win+L, Win+G, Ctrl+Alt+Del Task Manager)
       disableAllSystemShortcuts()
     }
 
     // Start process killer for blocked applications (Windows and macOS)
-    if ((process.platform === 'win32' || process.platform === 'darwin') && 
-        SECURITY_CONFIG.BLOCKED_PROCESSES && 
-        SECURITY_CONFIG.BLOCKED_PROCESSES.length > 0) {
+    if ((process.platform === 'win32' || process.platform === 'darwin') &&
+      SECURITY_CONFIG.BLOCKED_PROCESSES &&
+      SECURITY_CONFIG.BLOCKED_PROCESSES.length > 0) {
       console.log('Browser: Starting process killer for blocked applications:', SECURITY_CONFIG.BLOCKED_PROCESSES)
       // Run immediately
       this.checkAndKillBlockedProcesses()
@@ -759,25 +766,25 @@ class Browser {
 
       // Keep process alive - don't unref
       // this.nativeHelperProcess.unref()
-      
+
       // Log any output from helper
       if (this.nativeHelperProcess.stdout) {
         this.nativeHelperProcess.stdout.on('data', (data) => {
           console.log('[KeyboardHelper]', data.toString().trim())
         })
       }
-      
+
       if (this.nativeHelperProcess.stderr) {
         this.nativeHelperProcess.stderr.on('data', (data) => {
           console.warn('[KeyboardHelper Error]', data.toString().trim())
         })
       }
-      
+
       this.nativeHelperProcess.on('exit', (code) => {
         console.warn('[KeyboardHelper] Process exited with code:', code)
         this.nativeHelperProcess = null
       })
-      
+
       console.log('Browser: Native keyboard helper started successfully (PID:', this.nativeHelperProcess.pid, ')')
     } catch (error) {
       console.warn('KeyboardHelper: Failed to start:', error.message)
@@ -856,7 +863,8 @@ class Browser {
 
   createInitialWindow() {
     // Create browser window with external welcome page as initial URL
-    const welcomeUrl = 'https://portal-ujian-ukom.kki.go.id/login-ujian'
+    // const welcomeUrl = 'https://portal-ujian-ukom.kki.go.id/login-ujian'
+    const welcomeUrl = 'https://kolegium-dokter.kki.go.id/penguji'
     this.createWindow({ initialUrl: welcomeUrl })
 
     // Test domain whitelist system in debug mode

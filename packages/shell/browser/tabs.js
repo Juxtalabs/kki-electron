@@ -3,6 +3,12 @@ const { WebContentsView } = require('electron')
 
 const toolbarHeight = 64
 
+// Chromium's built-in PDF viewer is only registered when plugins are enabled.
+// Without this, navigating to a PDF downloads the file instead of rendering it.
+const defaultWebPreferences = {
+  plugins: true,
+}
+
 class Tab {
   constructor(parentWindow, wcvOpts = {}) {
     this.invalidateLayout = this.invalidateLayout.bind(this)
@@ -12,6 +18,12 @@ class Tab {
     if (wcvOpts.hasOwnProperty('webContents') && !wcvOpts.webContents) delete wcvOpts.webContents
     if (wcvOpts.hasOwnProperty('webPreferences') && !wcvOpts.webPreferences)
       delete wcvOpts.webPreferences
+
+    // webPreferences are ignored when adopting an existing webContents, so only
+    // apply the defaults when this tab creates its own.
+    if (!wcvOpts.webContents) {
+      wcvOpts.webPreferences = { ...defaultWebPreferences, ...wcvOpts.webPreferences }
+    }
 
     this.view = new WebContentsView(wcvOpts)
     this.id = this.view.webContents.id
