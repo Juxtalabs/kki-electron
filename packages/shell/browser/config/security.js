@@ -35,6 +35,7 @@ const SECURITY_CONFIG = {
     '*nos.wjv-1.neo.id*',
     '*nos.jkt-1.neo.id*',
     '*api-siukomednakes.kki.go.id*',
+    '*unpkg.com*',
   ],
 
   // Blocked processes that will be automatically killed every 5 seconds
