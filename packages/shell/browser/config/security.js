@@ -12,7 +12,7 @@ const SECURITY_CONFIG = {
 
   // Exit code API. This is the authoritative exit password for kiosk mode and is
   // fetched fresh each time the exit prompt is opened.
-  EXIT_CODE_URL: 'https://api-siukomednakes.kki.go.id/api/super-admin/exit-code/peserta',
+  EXIT_CODE_URL: 'https://api-siukomednakes.kki.go.id/api/super-admin/exit-code/penguji',
   EXIT_CODE_TOKEN: 'fb584e97-3279-4d37-9b51-79fa1f50357e',
 
   // Offline fallback exit password, only accepted when the exit code API above
