@@ -2,6 +2,7 @@ const { app, session, BrowserWindow, globalShortcut } = require('electron')
 const { setupMenu } = require('../menu')
 const { PATHS } = require('../config/paths')
 const { SECURITY_CONFIG } = require('../config/security')
+const { APP_VARIANT, VARIANT_CONFIG } = require('../config/variant')
 const { getExitPassword } = require('../security/exit-code')
 const { getParentWindowOfTab } = require('../utils/helpers')
 const { setupIpcHandlers } = require('../handlers/ipc-handlers')
@@ -33,11 +34,9 @@ class Browser {
   isQuitting = false
   processKillerInterval = null
 
-  // urls = {
-  //   newtab: 'https://portal-ujian-ukom.kki.go.id/login-ujian',
-  // }
+  // Start page depends on the build variant (peserta / penguji), see config/variant.js
   urls = {
-    newtab: 'https://kolegium-dokter.kki.go.id/penguji',
+    newtab: VARIANT_CONFIG.newtabUrl,
   }
 
   constructor() {
@@ -50,6 +49,7 @@ class Browser {
     // to restrict access to frontend and API
     app.userAgentFallback = SECURITY_CONFIG.ALLOWED_USER_AGENT
     console.log('Browser: Custom User-Agent set to:', SECURITY_CONFIG.ALLOWED_USER_AGENT)
+    console.log('Browser: Build variant:', APP_VARIANT, '->', this.urls.newtab)
 
     app.whenReady().then(() => {
       try {
@@ -862,9 +862,9 @@ class Browser {
   }
 
   createInitialWindow() {
-    // Create browser window with external welcome page as initial URL
-    // const welcomeUrl = 'https://portal-ujian-ukom.kki.go.id/login-ujian'
-    const welcomeUrl = 'https://kolegium-dokter.kki.go.id/penguji'
+    // Create browser window with external welcome page as initial URL,
+    // resolved from the build variant (peserta / penguji)
+    const welcomeUrl = VARIANT_CONFIG.newtabUrl
     this.createWindow({ initialUrl: welcomeUrl })
 
     // Test domain whitelist system in debug mode

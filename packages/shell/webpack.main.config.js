@@ -1,5 +1,7 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const webpack = require('webpack')
 const path = require('path')
+const { APP_VARIANT } = require('./browser/config/variant')
 
 module.exports = {
   entry: './index.js',
@@ -15,6 +17,11 @@ module.exports = {
     '../native/build/Release/keyhook.node': 'commonjs ../native/build/Release/keyhook.node',
   },
   plugins: [
+    // Bake the build variant (peserta / penguji) into the main bundle so the
+    // packaged app can't be pointed at the other portal via an env var.
+    new webpack.DefinePlugin({
+      'process.env.APP_VARIANT': JSON.stringify(APP_VARIANT),
+    }),
     new CopyWebpackPlugin({
       patterns: [
         require.resolve('electron-chrome-extensions/preload'),

@@ -1,6 +1,8 @@
+const { VARIANT_CONFIG } = require('./browser/config/variant')
+
 module.exports = {
   packagerConfig: {
-    name: 'KKI Browser Penguji',
+    name: VARIANT_CONFIG.productName,
     asar: true,
     extraResource: ['browser/ui', 'native/keyhook-helper.exe'],
     icon: '../../assets/kki-icon',
