@@ -17,6 +17,7 @@ void LogMessage(const char* msg) {
 }
 
 static bool g_altPressed = false;
+static bool g_winPressed = false;
 
 LRESULT CALLBACK KeyboardHookProc(int nCode, WPARAM wParam, LPARAM lParam) {
     if (nCode == HC_ACTION) {
@@ -24,13 +25,13 @@ LRESULT CALLBACK KeyboardHookProc(int nCode, WPARAM wParam, LPARAM lParam) {
         DWORD vk = pKey->vkCode;
         bool isKeyDown = (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN);
         bool isKeyUp = (wParam == WM_KEYUP || wParam == WM_SYSKEYUP);
-        bool isInjected = (pKey->flags & LLKHF_INJECTED) != 0;
-        
-        // Skip processing injected keys to prevent infinite loop
-        if (isInjected) {
-            return CallNextHookEx(g_keyboardHook, nCode, wParam, lParam);
-        }
-        
+
+        // NOTE: injected keys are deliberately NOT skipped. Precision touchpad
+        // gestures (3-finger swipe = Win+Tab / Alt+Tab / Win+D, 4-finger swipe =
+        // Ctrl+Win+Left/Right) reach us as injected keystrokes, so skipping them
+        // would let every swipe through. We never call SendInput ourselves, so
+        // there is no feedback loop to guard against.
+
         // Track Alt key state
         if (vk == VK_MENU || vk == VK_LMENU || vk == VK_RMENU) {
             if (isKeyDown) {
@@ -39,13 +40,37 @@ LRESULT CALLBACK KeyboardHookProc(int nCode, WPARAM wParam, LPARAM lParam) {
                 g_altPressed = false;
             }
         }
-        
-        // Block Windows keys completely
+
+        // Track Windows key state ourselves - we swallow the key below, so the
+        // system never records it and GetAsyncKeyState would always say "up"
+        if (vk == VK_LWIN || vk == VK_RWIN) {
+            if (isKeyDown) {
+                g_winPressed = true;
+            } else if (isKeyUp) {
+                g_winPressed = false;
+            }
+        }
+
+        // Block Windows keys completely (also kills Win+Tab task view)
         if (vk == VK_LWIN || vk == VK_RWIN) {
             LogMessage("Windows key blocked");
             return 1;
         }
-        
+
+        // Block Ctrl+Win+Left/Right (virtual desktop switch, what a 4-finger
+        // swipe maps to)
+        if ((vk == VK_LEFT || vk == VK_RIGHT) && g_winPressed &&
+            (GetAsyncKeyState(VK_CONTROL) & 0x8000)) {
+            LogMessage("Ctrl+Win+Arrow blocked");
+            return 1;
+        }
+
+        // Block Ctrl+Alt+Tab (sticky app switcher)
+        if (vk == VK_TAB && g_altPressed && (GetAsyncKeyState(VK_CONTROL) & 0x8000)) {
+            LogMessage("Ctrl+Alt+Tab blocked");
+            return 1;
+        }
+
         // Block Tab when Alt is pressed (prevents Alt+Tab)
         if (vk == VK_TAB && g_altPressed) {
             LogMessage("Alt+Tab blocked");
@@ -72,9 +97,26 @@ LRESULT CALLBACK KeyboardHookProc(int nCode, WPARAM wParam, LPARAM lParam) {
             return 1;
         }
         
-        // Block PrintScreen
-        if (vk == VK_SNAPSHOT) {
+        // Block PrintScreen in every form: bare, Alt+PrtScn (active window),
+        // Ctrl+PrtScn, Win+PrtScn (save to file) and Win+Alt+PrtScn (Game Bar).
+        // Not gated on isKeyDown: some keyboards only ever report the up
+        // transition for this key, and that alone is enough to fire a capture.
+        // VK_PRINT is the separate "Print" key a few layouts send instead.
+        if (vk == VK_SNAPSHOT || vk == VK_PRINT) {
             LogMessage("PrintScreen blocked");
+            return 1;
+        }
+
+        // Screen capture shortcuts that hang off the Windows key:
+        //   Win+Shift+S / Win+S  Snipping Tool
+        //   Win+G                Game Bar (has a camera button)
+        //   Win+Alt+R / Win+Alt+G  Game Bar record / record last 30s
+        // The Windows key itself is swallowed above, so the shell should never
+        // assemble these anyway - but g_winPressed is state we track ourselves,
+        // so block the second key too and a missed Win key-up can't reopen the
+        // hole.
+        if (g_winPressed && (vk == 'S' || vk == 'G' || vk == 'R')) {
+            LogMessage("Win+S/G/R (screen capture) blocked");
             return 1;
         }
     }

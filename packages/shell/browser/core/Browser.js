@@ -13,6 +13,10 @@ const { setupContextMenu } = require('../handlers/context-menu-handler')
 const { setupWindowOpenHandler } = require('../handlers/window-open-handler')
 const { checkAndBlockIfMultipleMonitors } = require('../utils/monitor-detector')
 const { disableAllSystemShortcuts, enableAllSystemShortcuts } = require('../utils/disable-alttab')
+const touchpadGestures = require('../utils/touchpad-gestures')
+const macScreenshotShortcuts = require('../utils/mac-screenshot-shortcuts')
+const focusGuard = require('../utils/focus-guard')
+const diag = require('../utils/diag-log')
 const { spawn, exec } = require('child_process')
 const path = require('path')
 const fs = require('fs')
@@ -586,11 +590,32 @@ class Browser {
       console.warn('Browser: Failed to uninstall keyboard blocker:', error.message)
     }
 
+    // Stop pulling focus back before the windows go away
+    try {
+      focusGuard.uninstall()
+    } catch (error) {
+      console.warn('Browser: Failed to uninstall focus guard:', error.message)
+    }
+
     // Re-enable system shortcuts via Registry
     try {
       enableAllSystemShortcuts()
     } catch (error) {
       console.warn('Browser: Failed to re-enable system shortcuts:', error.message)
+    }
+
+    // Give the student their touchpad gestures back
+    try {
+      touchpadGestures.restore()
+    } catch (error) {
+      console.warn('Browser: Failed to restore touchpad gestures:', error.message)
+    }
+
+    // ...and their macOS screenshot shortcuts
+    try {
+      macScreenshotShortcuts.restore()
+    } catch (error) {
+      console.warn('Browser: Failed to restore macOS screenshot shortcuts:', error.message)
     }
 
     console.log('Browser: Cleanup completed, quitting app...')
@@ -666,9 +691,9 @@ class Browser {
 
     // Install keyboard hook for kiosk mode security (unless disabled for development)
     if (process.env.DISABLE_WIN_KEY_BLOCK) {
-      console.log('Browser: Windows key blocking DISABLED for development (DISABLE_WIN_KEY_BLOCK=true)')
+      diag.write('Kiosk', 'Keyboard blocking DISABLED (DISABLE_WIN_KEY_BLOCK=true)')
     } else {
-      console.log('Browser: Installing keyboard blocking system...')
+      diag.write('Kiosk', 'Installing keyboard blocking system')
 
       // Primary: Start native helper (handles Windows key effectively)
       this.startNativeKeyboardHelper()
@@ -678,7 +703,29 @@ class Browser {
 
       // Additional: Disable system shortcuts via Registry (Win+L, Win+G, Ctrl+Alt+Del Task Manager)
       disableAllSystemShortcuts()
+
+      // macOS counterpart: the screen capture shortcuts are consumed by
+      // WindowServer before the app sees them, so they have to be switched off
+      // in com.apple.symbolichotkeys rather than swallowed like on Windows.
+      macScreenshotShortcuts.restoreStaleBackup()
+      macScreenshotShortcuts.disable()
     }
+
+    // Touchpad: 3/4 finger swipe switches apps below the app level, so it has to be
+    // turned off in the Precision Touchpad settings themselves. Kept separate from
+    // DISABLE_WIN_KEY_BLOCK so a dev run can still exercise it.
+    if (process.env.DISABLE_TOUCHPAD_BLOCK) {
+      diag.write('Kiosk', 'Touchpad gesture blocking DISABLED (DISABLE_TOUCHPAD_BLOCK=true)')
+      diag.write('Kiosk', 'Touchpad gesture state:', touchpadGestures.readCurrentState())
+    } else {
+      touchpadGestures.restoreStaleBackup()
+      touchpadGestures.disable()
+    }
+
+    // Connectivity probe: puts the exit-code API result in the diag log at every
+    // launch, so a failure is visible without waiting for a proctor to open the
+    // exit prompt. getExitPassword() never rejects - it falls back internally.
+    getExitPassword()
 
     // Start process killer for blocked applications (Windows and macOS)
     if ((process.platform === 'win32' || process.platform === 'darwin') &&
@@ -752,11 +799,11 @@ class Browser {
       const helperPath = candidates.find((p) => fs.existsSync(p))
 
       if (!helperPath) {
-        console.warn('KeyboardHelper: keyhook-helper.exe not found in any known path')
+        diag.write('Kiosk', 'WARN keyhook-helper.exe not found in any known path', candidates)
         return
       }
 
-      console.log('Browser: Starting native keyboard helper:', helperPath)
+      diag.write('Kiosk', 'Starting native keyboard helper:', helperPath)
 
       this.nativeHelperProcess = spawn(helperPath, [], {
         detached: false,
@@ -844,6 +891,33 @@ class Browser {
       event.preventDefault()
     })
 
+    // Catch app switching that never reaches us as a keystroke (3-finger swipe,
+    // task view, taskbar click) and pull the window back to the front
+    if (process.env.DISABLE_FOCUS_GUARD) {
+      diag.write('Kiosk', 'Focus guard DISABLED (DISABLE_FOCUS_GUARD=true)')
+    } else {
+      focusGuard.guardWindow(win.window, {
+        isQuitting: () => this.isQuitting,
+      })
+    }
+
+    // Last line of defence against screen capture: mark the window as protected
+    // content. On Windows this is SetWindowDisplayAffinity(WDA_EXCLUDEFROMCAPTURE),
+    // on macOS NSWindowSharingNone - the window is skipped by PrintScreen, the
+    // Snipping Tool, Game Bar, screen recorders and remote desktop alike, so a
+    // shortcut we failed to swallow still yields a blank capture rather than the
+    // exam paper. Costs nothing on screen; the student sees the window normally.
+    if (process.env.DISABLE_SCREENSHOT_PROTECTION) {
+      diag.write('Kiosk', 'Screenshot content protection DISABLED (DISABLE_SCREENSHOT_PROTECTION=true)')
+    } else {
+      try {
+        win.window.setContentProtection(true)
+        diag.write('Kiosk', 'Screenshot content protection enabled on window', win.window.id)
+      } catch (error) {
+        diag.write('Kiosk', 'WARN failed to enable content protection:', error.message)
+      }
+    }
+
     // Block all Command key combinations on macOS inside the app
     if (process.platform === 'darwin') {
       win.webContents.on('before-input-event', (event, input) => {
@@ -895,6 +969,40 @@ class Browser {
 
     setupWindowOpenHandler(webContents, this)
     setupContextMenu(webContents, this)
+    this.blockScreenCaptureKeys(webContents)
+  }
+
+  /**
+   * Swallow capture keys that reach Chromium as ordinary input.
+   *
+   * The low-level hook normally eats these before they get this far; this is the
+   * layer that still holds when the hook could not be installed (no admin
+   * rights, helper .exe missing), and it is the only keyboard-level screenshot
+   * block that works on macOS. Attached per webContents so tabs are covered as
+   * well as the shell window.
+   */
+  blockScreenCaptureKeys(webContents) {
+    webContents.on('before-input-event', (event, input) => {
+      const key = input.key
+
+      // PrintScreen in any modifier combination - the vk does not change
+      if (key === 'PrintScreen' || key === 'Print') {
+        event.preventDefault()
+        return
+      }
+
+      // Win+S / Win+Shift+S (Snipping Tool). input.meta is the Windows key on
+      // Windows and Command on macOS.
+      if (input.meta && (key === 'S' || key === 's')) {
+        event.preventDefault()
+        return
+      }
+
+      // Cmd+Shift+3/4/5/6 (macOS capture family)
+      if (input.meta && input.shift && ['3', '4', '5', '6'].includes(key)) {
+        event.preventDefault()
+      }
+    })
   }
 }
 

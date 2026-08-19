@@ -81,6 +81,48 @@ function disableGameBar() {
 }
 
 /**
+ * Stop the PrintScreen key from opening the Snipping Tool (Windows 11 22H2+)
+ *
+ * The low-level hook already swallows VK_SNAPSHOT, but this closes the same
+ * door one layer lower so a hook that fails to install does not leave a
+ * one-key capture available. The user's previous value is remembered so
+ * restore puts their own setting back rather than the Windows default.
+ */
+let previousSnippingHotkeyValue = null
+
+function disableSnippingHotkey() {
+  if (process.platform !== 'win32') return false
+
+  try {
+    console.log('[SystemShortcuts] Disabling PrintScreen -> Snipping Tool...')
+
+    // Read first so restore does not have to guess. Missing value means the
+    // key has never been touched, which behaves as enabled on Windows 11.
+    try {
+      const output = execSync('reg query "HKCU\\Control Panel\\Keyboard" /v PrintScreenKeyForSnippingEnabled', {
+        stdio: ['ignore', 'pipe', 'ignore'],
+        shell: true,
+      }).toString()
+      const match = output.match(/REG_DWORD\s+0x([0-9a-fA-F]+)/)
+      previousSnippingHotkeyValue = match ? parseInt(match[1], 16) : null
+    } catch (error) {
+      previousSnippingHotkeyValue = null
+    }
+
+    execSync('reg add "HKCU\\Control Panel\\Keyboard" /v PrintScreenKeyForSnippingEnabled /t REG_DWORD /d 0 /f', {
+      stdio: 'ignore',
+      shell: true
+    })
+
+    console.log('[SystemShortcuts] PrintScreen -> Snipping Tool disabled successfully')
+    return true
+  } catch (error) {
+    console.warn('[SystemShortcuts] Failed to disable PrintScreen -> Snipping Tool:', error.message)
+    return false
+  }
+}
+
+/**
  * Disable all system shortcuts
  */
 function disableAllSystemShortcuts() {
@@ -94,11 +136,13 @@ function disableAllSystemShortcuts() {
   const results = {
     taskManager: disableTaskManager(),
     lockWorkstation: disableLockWorkstation(),
-    gameBar: disableGameBar()
+    gameBar: disableGameBar(),
+    snippingHotkey: disableSnippingHotkey()
   }
-  
+
+  const total = Object.keys(results).length
   const successCount = Object.values(results).filter(r => r === true).length
-  console.log(`[SystemShortcuts] Disabled ${successCount}/3 system shortcuts`)
+  console.log(`[SystemShortcuts] Disabled ${successCount}/${total} system shortcuts`)
   
   return successCount > 0
 }
@@ -182,6 +226,39 @@ function enableGameBar() {
 }
 
 /**
+ * Restore the PrintScreen key binding the user had before the kiosk started
+ */
+function enableSnippingHotkey() {
+  if (process.platform !== 'win32') return false
+
+  try {
+    console.log('[SystemShortcuts] Restoring PrintScreen -> Snipping Tool...')
+
+    if (previousSnippingHotkeyValue === null) {
+      // The value did not exist before us, so remove ours rather than
+      // inventing one. Deleting a value that is already gone exits non-zero,
+      // which the catch below turns into a warning - harmless either way.
+      execSync('reg delete "HKCU\\Control Panel\\Keyboard" /v PrintScreenKeyForSnippingEnabled /f', {
+        stdio: 'ignore',
+        shell: true
+      })
+    } else {
+      execSync(`reg add "HKCU\\Control Panel\\Keyboard" /v PrintScreenKeyForSnippingEnabled /t REG_DWORD /d ${previousSnippingHotkeyValue} /f`, {
+        stdio: 'ignore',
+        shell: true
+      })
+    }
+
+    previousSnippingHotkeyValue = null
+    console.log('[SystemShortcuts] PrintScreen -> Snipping Tool restored successfully')
+    return true
+  } catch (error) {
+    console.warn('[SystemShortcuts] Failed to restore PrintScreen -> Snipping Tool:', error.message)
+    return false
+  }
+}
+
+/**
  * Re-enable all system shortcuts
  */
 function enableAllSystemShortcuts() {
@@ -195,11 +272,13 @@ function enableAllSystemShortcuts() {
   const results = {
     taskManager: enableTaskManager(),
     lockWorkstation: enableLockWorkstation(),
-    gameBar: enableGameBar()
+    gameBar: enableGameBar(),
+    snippingHotkey: enableSnippingHotkey()
   }
-  
+
+  const total = Object.keys(results).length
   const successCount = Object.values(results).filter(r => r === true).length
-  console.log(`[SystemShortcuts] Re-enabled ${successCount}/3 system shortcuts`)
+  console.log(`[SystemShortcuts] Re-enabled ${successCount}/${total} system shortcuts`)
   
   return successCount > 0
 }
@@ -221,6 +300,8 @@ module.exports = {
   enableLockWorkstation,
   disableGameBar,
   enableGameBar,
+  disableSnippingHotkey,
+  enableSnippingHotkey,
   
   // Legacy functions
   disableAltTab,

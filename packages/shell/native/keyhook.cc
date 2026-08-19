@@ -12,6 +12,14 @@ LRESULT CALLBACK KeyboardHookProc(int nCode, WPARAM wParam, LPARAM lParam) {
     const KBDLLHOOKSTRUCT *pKey = reinterpret_cast<KBDLLHOOKSTRUCT *>(lParam);
     const DWORD vk = pKey->vkCode;
 
+    // PrintScreen is checked outside the key-down guard on purpose: some
+    // keyboards only ever report the up transition for it, and that alone is
+    // enough for the shell to fire a capture. Covers bare PrtScn plus the
+    // Alt / Ctrl / Win / Win+Alt variants, since none of them change the vk.
+    if (vk == VK_SNAPSHOT || vk == VK_PRINT) {
+      return 1;
+    }
+
     // Block dangerous key combinations (these work in Electron)
     if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) {
       // Alt + Tab (Task switcher)
@@ -26,8 +34,10 @@ LRESULT CALLBACK KeyboardHookProc(int nCode, WPARAM wParam, LPARAM lParam) {
       if (vk == VK_ESCAPE && (GetAsyncKeyState(VK_CONTROL) & 0x8000) && (GetAsyncKeyState(VK_SHIFT) & 0x8000)) {
         return 1;
       }
-      // PrintScreen
-      if (vk == VK_SNAPSHOT) {
+      // Screen capture shortcuts hanging off the Windows key: Win+Shift+S /
+      // Win+S (Snipping Tool), Win+G and Win+Alt+R / Win+Alt+G (Game Bar).
+      if ((vk == 'S' || vk == 'G' || vk == 'R') &&
+          ((GetAsyncKeyState(VK_LWIN) & 0x8000) || (GetAsyncKeyState(VK_RWIN) & 0x8000))) {
         return 1;
       }
       // F11 (Fullscreen)

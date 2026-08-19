@@ -40,13 +40,31 @@ const SECURITY_CONFIG = {
     '*unpkg.com*',
   ],
 
-  // Blocked processes that will be automatically killed every 5 seconds
-  // Add process names (e.g., 'WhatsApp.exe', 'Discord.exe')
+  // Blocked processes that will be automatically killed every 5 seconds.
+  // Add process names (e.g., 'WhatsApp.exe', 'Discord.exe'). Matching is
+  // case-insensitive, and the macOS killer strips the .exe suffix before
+  // matching, so one entry per app covers both platforms.
   BLOCKED_PROCESSES: [
     'WhatsApp.exe',
     'whatsapp.exe',
     'WhatsApp.Root.exe',
-    'WhatsApp'
+    'WhatsApp',
+
+    // Remote control / screen sharing. The session processes
+    // (TeamViewer_Desktop, AnyDesk) are the ones that actually capture the
+    // screen and inject input, so they matter most; the *_Service entries kill
+    // the supervisor that would otherwise respawn them on the next incoming
+    // connection.
+    'TeamViewer.exe',
+    'TeamViewer_Desktop.exe',
+    'TeamViewer_Service.exe',
+    'TeamViewer_Note.exe',
+    'TeamViewerQS.exe',
+    'TeamViewerQS_x64.exe',
+    'tv_w32.exe',
+    'tv_x64.exe',
+    'AnyDesk.exe',
+    'AnyDeskMSI.exe',
   ]
 }
 

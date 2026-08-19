@@ -31,11 +31,31 @@ const BLOCKED_SHORTCUTS = [
   'Super+E', // File Explorer
   'Super+R', // Run dialog
   
-  // Screenshot shortcuts
-  'Super+Shift+S', // Snipping Tool (Windows)
-  'CommandOrControl+Shift+3', // Screenshot (macOS)
-  'CommandOrControl+Shift+4', // Screenshot selection (macOS)
-  'CommandOrControl+Shift+5', // Screenshot options (macOS)
+  // Screenshot shortcuts (Windows)
+  // PrintScreen has to be listed with every modifier combination: registering
+  // the bare accelerator does not cover Alt+PrtScn or Win+PrtScn, and each of
+  // those is a working capture on its own.
+  'PrintScreen', // Full screen to clipboard / Snipping Tool on Win11
+  'Alt+PrintScreen', // Active window to clipboard
+  'Shift+PrintScreen',
+  'CommandOrControl+PrintScreen',
+  'Super+PrintScreen', // Saves straight to Pictures\Screenshots
+  'Super+Alt+PrintScreen', // Game Bar screenshot
+  'Super+Shift+PrintScreen',
+  'Super+Shift+S', // Snipping Tool
+  'Super+S', // Search, also opens capture surfaces
+  'Super+Shift+R', // Snipping Tool screen recording (Win11 23H2+)
+  'Super+Alt+R', // Game Bar: start/stop recording
+  'Super+Alt+G', // Game Bar: record the last 30 seconds
+
+  // Screenshot shortcuts (macOS)
+  'CommandOrControl+Shift+3', // Whole screen to file
+  'CommandOrControl+Shift+4', // Selection to file
+  'CommandOrControl+Shift+5', // Screenshot / screen recording panel
+  'CommandOrControl+Shift+6', // Touch Bar capture
+  'CommandOrControl+Control+Shift+3', // Whole screen to clipboard
+  'CommandOrControl+Control+Shift+4', // Selection to clipboard
+  'CommandOrControl+Control+Shift+5',
   
   // Developer tools (optional - comment out if you need them)
   'F12',
