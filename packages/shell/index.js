@@ -1,6 +1,7 @@
-// The elevation gate runs before the Browser is even required: when it decides
-// to relaunch through UAC this process exits, and nothing else should have
-// started by then. See browser/utils/elevation.js for why the kiosk needs it.
+// The elevation gate runs before the Browser is even required: it only returns
+// when we are administrator, and otherwise exits - either handing over to the
+// copy Windows elevated for us, or closing because the UAC prompt was refused.
+// Nothing else should have started by then. See browser/utils/elevation.js.
 const { ensureElevated } = require('./browser/utils/elevation')
 
 ensureElevated()

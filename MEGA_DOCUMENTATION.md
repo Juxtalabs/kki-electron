@@ -727,19 +727,22 @@ sebagian proteksi tidak bekerja:
    lalu keluar. Menutup kasus di mana manifest tidak berlaku: development run,
    atau exe yang resource-nya sudah diubah orang.
 
-**Catatan deployment**: dengan `requireAdministrator`, user standar (bukan
-administrator) akan diminta kredensial admin dan tidak bisa menjalankan aplikasi
-sama sekali. Bila mesin ujian memakai akun standar, ganti nilainya ke
-`highestAvailable`: administrator tetap naik otomatis, user standar tetap bisa
-jalan (dengan proteksi terbatas).
+**Elevation bersifat wajib**: aplikasi hanya berjalan sebagai administrator.
+Bila prompt UAC ditolak, aplikasi menulis alasannya ke
+`%TEMP%/kki-kiosk-diag.log` lalu menutup diri (exit code 1) - tidak ada mode
+jalan-dengan-proteksi-terbatas, karena kiosk yang jalan tanpa admin memberi rasa
+aman yang palsu.
 
-**Bila UAC ditolak**: aplikasi tetap jalan dengan proteksi terbatas dan menulis
-peringatan ke `%TEMP%/kki-kiosk-diag.log`. Untuk mewajibkan admin, set
-`REQUIRE_ELEVATION = true` di `browser/utils/elevation.js`.
+**Catatan deployment**: konsekuensinya, akun yang dipakai di mesin ujian harus
+anggota grup Administrators. User standar akan diminta kredensial admin dan tidak
+akan bisa menjalankan aplikasi sama sekali. Siapkan akun ujian sebagai
+administrator lokal sebelum hari-H.
 
-**Environment Variable Flags:**
+**Environment Variable Flags** (hanya berlaku pada run yang belum di-package;
+pada build packaged keduanya diabaikan agar tidak bisa dipakai untuk melewati
+elevation):
 - `DISABLE_ELEVATION=true`: lewati elevation sepenuhnya
-- `FORCE_ELEVATION=true`: aktifkan elevation pada run yang belum di-package (default: hanya build packaged)
+- `FORCE_ELEVATION=true`: aktifkan elevation pada run development (default: hanya build packaged)
 
 ### 🍽️ Application Menu System
 
@@ -954,7 +957,7 @@ npm run start:no-monitor-check
 Mengatur elevation administrator di Windows (lihat Administrator Elevation di atas).
 
 ```bash
-# Lewati elevation sepenuhnya
+# Lewati elevation sepenuhnya (hanya run development)
 set DISABLE_ELEVATION=true
 
 # Paksa elevation walau belum di-package (untuk menguji jalur UAC)
@@ -963,7 +966,9 @@ set FORCE_ELEVATION=true
 
 **Kapan digunakan:**
 - Development di mesin tanpa hak administrator
-- Menguji perilaku aplikasi saat prompt UAC ditolak
+- Menguji perilaku aplikasi saat prompt UAC ditolak (aplikasi harus menutup diri)
+
+> Keduanya tidak berpengaruh pada build hasil package - di sana elevation selalu wajib.
 
 ##### `SHELL_DEBUG`
 Mengaktifkan debug mode dengan developer tools.

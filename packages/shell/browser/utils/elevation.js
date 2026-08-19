@@ -25,6 +25,11 @@
 //      its own integrity level once it is running, so the only option left is to
 //      start a second copy through ShellExecute's "runas" verb and exit.
 //
+// Administrator rights are mandatory, not preferred: if the prompt is refused,
+// or the second copy comes back unelevated anyway, the app closes instead of
+// starting. A kiosk running without them still looks locked down while the kills
+// silently fail, and that is worse than one that plainly refuses to open.
+//
 // macOS is deliberately left alone: the mac protections do not need root, and a
 // GUI application asking to run as root there is a bigger risk than the one it
 // would solve.
@@ -39,12 +44,6 @@ const warn = (message, data) => diag.write('Elevation', `WARN ${message}`, data)
 // Marker on the relaunched copy's command line. Without it a machine where the
 // elevation probe itself is unreliable would relaunch forever.
 const ELEVATED_ARG = '--kki-elevated'
-
-// What to do when the proctor dismisses the UAC prompt. Left off because a kiosk
-// that refuses to start is worse than one running with the name-based tier only,
-// and the refusal is written to the diag log either way. Flip it to true to make
-// administrator rights mandatory instead.
-const REQUIRE_ELEVATION = false
 
 const SYSTEM_ROOT = process.env.SystemRoot || 'C:\\Windows'
 const POWERSHELL_EXE = path.join(
@@ -146,24 +145,41 @@ function relaunchElevated() {
 }
 
 /**
- * Call this before anything else in the main process. Returns true when the
- * caller should keep going, and does not return at all when an elevated copy has
- * taken over.
+ * Leave this process for good. app.exit does not tear the process down
+ * synchronously, so process.exit follows it: the caller must never go on to open
+ * a window in a process that is already on its way out.
+ */
+function exitNow(code) {
+  const { app } = require('electron')
+  app.exit(code)
+  process.exit(code)
+}
+
+/**
+ * Call this before anything else in the main process. It either returns true,
+ * meaning we are elevated and the kiosk may start, or it does not return at all:
+ * administrator rights are mandatory, so a refused UAC prompt closes the app
+ * instead of leaving it running with half its protections disabled.
  */
 function ensureElevated() {
   if (process.platform !== 'win32') return true
 
-  if (process.env.DISABLE_ELEVATION === 'true') {
-    log('Skipped, DISABLE_ELEVATION is set')
-    return true
-  }
+  const { app } = require('electron')
 
   // A development run would detach from electron-forge the moment it relaunched,
   // so outside a packaged build this stays opt-in through FORCE_ELEVATION=true.
-  const { app } = require('electron')
-  if (!app.isPackaged && process.env.FORCE_ELEVATION !== 'true') {
-    log('Skipped, unpackaged run (set FORCE_ELEVATION=true to exercise it)')
-    return true
+  // Both escape hatches are development-only on purpose: in a packaged build an
+  // environment variable must not be able to talk the kiosk into starting
+  // unelevated, which is exactly what a candidate would try.
+  if (!app.isPackaged) {
+    if (process.env.DISABLE_ELEVATION === 'true') {
+      log('Skipped, DISABLE_ELEVATION is set')
+      return true
+    }
+    if (process.env.FORCE_ELEVATION !== 'true') {
+      log('Skipped, unpackaged run (set FORCE_ELEVATION=true to exercise it)')
+      return true
+    }
   }
 
   const elevated = isElevated()
@@ -174,30 +190,27 @@ function ensureElevated() {
   }
 
   if (process.argv.includes(ELEVATED_ARG)) {
-    warn('Still not elevated after a relaunch, continuing with reduced protection')
-    return true
+    // We are the copy Windows started after the prompt was accepted. A null here
+    // is the probe being unavailable rather than a denial, and refusing to start
+    // over a probe we could not run would strand the exam on that machine.
+    if (elevated === null) {
+      warn('Elevation state unverifiable after the relaunch, continuing')
+      return true
+    }
+
+    warn('Still not elevated after a relaunch, exiting')
+    exitNow(1)
   }
 
   log('Not elevated, relaunching through UAC')
 
   if (relaunchElevated()) {
     log('Elevated copy started, exiting this one')
-    app.exit(0)
-    // app.exit does not tear the process down synchronously, and the caller must
-    // not go on to open a window in a process that is already on its way out.
-    process.exit(0)
+    exitNow(0)
   }
 
-  if (REQUIRE_ELEVATION) {
-    warn('Administrator rights are required, exiting')
-    app.exit(1)
-    process.exit(1)
-  }
-
-  warn(
-    'Continuing without administrator rights - process blocking and the keyboard hook are degraded'
-  )
-  return false
+  warn('Administrator rights are required and the prompt was refused, exiting')
+  exitNow(1)
 }
 
 module.exports = { ensureElevated, isElevated, ELEVATED_ARG }
