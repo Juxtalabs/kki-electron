@@ -705,6 +705,42 @@ if (monitorCount > 1 && !process.env.DISABLE_MONITOR_CHECK) {
 - **JavaScript Fallback**: Electron globalShortcut API
 - **60+ Blocked Combinations**: See Windows Key Blocking Implementation section above
 
+### 🔐 Administrator Elevation (Windows)
+
+**Purpose**: Menjalankan kiosk dengan hak administrator, karena tanpa elevation
+sebagian proteksi tidak bekerja:
+
+- `taskkill` terhadap service yang berjalan sebagai SYSTEM (mis. `TeamViewer_Service.exe`) ditolak
+- image path proses milik user lain tidak terbaca, sehingga tier signature/metadata di `process-blocker.js` buta terhadap aplikasi yang di-rename
+- low-level keyboard hook tidak menerima input yang ditujukan ke window high-integrity (UIPI)
+
+**Dua lapis, keduanya aktif:**
+
+1. **Manifest** - `forge.config.js` menyetel
+   `win32metadata['requested-execution-level'] = 'requireAdministrator'`, sehingga
+   exe hasil package meminta UAC sebelum aplikasi jalan. Ini jalur normal.
+   (`package.json` root juga menyetel `build.win.requestedExecutionLevel` untuk
+   installer NSIS electron-builder.)
+2. **Runtime fallback** - `browser/utils/elevation.js` dipanggil dari `index.js`
+   sebelum apa pun yang lain. Ia memeriksa integrity level lewat `fltmc.exe`, dan
+   bila belum elevated me-relaunch dirinya sendiri via `Start-Process -Verb RunAs`
+   lalu keluar. Menutup kasus di mana manifest tidak berlaku: development run,
+   atau exe yang resource-nya sudah diubah orang.
+
+**Catatan deployment**: dengan `requireAdministrator`, user standar (bukan
+administrator) akan diminta kredensial admin dan tidak bisa menjalankan aplikasi
+sama sekali. Bila mesin ujian memakai akun standar, ganti nilainya ke
+`highestAvailable`: administrator tetap naik otomatis, user standar tetap bisa
+jalan (dengan proteksi terbatas).
+
+**Bila UAC ditolak**: aplikasi tetap jalan dengan proteksi terbatas dan menulis
+peringatan ke `%TEMP%/kki-kiosk-diag.log`. Untuk mewajibkan admin, set
+`REQUIRE_ELEVATION = true` di `browser/utils/elevation.js`.
+
+**Environment Variable Flags:**
+- `DISABLE_ELEVATION=true`: lewati elevation sepenuhnya
+- `FORCE_ELEVATION=true`: aktifkan elevation pada run yang belum di-package (default: hanya build packaged)
+
 ### 🍽️ Application Menu System
 
 **Menu Structure:**
@@ -913,6 +949,21 @@ npm run start:no-monitor-check
 **Kapan digunakan:**
 - Development dengan multiple monitor setup
 - Testing di environment dengan banyak monitor
+
+##### `DISABLE_ELEVATION` / `FORCE_ELEVATION`
+Mengatur elevation administrator di Windows (lihat Administrator Elevation di atas).
+
+```bash
+# Lewati elevation sepenuhnya
+set DISABLE_ELEVATION=true
+
+# Paksa elevation walau belum di-package (untuk menguji jalur UAC)
+set FORCE_ELEVATION=true
+```
+
+**Kapan digunakan:**
+- Development di mesin tanpa hak administrator
+- Menguji perilaku aplikasi saat prompt UAC ditolak
 
 ##### `SHELL_DEBUG`
 Mengaktifkan debug mode dengan developer tools.

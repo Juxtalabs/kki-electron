@@ -8,6 +8,13 @@ module.exports = {
     icon: '../../assets/kki-icon',
     appBundleId: 'io.kki.app',
     appCategoryType: 'public.app-category.education',
+    // Stamp requestedExecutionLevel=requireAdministrator into the packaged
+    // exe's manifest so Windows raises the UAC prompt before the app starts
+    // rather than after it (browser/utils/elevation.js is the runtime
+    // fallback). Only read by the win32 build; the mac builds ignore it.
+    win32metadata: {
+      'requested-execution-level': 'requireAdministrator',
+    },
     osxSign: {},
     osxNotarize: undefined,
     arch: ['x64', 'arm64'],
