@@ -65,7 +65,68 @@ const SECURITY_CONFIG = {
     'tv_x64.exe',
     'AnyDesk.exe',
     'AnyDeskMSI.exe',
-  ]
+  ],
+
+  // Signature-based blocking, checked against every running process by image path
+  // rather than by process name. Renaming AnyDesk.exe to notepad.exe gets past
+  // BLOCKED_PROCESSES above; it does not get past the signing certificate here.
+  //
+  // Matched case-insensitively as a substring of the Authenticode certificate
+  // subject on Windows and of the codesign authority on macOS. Keep the entries
+  // specific: a substring this short matching a certificate it was not meant to
+  // would kill an unrelated application mid-exam.
+  BLOCKED_PUBLISHERS: [
+    'TeamViewer',              // TeamViewer Germany GmbH / TeamViewer GmbH
+    'philandro Software GmbH', // AnyDesk, original signer
+    'AnyDesk Software GmbH',
+    'RealVNC',
+    'uvnc bvba',               // UltraVNC
+    'GlavSoft',                // TightVNC / Remote Utilities
+    'LogMeIn',
+    'GoTo Technologies',       // GoToAssist, GoToMyPC, Rescue
+    'Splashtop',
+    'Ammyy',
+    'Remote Utilities',
+    'NetSupport',
+    'Supremo',
+    'Nanosystems',             // Supremo publisher
+    'Atera Networks',
+    'ConnectWise',             // ScreenConnect
+    'Devolutions',
+    'Purslane Ltd',            // RustDesk
+    'Parsec Cloud',
+  ],
+
+  // Checked against the PE version resource (CompanyName / ProductName /
+  // FileDescription / OriginalFilename) on Windows, and against the codesign
+  // bundle identifier on macOS. Not cryptographic - a resource editor can rewrite
+  // these - but free to check and it still catches a plain rename.
+  BLOCKED_PRODUCTS: [
+    'TeamViewer',
+    'AnyDesk',
+    'UltraVNC',
+    'TightVNC',
+    'RealVNC',
+    'VNC Viewer',
+    'VNC Server',
+    'Ammyy Admin',
+    'Remote Utilities',
+    'NetSupport Manager',
+    'ScreenConnect',
+    'Splashtop',
+    'Supremo',
+    'RustDesk',
+    'Parsec',
+    'Chrome Remote Desktop',
+    'com.teamviewer',
+    'com.philandro.anydesk',
+  ],
+
+  // An executable with its signature stripped, running out of Downloads or Temp,
+  // is what getting past the tier above actually looks like. Off by default: a
+  // student's own unsigned software is not by itself a reason to kill a process,
+  // so it is written to the diag log for a proctor to look at instead.
+  KILL_UNSIGNED_SUSPICIOUS: false,
 }
 
 module.exports = { SECURITY_CONFIG }

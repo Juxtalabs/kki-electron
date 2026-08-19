@@ -16,8 +16,9 @@ const { disableAllSystemShortcuts, enableAllSystemShortcuts } = require('../util
 const touchpadGestures = require('../utils/touchpad-gestures')
 const macScreenshotShortcuts = require('../utils/mac-screenshot-shortcuts')
 const focusGuard = require('../utils/focus-guard')
+const processBlocker = require('../utils/process-blocker')
 const diag = require('../utils/diag-log')
-const { spawn, exec } = require('child_process')
+const { spawn } = require('child_process')
 const path = require('path')
 const fs = require('fs')
 
@@ -36,7 +37,6 @@ keyboardBlocker = require('../utils/keyboard-blocker')
 class Browser {
   windows = []
   isQuitting = false
-  processKillerInterval = null
 
   // Start page depends on the build variant (peserta / penguji), see config/variant.js
   urls = {
@@ -82,64 +82,14 @@ class Browser {
     setupIpcHandlers(this)
   }
 
+  /**
+   * Kept as a method because it is the entry point the rest of the app knows
+   * about. The sweep itself lives in utils/process-blocker.js, which matches on
+   * the Authenticode signature of each running image as well as on its name -
+   * renaming TeamViewer.exe is enough to defeat a name-only taskkill.
+   */
   checkAndKillBlockedProcesses() {
-    const blockedProcesses = SECURITY_CONFIG.BLOCKED_PROCESSES || []
-    if (!blockedProcesses.length) return
-
-    if (process.platform === 'win32') {
-      // Windows: use tasklist and taskkill
-      exec('tasklist', (err, stdout) => {
-        if (err) {
-          console.warn('Browser: Failed to get process list:', err.message)
-          return
-        }
-
-        blockedProcesses.forEach((processName) => {
-          // More flexible regex: match process name anywhere in the line
-          const escapedName = processName.replace(/\./g, '\\.')
-          const regex = new RegExp(`\\b${escapedName}\\b`, 'i')
-
-          if (regex.test(stdout)) {
-            console.log(`Browser: Detected blocked process "${processName}", killing...`)
-            exec(`taskkill /F /IM "${processName}" /T`, (killErr, killStdout, killStderr) => {
-              if (killErr) {
-                console.warn(`Browser: Failed to kill ${processName}:`, killErr.message)
-                if (killStderr) console.warn('Browser: Kill stderr:', killStderr)
-              } else {
-                console.log(`Browser: Successfully killed ${processName}`)
-                if (killStdout) console.log('Browser: Kill output:', killStdout.trim())
-              }
-            })
-          }
-        })
-      })
-    } else if (process.platform === 'darwin') {
-      // macOS: use ps aux and killall
-      exec('ps aux', (err, stdout) => {
-        if (err) {
-          console.warn('Browser: Failed to get process list:', err.message)
-          return
-        }
-
-        blockedProcesses.forEach((processName) => {
-          // Remove .exe extension for macOS (e.g., WhatsApp.exe -> WhatsApp)
-          const macProcessName = processName.replace(/\.exe$/i, '')
-          // Match process name in ps aux output (more flexible pattern)
-          const regex = new RegExp(`/${macProcessName}(\\.app)?(/|\\s|$)`, 'i')
-
-          if (regex.test(stdout)) {
-            console.log(`Browser: Detected blocked process "${macProcessName}", killing...`)
-            exec(`killall -9 "${macProcessName}"`, (killErr) => {
-              if (killErr) {
-                console.warn(`Browser: Failed to kill ${macProcessName}:`, killErr.message)
-              } else {
-                console.log(`Browser: Successfully killed ${macProcessName}`)
-              }
-            })
-          }
-        })
-      })
-    }
+    return processBlocker.scanOnce()
   }
 
   async promptExitPassword() {
@@ -561,12 +511,8 @@ class Browser {
     this.isQuitting = true
     console.log('Browser: Cleaning up before exit...')
 
-    // Stop process killer interval
-    if (this.processKillerInterval) {
-      clearInterval(this.processKillerInterval)
-      this.processKillerInterval = null
-      console.log('Browser: Process killer stopped')
-    }
+    // Stop process killer sweeps
+    processBlocker.stop()
 
     // Stop native keyboard helper
     this.stopNativeKeyboardHelper()
@@ -727,18 +673,13 @@ class Browser {
     // exit prompt. getExitPassword() never rejects - it falls back internally.
     getExitPassword()
 
-    // Start process killer for blocked applications (Windows and macOS)
-    if ((process.platform === 'win32' || process.platform === 'darwin') &&
-      SECURITY_CONFIG.BLOCKED_PROCESSES &&
-      SECURITY_CONFIG.BLOCKED_PROCESSES.length > 0) {
-      console.log('Browser: Starting process killer for blocked applications:', SECURITY_CONFIG.BLOCKED_PROCESSES)
-      // Run immediately
-      this.checkAndKillBlockedProcesses()
-      // Then run every 5 seconds
-      this.processKillerInterval = setInterval(() => {
-        this.checkAndKillBlockedProcesses()
-      }, 5000)
-    }
+    // Kill remote-control and messaging software, by signing certificate as well
+    // as by process name. Sweeps on its own interval from here on.
+    processBlocker.start(SECURITY_CONFIG, {
+      intervalMs: 5000,
+      onDetection: (hit) =>
+        diag.write('Kiosk', `Blocked application killed: ${hit.name} (${hit.reason})`, hit.path),
+    })
 
     this.createInitialWindow()
     this.resolveReady()
