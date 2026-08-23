@@ -15,6 +15,7 @@ const { checkAndBlockIfMultipleMonitors } = require('../utils/monitor-detector')
 const { disableAllSystemShortcuts, enableAllSystemShortcuts } = require('../utils/disable-alttab')
 const touchpadGestures = require('../utils/touchpad-gestures')
 const macScreenshotShortcuts = require('../utils/mac-screenshot-shortcuts')
+const zoom = require('../utils/zoom')
 const focusGuard = require('../utils/focus-guard')
 const processBlocker = require('../utils/process-blocker')
 const diag = require('../utils/diag-log')
@@ -911,6 +912,26 @@ class Browser {
     setupWindowOpenHandler(webContents, this)
     setupContextMenu(webContents, this)
     this.blockScreenCaptureKeys(webContents)
+    this.setupZoomShortcuts(webContents)
+  }
+
+  /**
+   * Ctrl+= / Ctrl+Plus / Ctrl+- / Ctrl+0 page zoom.
+   *
+   * Handled here rather than left to the menu roles because the zoomIn role's
+   * accelerator misses the unshifted '=' and the keypad '+' - see utils/zoom.js.
+   * Attached per webContents so it works from a tab and from the shell chrome
+   * alike; either way the zoom lands on the tab the student is reading, which is
+   * what the menu items do too.
+   */
+  setupZoomShortcuts(webContents) {
+    webContents.on('before-input-event', (event, input) => {
+      const window = this.getWindowFromWebContents(webContents) || this.getFocusedWindow()
+      const tabContents = window?.getFocusedTab()?.webContents
+      const target = tabContents && !tabContents.isDestroyed() ? tabContents : webContents
+
+      zoom.handleZoomInput(target, event, input)
+    })
   }
 
   /**

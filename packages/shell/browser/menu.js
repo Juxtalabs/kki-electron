@@ -1,5 +1,7 @@
 const { Menu, app } = require('electron')
 
+const zoom = require('./utils/zoom')
+
 const setupMenu = (browser) => {
   const isMac = process.platform === 'darwin'
 
@@ -43,9 +45,30 @@ const setupMenu = (browser) => {
           click: () => tabWc().toggleDevTools(),
         },
         { type: 'separator' },
-        { role: 'resetZoom' },
-        { role: 'zoomIn' },
-        { role: 'zoomOut' },
+        // Spelled out rather than using the zoom roles: the zoomIn role only
+        // registers 'CommandOrControl+Plus', which never matches the unshifted
+        // Ctrl+= most people press. The keys are handled in Browser's
+        // before-input-event instead (utils/zoom.js), so the accelerators here
+        // are labels only - registerAccelerator keeps Electron from binding
+        // them a second time and double-stepping the zoom.
+        {
+          label: 'Actual Size',
+          accelerator: 'CmdOrCtrl+0',
+          registerAccelerator: false,
+          click: () => zoom.resetZoom(tabWc()),
+        },
+        {
+          label: 'Zoom In',
+          accelerator: 'CmdOrCtrl+Plus',
+          registerAccelerator: false,
+          click: () => zoom.zoomIn(tabWc()),
+        },
+        {
+          label: 'Zoom Out',
+          accelerator: 'CmdOrCtrl+-',
+          registerAccelerator: false,
+          click: () => zoom.zoomOut(tabWc()),
+        },
       ],
     },
   ]
