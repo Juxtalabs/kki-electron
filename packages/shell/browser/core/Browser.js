@@ -674,8 +674,10 @@ class Browser {
     // exit prompt. getExitPassword() never rejects - it falls back internally.
     getExitPassword()
 
-    // Kill remote-control and messaging software, by signing certificate as well
-    // as by process name. Sweeps on its own interval from here on.
+    // Kill everything the exam does not need - remote control, browsers, PDF
+    // readers, text editors, office suites, chat and conferencing - by signing
+    // certificate as well as by process name. Sweeps on its own interval from
+    // here on.
     processBlocker.start(SECURITY_CONFIG, {
       intervalMs: 5000,
       onDetection: (hit) =>

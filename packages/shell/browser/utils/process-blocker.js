@@ -1,10 +1,12 @@
-// Kill remote-control software by who signed it, not by what it is called.
+// Kill everything the exam does not need - remote-control software, browsers,
+// PDF readers, text editors, office suites, chat and conferencing clients - by
+// who signed it, not only by what it is called.
 //
 // Matching on the process name alone (taskkill /IM TeamViewer.exe) is one rename
 // away from useless: a student who copies TeamViewer.exe to notepad.exe keeps a
-// working remote session. What they cannot change without invalidating it is the
-// Authenticode signature, so the real check is on the signing certificate of the
-// executable behind each running PID.
+// working remote session, and the same trick reopens Chrome. What they cannot
+// change without invalidating it is the Authenticode signature, so the real
+// check is on the signing certificate of the executable behind each running PID.
 //
 // Three tiers run together and any one of them is enough to kill:
 //
@@ -108,17 +110,36 @@ function isUnderSystemRoot(imagePath) {
 }
 
 /**
+ * Named exceptions to the %SystemRoot% guard below, from
+ * KILLABLE_SYSTEM_PROCESSES. Only the name tier consults this: a Windows
+ * accessory is killed because someone named it on purpose, never because a
+ * hand-edited publisher substring happened to match its certificate.
+ */
+function isSystemKillable(proc) {
+  if (!config || !proc.name) return false
+
+  const names = config.KILLABLE_SYSTEM_PROCESSES || []
+  return names.some((name) => String(name).toLowerCase() === proc.name.toLowerCase())
+}
+
+/**
  * Anything the OS needs to keep running, plus our own executable.
  *
  * The publisher lists are edited by hand, and a careless entry like 'Microsoft'
  * would otherwise take the machine down mid-exam. Nothing shipped with Windows is
  * ever a kill candidate - a remote-control tool does not live in System32.
+ *
+ * `allowSystem` lets the name tier past that last rule for the accessories in
+ * KILLABLE_SYSTEM_PROCESSES - Notepad ships in System32 and is still a place to
+ * keep notes. The checks above it, the idle pids and our own image, hold either
+ * way.
  */
-function isProtected(proc) {
+function isProtected(proc, { allowSystem = false } = {}) {
   if (!proc.pid || proc.pid <= 4) return true
   if (proc.pid === process.pid) return true
   if (!proc.path) return false
   if (proc.path === process.execPath) return true
+  if (allowSystem && isSystemKillable(proc)) return false
   return isUnderSystemRoot(proc.path)
 }
 
@@ -523,7 +544,7 @@ async function killByName(processes) {
   const targets = []
 
   for (const proc of processes) {
-    if (isProtected(proc)) continue
+    if (isProtected(proc, { allowSystem: true })) continue
 
     const candidate = process.platform === 'darwin' ? proc.name.replace(/\.exe$/i, '') : proc.name
 
@@ -705,6 +726,7 @@ function start(securityConfig, options = {}) {
     names: (config.BLOCKED_PROCESSES || []).length,
     publishers: (config.BLOCKED_PUBLISHERS || []).length,
     products: (config.BLOCKED_PRODUCTS || []).length,
+    killableSystem: (config.KILLABLE_SYSTEM_PROCESSES || []).length,
     killUnsigned: config.KILL_UNSIGNED_SUSPICIOUS === true,
     intervalMs,
   })
