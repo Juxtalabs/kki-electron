@@ -2,6 +2,7 @@ const { app, session } = require('electron')
 const { PATHS } = require('../config/paths')
 const fs = require('fs')
 const DomainInterceptor = require('../security/domain-interceptor')
+const diag = require('../utils/diag-log')
 
 let domainInterceptor = null
 
@@ -20,6 +21,23 @@ function initSession(browserSession) {
 
   // Setup domain whitelist interceptor
   domainInterceptor.setupInterceptor(browserSession)
+
+  // A TLS filter on the exam network answers for the portal with its own block
+  // page certificate; Chromium reports that as a bare ERR_CERT_INVALID error
+  // page with nothing in it naming the interceptor. Record which host and which
+  // issuer, then let Electron reject as usual - certificates are not something a
+  // kiosk should ever wave through.
+  browserSession.setCertificateVerifyProc((request, callback) => {
+    if (request.verificationResult !== 'net::OK') {
+      diag.write('Certificate', `WARN ${request.verificationResult} for ${request.hostname}`, {
+        issuer: request.certificate?.issuerName,
+        subject: request.certificate?.subjectName,
+        errorCode: request.errorCode,
+      })
+    }
+    // -3 means "use Chromium's own verdict"
+    callback(-3)
+  })
 
   browserSession.serviceWorkers.on('running-status-changed', (event) => {
     console.info(`service worker ${event.versionId} ${event.runningStatus}`)

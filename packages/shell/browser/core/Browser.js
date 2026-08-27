@@ -913,8 +913,42 @@ class Browser {
 
     setupWindowOpenHandler(webContents, this)
     setupContextMenu(webContents, this)
+    this.logNavigationFailures(webContents)
     this.blockScreenCaptureKeys(webContents)
     this.setupZoomShortcuts(webContents)
+  }
+
+  /**
+   * Record why a page failed to load.
+   *
+   * A packaged build has no console, so a tab that comes up as the Chromium
+   * error page leaves no trace of *which* error it was - a blocked domain, a
+   * dead DNS name and a TLS middlebox all look identical on screen. These land
+   * in the same %TEMP% diag log as the kiosk layers.
+   *
+   * certificate-error fires on the session rather than the webContents, so it
+   * is attached once in the session manager; here we only cover navigation.
+   */
+  logNavigationFailures(webContents) {
+    webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL, isMainFrame) => {
+      // -3 is ERR_ABORTED, which is what a navigation superseded by another one
+      // reports. Not a failure worth a line.
+      if (errorCode === -3) return
+
+      diag.write(
+        'Navigation',
+        `WARN load failed ${errorDescription} (${errorCode})`,
+        { url: validatedURL, mainFrame: isMainFrame }
+      )
+    })
+
+    webContents.on('render-process-gone', (event, details) => {
+      diag.write('Navigation', 'WARN render process gone', {
+        url: webContents.getURL(),
+        reason: details.reason,
+        exitCode: details.exitCode,
+      })
+    })
   }
 
   /**
