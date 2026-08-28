@@ -19,7 +19,13 @@ call "%VCVARS%"
 cd /d "%~dp0"
 if not exist "native\ia32" mkdir "native\ia32"
 
-cl.exe /EHsc /O2 native\keyhook-helper.cpp /Fo:native\ia32\ /Fe:native\ia32\keyhook-helper.exe user32.lib
+:: Same portability flags as compile-helper.bat - see that file for the full
+:: rationale. In short: /MT statically links the CRT so the exe needs NO Visual
+:: C++ redistributable, the _WIN32_WINNT/WINVER defines target Windows 7, and the
+:: pinned subsystem version keeps the Windows 7 loader happy. Verify a build with
+:: dumpbin /dependents native\ia32\keyhook-helper.exe - only USER32.dll and
+:: KERNEL32.dll should appear.
+cl.exe /EHsc /O2 /MT /DWINVER=0x0601 /D_WIN32_WINNT=0x0601 native\keyhook-helper.cpp /Fo:native\ia32\ /Fe:native\ia32\keyhook-helper.exe user32.lib /link /SUBSYSTEM:CONSOLE,6.00
 
 if %ERRORLEVEL% NEQ 0 goto :failed
 

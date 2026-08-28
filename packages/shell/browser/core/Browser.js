@@ -12,7 +12,11 @@ const { TabbedBrowserWindow, setWebuiExtensionId } = require('../windows/TabbedB
 const { setupContextMenu } = require('../handlers/context-menu-handler')
 const { setupWindowOpenHandler } = require('../handlers/window-open-handler')
 const { checkAndBlockIfMultipleMonitors } = require('../utils/monitor-detector')
-const { disableAllSystemShortcuts, enableAllSystemShortcuts } = require('../utils/disable-alttab')
+const {
+  disableAllSystemShortcuts,
+  enableAllSystemShortcuts,
+  restoreStaleBackup: restoreStaleShortcutBackup,
+} = require('../utils/disable-alttab')
 const touchpadGestures = require('../utils/touchpad-gestures')
 const macScreenshotShortcuts = require('../utils/mac-screenshot-shortcuts')
 const zoom = require('../utils/zoom')
@@ -38,6 +42,7 @@ keyboardBlocker = require('../utils/keyboard-blocker')
 class Browser {
   windows = []
   isQuitting = false
+  cleanupDone = false
 
   // Start page depends on the build variant (peserta / penguji), see config/variant.js
   urls = {
@@ -71,6 +76,50 @@ class Browser {
       if (process.platform !== 'darwin') {
         this.destroy()
       }
+    })
+
+    // A kiosk window refuses to close while isQuitting is false, so a quit the
+    // app did not start - Electron quitting for its own reasons, an app.quit()
+    // from anywhere - would otherwise hang on that preventDefault and be
+    // force-killed with the registry still locked down. Windows shutdown/logoff
+    // does NOT reach before-quit (Electron docs are explicit about that); it
+    // arrives as the per-window 'session-end' event, wired up in createWindow().
+    app.on('before-quit', () => {
+      this.isQuitting = true
+      this.runCleanup()
+    })
+
+    // will-quit fires after before-quit once the windows are gone. Belt and
+    // braces: if some path reaches quit without before-quit, cleanup still runs.
+    app.on('will-quit', () => {
+      this.runCleanup()
+    })
+
+    // Last resort for an exit no Electron event covers, such as an explicit
+    // process.exit or a normal process end. Runs synchronously here - by the
+    // time 'exit' fires no async work can be scheduled. Nothing in-process can
+    // survive a TerminateProcess or a power loss; that is what the on-disk
+    // backups in disable-alttab.js and touchpad-gestures.js restore on the next
+    // launch.
+    process.on('exit', () => {
+      try {
+        this.runCleanup()
+      } catch (error) {
+        // Nothing left standing that could report it
+      }
+    })
+
+    // A crash in the main process would otherwise unwind without cleanup. Undo
+    // the lockdown, then re-throw by exiting so the failure is not swallowed -
+    // process.on('exit') above is a no-op the second time through runCleanup().
+    process.on('uncaughtException', (error) => {
+      console.error('Browser: Uncaught exception, cleaning up before exit:', error)
+      try {
+        this.runCleanup()
+      } catch (cleanupError) {
+        // Prefer surfacing the original error below
+      }
+      process.exit(1)
     })
 
     app.on('activate', () => {
@@ -507,9 +556,20 @@ class Browser {
     })
   }
 
-  destroy() {
-    if (this.isQuitting) return
-    this.isQuitting = true
+  /**
+   * Undo everything init() changed outside our own process.
+   *
+   * Split out of destroy() because the kiosk does not always get a clean exit.
+   * destroy() only runs when the app itself decides to quit; other exits arrive
+   * as before-quit, will-quit, a window 'session-end' (Windows shutdown/logoff),
+   * an uncaughtException or process 'exit', and each of those used to end the
+   * process with Task Manager still disabled in the registry. Every one of those
+   * paths calls this, so it is written to be idempotent.
+   */
+  runCleanup() {
+    if (this.cleanupDone) return
+    this.cleanupDone = true
+
     console.log('Browser: Cleaning up before exit...')
 
     // Stop process killer sweeps
@@ -565,7 +625,16 @@ class Browser {
       console.warn('Browser: Failed to restore macOS screenshot shortcuts:', error.message)
     }
 
-    console.log('Browser: Cleanup completed, quitting app...')
+    console.log('Browser: Cleanup completed')
+  }
+
+  destroy() {
+    if (this.isQuitting) return
+    this.isQuitting = true
+
+    this.runCleanup()
+
+    console.log('Browser: Quitting app...')
 
     // Force-destroy windows because we intentionally prevent user-driven closes.
     // app.quit() triggers BrowserWindow close events; if those are prevented the app won't quit.
@@ -602,10 +671,40 @@ class Browser {
     return window ? this.getWindowFromBrowserWindow(window) : null
   }
 
+  /**
+   * Undo whatever a previous run left behind before this one changes anything.
+   *
+   * Runs first, ahead of every check that can end init() early - a machine that
+   * was killed mid-exam and then had a second screen plugged in would otherwise
+   * hit the multi-monitor block on every launch and never get its Task Manager
+   * back. Each restore is a no-op when that layer left nothing behind.
+   */
+  restoreStaleSystemState() {
+    try {
+      restoreStaleShortcutBackup()
+    } catch (error) {
+      console.warn('Browser: Failed to restore stale system shortcuts:', error.message)
+    }
+
+    try {
+      touchpadGestures.restoreStaleBackup()
+    } catch (error) {
+      console.warn('Browser: Failed to restore stale touchpad gestures:', error.message)
+    }
+
+    try {
+      macScreenshotShortcuts.restoreStaleBackup()
+    } catch (error) {
+      console.warn('Browser: Failed to restore stale macOS screenshot shortcuts:', error.message)
+    }
+  }
+
   async init() {
     console.log('Browser: init() called')
     console.log('Browser: BLOCKED_PROCESSES config:', SECURITY_CONFIG.BLOCKED_PROCESSES)
     console.log('Browser: Platform:', process.platform)
+
+    this.restoreStaleSystemState()
 
     // Check for multiple monitors and block if detected
     if (checkAndBlockIfMultipleMonitors()) {
@@ -648,13 +747,14 @@ class Browser {
       // Backup: Install Electron addon (handles key combinations)
       this.installElectronKeyboardHook()
 
-      // Additional: Disable system shortcuts via Registry (Win+L, Win+G, Ctrl+Alt+Del Task Manager)
+      // Additional: Disable system shortcuts via Registry (Win+L, Win+G, Ctrl+Alt+Del Task Manager).
+      // Anything a killed run left behind was already put back above, so this
+      // snapshots the student's own values rather than the last run's.
       disableAllSystemShortcuts()
 
       // macOS counterpart: the screen capture shortcuts are consumed by
       // WindowServer before the app sees them, so they have to be switched off
       // in com.apple.symbolichotkeys rather than swallowed like on Windows.
-      macScreenshotShortcuts.restoreStaleBackup()
       macScreenshotShortcuts.disable()
     }
 
@@ -665,7 +765,6 @@ class Browser {
       diag.write('Kiosk', 'Touchpad gesture blocking DISABLED (DISABLE_TOUCHPAD_BLOCK=true)')
       diag.write('Kiosk', 'Touchpad gesture state:', touchpadGestures.readCurrentState())
     } else {
-      touchpadGestures.restoreStaleBackup()
       touchpadGestures.disable()
     }
 
@@ -833,6 +932,16 @@ class Browser {
     win.window.on('close', (event) => {
       if (this.isQuitting) return
       event.preventDefault()
+    })
+
+    // Windows shutdown / restart / logoff. On Windows this is the only signal
+    // the app gets - before-quit is skipped - so it is where the registry
+    // lockdown has to be undone before the session tears the process down.
+    // Cleanup is synchronous; there is no later turn to finish in.
+    win.window.on('session-end', () => {
+      diag.write('Kiosk', 'session-end received, restoring system state before shutdown')
+      this.isQuitting = true
+      this.runCleanup()
     })
 
     // Catch app switching that never reaches us as a keystroke (3-finger swipe,

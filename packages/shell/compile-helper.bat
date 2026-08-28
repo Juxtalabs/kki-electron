@@ -13,7 +13,25 @@ call "%VCVARS%"
 :: Compile with optimizations. Run from this folder so keyhook-helper.obj lands
 :: next to the copy the repo already tracks.
 cd /d "%~dp0"
-cl.exe /EHsc /O2 native\keyhook-helper.cpp /Fe:native\keyhook-helper.exe user32.lib
+::
+:: The flags below make the helper run on any Windows 7 SP1 or newer machine with
+:: NO Visual C++ redistributable installed, whatever build tools produced it:
+::
+::   /MT                  Static-link the C runtime (UCRT + vcruntime) into the
+::                        exe. Without it MSVC defaults to /MD, which imports
+::                        vcruntime140.dll / ucrtbase.dll and refuses to start on
+::                        a machine that lacks the matching redist. On some newer
+::                        toolsets /MD happens to link statically anyway, but that
+::                        is not guaranteed - /MT makes it certain everywhere.
+::   /D_WIN32_WINNT=0x0601  Target Windows 7: headers do not expose newer-only
+::   /DWINVER=0x0601        API declarations, so nothing Win8+ sneaks in.
+::   /SUBSYSTEM:CONSOLE,6.00  Pin the PE version fields to 6.00 (Vista) so the
+::                        Windows 7 loader accepts the image even if a future
+::                        toolset would otherwise stamp 10.0 and break Win7 load.
+::
+:: Verify a build with:  dumpbin /dependents native\keyhook-helper.exe
+:: It must list only USER32.dll and KERNEL32.dll.
+cl.exe /EHsc /O2 /MT /DWINVER=0x0601 /D_WIN32_WINNT=0x0601 native\keyhook-helper.cpp /Fe:native\keyhook-helper.exe user32.lib /link /SUBSYSTEM:CONSOLE,6.00
 
 if %ERRORLEVEL% NEQ 0 goto :failed
 
