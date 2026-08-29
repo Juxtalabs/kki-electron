@@ -50,6 +50,30 @@ function setupIpcHandlers(browser) {
     }
   })
 
+  // Refresh button: fetch a fresh copy from the server rather than replaying the
+  // cache. Clears the stale service worker + HTTP/shader caches (login state in
+  // localStorage/IndexedDB/cookies is kept), then reloads the focused tab
+  // ignoring the cache - so a page that failed to load, or came up blank from a
+  // corrupt cache, comes back from the network. Never throws.
+  ipcMain.handle('kiosk:reloadFresh', async () => {
+    try {
+      const tab = browserInstance?.getFocusedWindow?.()?.getFocusedTab?.()
+      const webContents = tab?.webContents
+      if (!webContents || webContents.isDestroyed()) return
+
+      if (typeof browserInstance.clearStaleWebCaches === 'function') {
+        await browserInstance.clearStaleWebCaches()
+      }
+
+      if (webContents.isDestroyed()) return
+      // Let the auto-recovery on the next failure fire again if it needs to.
+      webContents.__cacheRecoveryAttempted = false
+      webContents.reloadIgnoringCache()
+    } catch (error) {
+      console.error('Error during kiosk:reloadFresh:', error)
+    }
+  })
+
 }
 
 module.exports = { setupIpcHandlers }

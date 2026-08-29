@@ -712,6 +712,15 @@ class Browser {
     }
 
     this.initSession()
+
+    // Wipe the service worker + HTTP/shader caches before anything navigates.
+    // On kiosk PCs that get force-killed, these caches corrupt or pin a stale
+    // service worker, and the portal then renders blank - the failure that used
+    // to need a manual delete of %AppData%\Roaming\KKI Browser. Login state
+    // lives in localStorage/IndexedDB/cookies, which are deliberately left
+    // untouched, so this heals the blank page without signing the student out.
+    await this.clearStaleWebCaches()
+
     setupMenu(this)
 
     registerPreloadScripts(this.session)
@@ -893,6 +902,31 @@ class Browser {
     }
   }
 
+  /**
+   * Clear only the caches that go bad on a hard-killed kiosk: the service
+   * worker registrations + Cache Storage, the shader cache, and the HTTP/code
+   * disk cache. A truncated or stale entry in any of these makes the portal's
+   * service worker serve a broken/empty app shell (the "blank website" report),
+   * and there is nothing on the network path to repair it because the worker
+   * answers from cache first.
+   *
+   * Deliberately NOT cleared: localstorage, indexdb, cookies, websql,
+   * filesystem - that is where the login/exam session lives, so the student
+   * stays signed in across the fix. Never throws; a failure here must not stop
+   * the app from starting.
+   */
+  async clearStaleWebCaches() {
+    try {
+      await this.session.clearStorageData({
+        storages: ['serviceworkers', 'cachestorage', 'shadercache'],
+      })
+      await this.session.clearCache()
+      diag.write('Session', 'Cleared service worker + HTTP/shader caches (login state kept)')
+    } catch (error) {
+      diag.write('Session', `WARN failed to clear stale web caches: ${error.message}`)
+    }
+  }
+
   initSession() {
     this.session = session.defaultSession
     initSession(this.session)
@@ -1039,6 +1073,12 @@ class Browser {
    * is attached once in the session manager; here we only cover navigation.
    */
   logNavigationFailures(webContents) {
+    // A clean load clears the one-shot recovery guard so a later, unrelated
+    // failure on the same tab can heal again.
+    webContents.on('did-finish-load', () => {
+      webContents.__cacheRecoveryAttempted = false
+    })
+
     webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL, isMainFrame) => {
       // -3 is ERR_ABORTED, which is what a navigation superseded by another one
       // reports. Not a failure worth a line.
@@ -1049,6 +1089,12 @@ class Browser {
         `WARN load failed ${errorDescription} (${errorCode})`,
         { url: validatedURL, mainFrame: isMainFrame }
       )
+
+      // Only the main frame going down blanks the page; a failed subframe or
+      // asset is not worth a cache wipe + reload.
+      if (isMainFrame) {
+        this.recoverFromLoadFailure(webContents, `did-fail-load ${errorDescription} (${errorCode})`)
+      }
     })
 
     webContents.on('render-process-gone', (event, details) => {
@@ -1057,7 +1103,38 @@ class Browser {
         reason: details.reason,
         exitCode: details.exitCode,
       })
+
+      // 'clean-exit' is an ordinary teardown, not a crash - nothing to recover.
+      if (details.reason !== 'clean-exit') {
+        this.recoverFromLoadFailure(webContents, `render-process-gone ${details.reason}`)
+      }
     })
+  }
+
+  /**
+   * Heal a blank/broken tab in place: clear the stale service worker + HTTP/
+   * shader caches (the same set wiped at launch, login state kept), then reload
+   * once. Guarded per-webContents so a page that keeps failing reloads a single
+   * time instead of spinning in a wipe-reload loop; the guard is released on the
+   * next successful load. Never throws.
+   */
+  async recoverFromLoadFailure(webContents, reason) {
+    if (!webContents || webContents.isDestroyed()) return
+    if (webContents.__cacheRecoveryAttempted) {
+      diag.write('Navigation', `Recovery already attempted, not retrying (${reason})`)
+      return
+    }
+    webContents.__cacheRecoveryAttempted = true
+
+    diag.write('Navigation', `Clearing caches and reloading after failure (${reason})`)
+    await this.clearStaleWebCaches()
+
+    if (webContents.isDestroyed()) return
+    try {
+      webContents.reload()
+    } catch (error) {
+      diag.write('Navigation', `WARN reload after recovery failed: ${error.message}`)
+    }
   }
 
   /**

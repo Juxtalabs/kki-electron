@@ -31,7 +31,16 @@ class WebUI {
 
     this.$.goBackButton.addEventListener('click', () => chrome.tabs.goBack())
     this.$.goForwardButton.addEventListener('click', () => chrome.tabs.goForward())
-    this.$.reloadButton.addEventListener('click', () => chrome.tabs.reload())
+    this.$.reloadButton.addEventListener('click', () => {
+      // Prefer a fresh fetch from the server (clears stale service worker +
+      // caches, then reloads ignoring cache) so a failed/blank page recovers.
+      // Falls back to a plain reload if the kiosk bridge is unavailable.
+      if (window.kioskAPI && typeof window.kioskAPI.reloadFresh === 'function') {
+        window.kioskAPI.reloadFresh()
+      } else {
+        chrome.tabs.reload({ bypassCache: true })
+      }
+    })
 
     // this.$.urlBar.addEventListener('keydown', (event) => {
     //   if (event.key === 'Enter') {
