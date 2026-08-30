@@ -20,7 +20,7 @@ const SECURITY_CONFIG = {
   // Offline fallback exit password, only accepted when the exit code API above
   // can't be reached (no network, server down). Without it an outage would leave
   // the proctor with no way out of the kiosk.
-  EXIT_PASSWORD: 'Z8V86FUL',
+  EXIT_PASSWORD: 'OVP249CR',
 
   // Admin whitelisted domains (full access)
   ADMIN_WHITELISTED_DOMAINS: [
